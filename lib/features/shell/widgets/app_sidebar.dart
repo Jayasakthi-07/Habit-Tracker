@@ -26,6 +26,7 @@ const _items = [
   _NavItem('Journal', Icons.menu_book_rounded, Routes.journal),
   _NavItem('Achievements', Icons.emoji_events_rounded, Routes.achievements),
   _NavItem('Focus', Icons.timer_rounded, Routes.focus),
+  _NavItem('AI Coach', Icons.auto_awesome_rounded, Routes.ai),
 ];
 
 /// The vertical navigation rail with branding, routes and user card.
