@@ -18,6 +18,11 @@ Future<void> main() async {
   // Initializes the Supabase client only if SUPABASE_URL/ANON_KEY were provided
   // via --dart-define; otherwise this is a safe no-op (pure offline mode).
   await AuraSupabase.init();
+  assert(() {
+    debugPrint('[Aura] Supabase configured=${SupabaseConfig.isConfigured} '
+        'ready=${AuraSupabase.isReady}');
+    return true;
+  }());
   await WindowService.init();
   await NotificationService.instance.init();
 
