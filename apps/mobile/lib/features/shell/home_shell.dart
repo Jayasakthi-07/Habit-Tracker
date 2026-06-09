@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_colors.dart';
-import '../calendar/presentation/calendar_page.dart';
+import '../analytics/presentation/insights_page.dart';
 import '../dashboard/presentation/dashboard_page.dart';
 import '../habits/presentation/habits_page.dart';
 import '../habits/presentation/widgets/habit_editor_sheet.dart';
+import '../journal/presentation/journal_page.dart';
 import '../settings/presentation/settings_page.dart';
 
-/// The signed-in app shell: a bottom-nav scaffold hosting the MVP tabs.
+/// The signed-in app shell: a bottom-nav scaffold hosting the primary tabs.
+/// Secondary destinations (Goals, Calendar) are pushed routes reached from the
+/// dashboard header and the Profile tab.
 class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key});
 
@@ -22,7 +25,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   static const _pages = [
     DashboardPage(),
     HabitsPage(),
-    CalendarPage(),
+    InsightsPage(),
+    JournalPage(),
     SettingsPage(),
   ];
 
@@ -75,9 +79,13 @@ class _HomeShellState extends ConsumerState<HomeShell> {
                 selectedIcon: Icon(Icons.check_circle_rounded),
                 label: 'Habits'),
             NavigationDestination(
-                icon: Icon(Icons.calendar_month_outlined),
-                selectedIcon: Icon(Icons.calendar_month_rounded),
-                label: 'Calendar'),
+                icon: Icon(Icons.insights_outlined),
+                selectedIcon: Icon(Icons.insights_rounded),
+                label: 'Insights'),
+            NavigationDestination(
+                icon: Icon(Icons.menu_book_outlined),
+                selectedIcon: Icon(Icons.menu_book_rounded),
+                label: 'Journal'),
             NavigationDestination(
                 icon: Icon(Icons.person_outline_rounded),
                 selectedIcon: Icon(Icons.person_rounded),

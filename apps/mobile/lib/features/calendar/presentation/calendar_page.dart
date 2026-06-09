@@ -10,7 +10,11 @@ import '../../habits/presentation/widgets/habit_card.dart';
 /// A month calendar coloured by daily completion intensity, with a list of the
 /// selected day's scheduled habits below.
 class CalendarPage extends ConsumerStatefulWidget {
-  const CalendarPage({super.key});
+  const CalendarPage({super.key, this.standalone = false});
+
+  /// When true the page is a pushed route (own Scaffold + AppBar + back button)
+  /// rather than a bottom-nav tab.
+  final bool standalone;
 
   @override
   ConsumerState<CalendarPage> createState() => _CalendarPageState();
@@ -44,17 +48,19 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
         .where((h) => h.isScheduledOn(_selected))
         .toList();
 
-    return SafeArea(
+    final body = SafeArea(
       bottom: false,
+      top: !widget.standalone,
       child: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-              child: Text('Calendar',
-                  style: Theme.of(context).textTheme.headlineMedium),
+          if (!widget.standalone)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                child: Text('Calendar',
+                    style: Theme.of(context).textTheme.headlineMedium),
+              ),
             ),
-          ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
@@ -100,6 +106,17 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
             ),
         ],
       ),
+    );
+
+    if (!widget.standalone) return body;
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        title: const Text('Calendar'),
+        elevation: 0,
+      ),
+      body: body,
     );
   }
 

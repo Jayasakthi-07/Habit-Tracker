@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/storage/hive_service.dart';
 import '../auth/auth_provider.dart';
+import '../goals/goals_provider.dart';
 import '../habits/presentation/providers/habit_providers.dart';
+import '../journal/journal_provider.dart';
 
 /// The Hive boxes that mirror cloud-synced collections, in entity order.
 ///
@@ -99,6 +101,8 @@ class SyncController extends Notifier<SyncStatus> {
 
   void _refreshUi() {
     ref.read(habitsControllerProvider.notifier).refreshFromStore();
+    ref.invalidate(goalsProvider);
+    ref.invalidate(journalProvider);
   }
 
   void _onRemoteChange(SyncEntity entity) {
@@ -107,9 +111,10 @@ class SyncController extends Notifier<SyncStatus> {
       case SyncEntity.habitLogs:
       case SyncEntity.categories:
         ref.read(habitsControllerProvider.notifier).refreshFromStore();
-      // Goals & journal sync into Hive but have no MVP screen yet (Phase 4).
       case SyncEntity.goals:
+        ref.invalidate(goalsProvider);
       case SyncEntity.journalEntries:
+        ref.invalidate(journalProvider);
       case SyncEntity.achievements:
       case SyncEntity.settings:
       case SyncEntity.gamification:

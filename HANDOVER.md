@@ -63,8 +63,8 @@ guide). Be patient and encouraging.
 | 1 | Accounts & auth (email+code, Google) | ✅ DONE & verified |
 | 2 | Cloud sync engine (offline-first + realtime) | ✅ DONE & verified end-to-end |
 | — | Post-fixes: remove guest, per-account isolation, glow reduction, completion-UI redesign + crash fix | ✅ DONE |
-| **3** | **Android app MVP** | **🚧 IN PROGRESS** — app scaffolded at `apps/mobile/` on shared `aura_core`; auth + sync + MVP screens built; analyze clean, debug APK builds, runs on emulator (Supabase ready=true). Pending: Google client (guide written: `apps/mobile/ANDROID_GOOGLE_AUTH_SETUP.md`, debug SHA-1 `E4:EC:3A:E4:3A:5F:C8:B7:85:93:EE:22:37:95:51:32:64:AB:3E:D4`), visual + live-sync verification on a stable emulator. |
-| 4 | Android feature parity | ⬜ pending |
+| **3** | **Android app MVP** | ✅ DONE & verified — app at `apps/mobile/` on shared `aura_core`; auth + sync + MVP screens; cross-device sync verified live (signed in, completed a habit phone→cloud). Google sign-in still needs the user to do `apps/mobile/ANDROID_GOOGLE_AUTH_SETUP.md` (debug SHA-1 `E4:EC:3A:E4:3A:5F:C8:B7:85:93:EE:22:37:95:51:32:64:AB:3E:D4`) + hand back the Web client ID → `GOOGLE_WEB_CLIENT_ID` in env.json. |
+| **4** | **Android feature parity** | ✅ DONE & verified — ported goals/journal/gamification/analytics/categories (byte-identical models). New tabs: **Insights** (level/XP, stats, 30-day fl_chart trend, success bars, achievements) + **Journal** (mood + note). **Goals** page (pushed) + **Calendar** (pushed, `standalone:true`) reachable from dashboard header + Profile. SyncController refreshes goals/journal on remote change. Verified on emulator. Remaining for full parity later: focus timer, categories management UI, export, AI (Phase 7). |
 | 5 | Advanced analytics & insights | ⬜ pending |
 | 6 | Social & sharing cards | ⬜ pending |
 | 7 | AI coaching (Gemini + OpenAI) | ⬜ pending |

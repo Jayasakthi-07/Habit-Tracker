@@ -5,11 +5,17 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../auth/auth_provider.dart';
+import '../../calendar/presentation/calendar_page.dart';
+import '../../goals/presentation/goals_page.dart';
 import '../../license/license_service.dart';
 
 /// Profile / account tab: identity, premium license, and sign-out.
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
+
+  static void _push(BuildContext context, Widget page) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,6 +70,30 @@ class SettingsPage extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           _licenseCard(context, ref, license),
+          const SizedBox(height: 16),
+          GlassCard(
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: [
+                _tile(
+                  icon: Icons.flag_rounded,
+                  title: 'Goals',
+                  subtitle: 'Track targets and milestones',
+                  color: AppColors.secondary,
+                  onTap: () => _push(context, const GoalsPage()),
+                ),
+                const Divider(height: 1, color: AppColors.border),
+                _tile(
+                  icon: Icons.calendar_month_rounded,
+                  title: 'Calendar',
+                  subtitle: 'Browse completion history',
+                  color: AppColors.partial,
+                  onTap: () =>
+                      _push(context, const CalendarPage(standalone: true)),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 16),
           GlassCard(
             padding: EdgeInsets.zero,

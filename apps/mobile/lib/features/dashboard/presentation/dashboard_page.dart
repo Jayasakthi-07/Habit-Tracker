@@ -9,6 +9,8 @@ import '../../../core/theme/app_typography.dart';
 import '../../../core/utils/date_x.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../auth/auth_provider.dart';
+import '../../calendar/presentation/calendar_page.dart';
+import '../../goals/presentation/goals_page.dart';
 import '../../habits/presentation/providers/habit_providers.dart';
 import '../../habits/presentation/widgets/habit_card.dart';
 import '../../sync/sync_controller.dart';
@@ -16,6 +18,18 @@ import '../../sync/sync_controller.dart';
 /// The "Today" tab: greeting, daily progress hero, and today's scheduled habits.
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
+
+  static void _push(BuildContext context, Widget page) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+  }
+
+  Widget _headerIcon(BuildContext context, IconData icon, VoidCallback onTap) {
+    return IconButton(
+      onPressed: onTap,
+      icon: Icon(icon, color: AppColors.muted, size: 22),
+      visualDensity: VisualDensity.compact,
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,6 +68,12 @@ class DashboardPage extends ConsumerWidget {
                       ],
                     ),
                   ),
+                  _headerIcon(context, Icons.flag_outlined,
+                      () => _push(context, const GoalsPage())),
+                  const SizedBox(width: 4),
+                  _headerIcon(context, Icons.calendar_month_outlined,
+                      () => _push(context, const CalendarPage(standalone: true))),
+                  const SizedBox(width: 4),
                   const _SyncChip(),
                 ],
               ),
