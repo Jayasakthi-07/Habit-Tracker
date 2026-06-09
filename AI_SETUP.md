@@ -1,12 +1,29 @@
 # 🤖 AI Coach — API key setup (Aura Habits)
 
 > The AI Coach gives personalised habit advice grounded in your real data. It
-> supports **two engines — Google Gemini and OpenAI** — and you can switch
-> between them in the app. You only need **one** key to start; add both if you
-> want to switch. **Gemini has a generous free tier**, so it's the easiest start.
+> supports **three engines — OpenRouter, OpenAI, and Google Gemini**. You only
+> need **one** key to start.
+>
+> **Priority:** the app uses **OpenRouter first**, and **automatically falls back
+> to OpenAI** if OpenRouter is unavailable (then Gemini). You can also switch
+> manually in the coach when more than one key is configured.
 >
 > Everything you do here is clicking in the browser. When you have a key, paste
 > it to me and I'll drop it into `env.json` and rebuild — you never touch code.
+
+---
+
+## Option 0 — OpenRouter (preferred — one key, many models)
+
+1. Go to **https://openrouter.ai/keys** and sign in.
+2. Click **Create Key**, name it "Aura Habits", and copy it (starts with
+   `sk-or-...`).
+3. (Optional) add a few dollars of credit, or pick a free model — see below.
+4. 📋 **Paste it to me.** I add it as `OPENROUTER_API_KEY` in `env.json`.
+
+The default model is `openai/gpt-4o-mini` (cheap, reliable). To use a different
+or free model, set `OPENROUTER_MODEL` (e.g. `google/gemini-flash-1.5` or a
+`:free` model) — just tell me which and I'll set it.
 
 ---
 

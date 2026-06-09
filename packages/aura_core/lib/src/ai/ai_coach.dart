@@ -1,12 +1,14 @@
 /// Which AI backend powers the coach. Both are supported behind this one
 /// interface and are user-selectable (a locked product decision).
 enum AiProviderKind {
-  gemini,
-  openai;
+  openrouter,
+  openai,
+  gemini;
 
   String get label => switch (this) {
-        AiProviderKind.gemini => 'Google Gemini',
+        AiProviderKind.openrouter => 'OpenRouter',
         AiProviderKind.openai => 'OpenAI',
+        AiProviderKind.gemini => 'Google Gemini',
       };
 
   static AiProviderKind fromName(String? name, AiProviderKind fallback) {

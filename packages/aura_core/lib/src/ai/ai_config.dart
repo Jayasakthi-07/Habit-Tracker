@@ -1,33 +1,51 @@
 import 'ai_coach.dart';
 
 /// AI configuration injected at build time via `--dart-define-from-file=env.json`
-/// (never committed). Both providers are optional; the coach feature gates
+/// (never committed). All providers are optional; the coach feature gates
 /// itself on whether at least one key is present.
+///
+/// Priority order is **OpenRouter → OpenAI → Gemini**: OpenRouter is preferred
+/// (it can route to many models behind one key) and OpenAI is the fallback.
 abstract class AiConfig {
-  static const String geminiKey = String.fromEnvironment('GEMINI_API_KEY');
+  static const String openRouterKey =
+      String.fromEnvironment('OPENROUTER_API_KEY');
   static const String openAiKey = String.fromEnvironment('OPENAI_API_KEY');
+  static const String geminiKey = String.fromEnvironment('GEMINI_API_KEY');
 
   /// Models are overridable but have sensible, low-cost defaults.
-  static const String geminiModel =
-      String.fromEnvironment('GEMINI_MODEL', defaultValue: 'gemini-2.0-flash');
+  static const String openRouterModel = String.fromEnvironment(
+      'OPENROUTER_MODEL',
+      defaultValue: 'openai/gpt-4o-mini');
   static const String openAiModel =
       String.fromEnvironment('OPENAI_MODEL', defaultValue: 'gpt-4o-mini');
+  static const String geminiModel =
+      String.fromEnvironment('GEMINI_MODEL', defaultValue: 'gemini-2.0-flash');
 
-  static bool get hasGemini => geminiKey.isNotEmpty;
+  static bool get hasOpenRouter => openRouterKey.isNotEmpty;
   static bool get hasOpenAi => openAiKey.isNotEmpty;
-  static bool get anyConfigured => hasGemini || hasOpenAi;
+  static bool get hasGemini => geminiKey.isNotEmpty;
+  static bool get anyConfigured => hasOpenRouter || hasOpenAi || hasGemini;
+
+  /// Global priority order — used for default selection and fallback chains.
+  static const List<AiProviderKind> priority = [
+    AiProviderKind.openrouter,
+    AiProviderKind.openai,
+    AiProviderKind.gemini,
+  ];
 
   static bool isConfigured(AiProviderKind kind) => switch (kind) {
-        AiProviderKind.gemini => hasGemini,
+        AiProviderKind.openrouter => hasOpenRouter,
         AiProviderKind.openai => hasOpenAi,
+        AiProviderKind.gemini => hasGemini,
       };
 
-  /// The provider to actually use: the [preferred] one if it has a key,
-  /// otherwise the first configured provider, or null if none are.
+  /// The provider to use: the [preferred] one if it has a key, otherwise the
+  /// first configured provider by [priority], or null if none are configured.
   static AiProviderKind? resolve([AiProviderKind? preferred]) {
     if (preferred != null && isConfigured(preferred)) return preferred;
-    if (hasGemini) return AiProviderKind.gemini;
-    if (hasOpenAi) return AiProviderKind.openai;
+    for (final k in priority) {
+      if (isConfigured(k)) return k;
+    }
     return null;
   }
 }

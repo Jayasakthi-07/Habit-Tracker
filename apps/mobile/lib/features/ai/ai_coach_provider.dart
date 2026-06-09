@@ -44,11 +44,20 @@ class AiCoachController extends Notifier<AiCoachState> {
   static const _kProvider = 'ai_provider';
 
   static const _system =
-      'You are Aura, a warm, sharp habit coach inside the Aura Habits app. '
-      'Use the user\'s real habit data (provided below) to give specific, '
-      'actionable, encouraging advice. Be concise — 2-4 short paragraphs or a '
-      'tight bullet list. Never invent data that isn\'t given. Speak directly '
-      'to the user ("you").';
+      'You are Aura, the AI habit coach built into Aura Habits — a premium '
+      'habit-tracking app. Your sole focus is helping the user build and keep '
+      'habits using evidence-based behaviour change: habit stacking, tiny/2-minute '
+      'habits, streak protection, implementation intentions ("after X, I will Y"), '
+      'and identity-based habits ("be the kind of person who…").\n\n'
+      'Ground EVERY answer in the user\'s real data provided below — refer to their '
+      'actual habit names, streaks, and success rates. Never invent habits or '
+      'numbers that are not given. If they have no data, gently coach them to start '
+      'one tiny keystone habit.\n\n'
+      'Style: warm, direct, motivating, and specific to a habit-tracker context. '
+      'Be concise — at most ~4 short sentences or up to 4 bullets. When relevant, '
+      'end with ONE concrete next action. Keep advice safe and non-medical.\n\n'
+      'Formatting: plain text only. Do NOT use markdown — no **bold**, no #, no '
+      'backticks. For lists, start each line with "• ".';
 
   HabitRepository get _repo => ref.read(habitRepositoryProvider);
 
@@ -77,18 +86,20 @@ class AiCoachController extends Notifier<AiCoachState> {
     final q = question.trim();
     if (q.isEmpty || state.loading) return;
 
-    final coach = AiCoachFactory.resolve(state.provider);
+    // Priority chain: preferred/selected provider first, then OpenRouter →
+    // OpenAI → Gemini. If the first provider errors, we fall back to the next.
+    final chain = AiCoachFactory.fallbackChain(state.provider);
     final history = [...state.messages, AiMessage(fromUser: true, text: q)];
 
-    if (coach == null) {
+    if (chain.isEmpty) {
       state = state.copyWith(
         messages: [
           ...history,
           const AiMessage(
             fromUser: false,
             text:
-                'AI coaching isn\'t set up yet. Add a Gemini or OpenAI API key '
-                '(see the setup guide) to unlock your coach.',
+                'AI coaching isn\'t set up yet. Add an OpenRouter or OpenAI API '
+                'key (see AI_SETUP.md) to unlock your coach.',
           ),
         ],
       );
@@ -96,28 +107,34 @@ class AiCoachController extends Notifier<AiCoachState> {
     }
 
     state = state.copyWith(messages: history, loading: true);
-    try {
-      final reply = await coach.chat(system: _system, user: _buildPrompt(q));
-      state = state.copyWith(
-        messages: [...history, AiMessage(fromUser: false, text: reply)],
-        loading: false,
-      );
-    } on AiException catch (e) {
-      state = state.copyWith(
-        messages: [...history, AiMessage(fromUser: false, text: e.message)],
-        loading: false,
-      );
-    } catch (_) {
-      state = state.copyWith(
-        messages: [
-          ...history,
-          const AiMessage(
-              fromUser: false,
-              text: 'Something went wrong reaching the AI. Please try again.'),
-        ],
-        loading: false,
-      );
+    final prompt = _buildPrompt(q);
+    String? lastError;
+    for (final coach in chain) {
+      try {
+        final reply = await coach.chat(system: _system, user: prompt);
+        state = state.copyWith(
+          messages: [...history, AiMessage(fromUser: false, text: reply)],
+          loading: false,
+          provider: coach.kind, // reflect the provider that actually answered
+        );
+        return;
+      } on AiException catch (e) {
+        lastError = e.message; // try the next provider in the chain
+      } catch (_) {
+        lastError = 'Something went wrong reaching the AI.';
+      }
     }
+
+    // Every provider failed.
+    state = state.copyWith(
+      messages: [
+        ...history,
+        AiMessage(
+            fromUser: false,
+            text: '${lastError ?? 'The AI is unavailable.'} Please try again.'),
+      ],
+      loading: false,
+    );
   }
 
   /// Composes the user turn: a compact snapshot of their habit data followed by
