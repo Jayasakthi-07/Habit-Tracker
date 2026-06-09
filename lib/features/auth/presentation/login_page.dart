@@ -97,15 +97,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       case _Mode.signIn:
         err = await ctrl.signInWithEmail(email: email, password: pass);
       case _Mode.signUp:
-        err = await ctrl.signUpWithEmail(name: name, email: email, password: pass);
-        if (err == null && mounted) {
+        final r = await ctrl.signUpWithEmail(name: name, email: email, password: pass);
+        if (!mounted) return;
+        if (r.error == null) {
           setState(() {
             _loading = false;
-            _mode = _Mode.verify;
-            _info = 'We emailed a 6-digit verification code to $email.';
+            if (r.needsVerification) {
+              _mode = _Mode.verify;
+              _info = 'We emailed a 6-digit verification code to $email.';
+            }
+            // else: confirmation disabled → already signed in; router redirects.
           });
           return;
         }
+        err = r.error;
       case _Mode.verify:
         err = await ctrl.verifyEmailCode(email: email, code: code);
       case _Mode.forgot:

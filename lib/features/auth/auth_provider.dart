@@ -137,21 +137,29 @@ class AuthController extends Notifier<UserProfile?> {
 
   // ---- Email + password ----
 
-  /// Creates the account and emails a 6-digit verification code. Caller should
-  /// then collect the code and call [verifyEmailCode]. Returns null on success.
-  Future<String?> signUpWithEmail({
+  /// Creates the account. Returns `(error, needsVerification)`:
+  /// - `error != null` → failed.
+  /// - `needsVerification == true` → a 6-digit code was emailed; call
+  ///   [verifyEmailCode] next.
+  /// - `needsVerification == false` and no error → confirmation is disabled and
+  ///   the user is already signed in.
+  Future<({String? error, bool needsVerification})> signUpWithEmail({
     required String name,
     required String email,
     required String password,
   }) async {
-    if (_auth == null) return _noCloud;
+    if (_auth == null) return (error: _noCloud, needsVerification: false);
     try {
-      await _auth!.signUpWithEmail(email: email, password: password, fullName: name);
-      return null;
+      final res = await _auth!.signUpWithEmail(email: email, password: password, fullName: name);
+      if (res.session != null && res.user != null) {
+        _persist(_profileFromSupabase(res.user!), remember: true);
+        return (error: null, needsVerification: false);
+      }
+      return (error: null, needsVerification: true);
     } on AuthException catch (e) {
-      return e.message;
+      return (error: e.message, needsVerification: false);
     } catch (_) {
-      return 'Could not create your account. Please try again.';
+      return (error: 'Could not create your account. Please try again.', needsVerification: false);
     }
   }
 

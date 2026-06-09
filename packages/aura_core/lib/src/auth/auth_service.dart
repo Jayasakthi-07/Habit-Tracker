@@ -35,14 +35,18 @@ class AuthService {
 
   // ---- Email + password ----
 
-  /// Creates the account and triggers an email containing the verification code.
-  /// The account is not active until [verifyEmailOtp] succeeds.
-  Future<void> signUpWithEmail({
+  /// Creates the account. Behaviour depends on the Supabase email setting:
+  /// - **Confirm email ON**  → returns a user but no session; a verification
+  ///   code is emailed and [verifyEmailOtp] must be called.
+  /// - **Confirm email OFF** → returns a session immediately (signed in).
+  ///
+  /// Inspect `response.session` to tell which happened.
+  Future<AuthResponse> signUpWithEmail({
     required String email,
     required String password,
     String? fullName,
-  }) async {
-    await _auth.signUp(
+  }) {
+    return _auth.signUp(
       email: email,
       password: password,
       data: fullName != null && fullName.isNotEmpty ? {'full_name': fullName} : null,
