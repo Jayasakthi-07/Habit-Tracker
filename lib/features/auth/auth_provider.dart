@@ -7,15 +7,13 @@ import '../../core/config/google_auth_config.dart';
 import '../../core/storage/hive_service.dart';
 import 'google_auth_service.dart';
 
-/// The authenticated (or guest) user profile, surfaced to the UI.
-///
-/// Backed by Supabase when signed in with an account, or held locally for guest
-/// / offline mode. Premium is a local flag (offline license keys).
+/// The authenticated user profile, surfaced to the UI. Always backed by a
+/// Supabase account (there is no guest mode). Premium is a local flag (offline
+/// license keys).
 class UserProfile {
   const UserProfile({
     required this.name,
     this.email = '',
-    this.isGuest = false,
     this.isPremium = false,
     this.avatarSeed = 0,
     this.photoUrl = '',
@@ -23,7 +21,6 @@ class UserProfile {
 
   final String name;
   final String email;
-  final bool isGuest;
   final bool isPremium;
   final int avatarSeed;
   final String photoUrl;
@@ -38,7 +35,6 @@ class UserProfile {
   Map<String, dynamic> toJson() => {
         'name': name,
         'email': email,
-        'isGuest': isGuest,
         'isPremium': isPremium,
         'avatarSeed': avatarSeed,
         'photoUrl': photoUrl,
@@ -47,7 +43,6 @@ class UserProfile {
   factory UserProfile.fromJson(Map json) => UserProfile(
         name: json['name'] as String? ?? 'User',
         email: json['email'] as String? ?? '',
-        isGuest: json['isGuest'] as bool? ?? false,
         isPremium: json['isPremium'] as bool? ?? false,
         avatarSeed: json['avatarSeed'] as int? ?? 0,
         photoUrl: json['photoUrl'] as String? ?? '',
@@ -56,21 +51,20 @@ class UserProfile {
   UserProfile copyWith({String? name, String? email, bool? isPremium}) => UserProfile(
         name: name ?? this.name,
         email: email ?? this.email,
-        isGuest: isGuest,
         isPremium: isPremium ?? this.isPremium,
         avatarSeed: avatarSeed,
         photoUrl: photoUrl,
       );
 }
 
-/// Manages the current session via Supabase (email + Google) with a local
-/// guest/offline fallback. Returns `null` when nobody is signed in.
+/// Manages the current session via Supabase (email + Google). Returns `null`
+/// when nobody is signed in — the app requires an account (no guest mode).
 class AuthController extends Notifier<UserProfile?> {
   static const _kProfile = 'current_profile';
   static const _kRemember = 'remember_me';
   static const _kPremium = 'is_premium';
   static const _noCloud =
-      'Cloud sign-in is unavailable right now. You can continue as guest.';
+      'Cloud sign-in is unavailable right now. Please check your connection and try again.';
 
   AuthService? _auth;
   StreamSubscription<AuthState>? _sub;
@@ -84,17 +78,10 @@ class AuthController extends Notifier<UserProfile?> {
       ref.onDispose(() => _sub?.cancel());
     }
 
-    // A live Supabase session wins; otherwise restore a remembered local/guest
-    // profile so offline use keeps working.
+    // The Supabase session is the single source of truth. supabase_flutter
+    // persists it locally, so this also works offline after a prior sign-in.
     final supaUser = _auth?.currentUser;
     if (supaUser != null) return _profileFromSupabase(supaUser);
-
-    final box = HiveService.dynBox(Boxes.profile);
-    final remember = box.get(_kRemember, defaultValue: false) as bool;
-    final stored = box.get(_kProfile);
-    if (remember && stored != null) {
-      return UserProfile.fromJson(Map.from(stored as Map));
-    }
     return null;
   }
 
@@ -103,7 +90,7 @@ class AuthController extends Notifier<UserProfile?> {
     if (user != null) {
       _persist(_profileFromSupabase(user), remember: true);
     } else if (data.event == AuthChangeEvent.signedOut) {
-      if (state != null && !state!.isGuest) state = null;
+      state = null;
     }
   }
 
@@ -246,11 +233,7 @@ class AuthController extends Notifier<UserProfile?> {
     }
   }
 
-  // ---- Guest / profile / premium / sign out ----
-
-  void continueAsGuest() {
-    _persist(const UserProfile(name: 'Guest', isGuest: true), remember: false);
-  }
+  // ---- Profile / premium / sign out ----
 
   void updateProfile({String? name, String? email}) {
     final current = state;

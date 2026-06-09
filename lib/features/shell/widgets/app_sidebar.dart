@@ -57,7 +57,7 @@ class AppSidebar extends ConsumerWidget {
                   decoration: BoxDecoration(
                     gradient: AppColors.primaryGradient,
                     borderRadius: BorderRadius.circular(12),
-                    boxShadow: AppShadows.glow(AppColors.primary, strength: 0.4),
+                    boxShadow: AppShadows.glow(AppColors.primary, strength: 0.2),
                   ),
                   child: const Icon(Icons.bolt_rounded, color: Color(0xFF002417), size: 22),
                 ),
@@ -175,7 +175,7 @@ class _SidebarTileState extends State<_SidebarTile> {
                   decoration: BoxDecoration(
                     color: AppColors.primary,
                     shape: BoxShape.circle,
-                    boxShadow: AppShadows.glow(AppColors.primary, strength: 0.8),
+                    boxShadow: AppShadows.glow(AppColors.primary, strength: 0.25),
                   ),
                 ),
             ],
@@ -213,7 +213,7 @@ class _UserCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                 Text(
-                  (u?.isPremium ?? false) ? 'Premium' : (u?.isGuest ?? false) ? 'Guest' : 'Free plan',
+                  (u?.isPremium ?? false) ? 'Premium' : 'Free plan',
                   style: TextStyle(
                     fontSize: 11,
                     color: (u?.isPremium ?? false) ? AppColors.primary : AppColors.muted,

@@ -13,7 +13,7 @@ class GlassCard extends StatefulWidget {
     required this.child,
     this.padding = AppSpacing.cardPadding,
     this.radius = AppSpacing.radiusLg,
-    this.blur = 18,
+    this.blur = 8,
     this.onTap,
     this.hoverable = false,
     this.borderColor,
@@ -66,7 +66,7 @@ class _GlassCardState extends State<GlassCard> {
         boxShadow: [
           ...AppShadows.card,
           if (hover && widget.glowColor != null)
-            ...AppShadows.glow(widget.glowColor!, strength: 0.25),
+            ...AppShadows.glow(widget.glowColor!, strength: 0.12),
         ],
       ),
       child: ClipRRect(
@@ -75,7 +75,7 @@ class _GlassCardState extends State<GlassCard> {
           filter: ImageFilter.blur(sigmaX: widget.blur, sigmaY: widget.blur),
           child: Container(
             padding: widget.padding,
-            color: AppColors.alpha(AppColors.card, 0.55),
+            color: AppColors.alpha(AppColors.card, 0.82),
             child: widget.child,
           ),
         ),

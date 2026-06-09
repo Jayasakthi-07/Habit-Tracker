@@ -181,7 +181,7 @@ class _StatusToggle extends StatelessWidget {
               color: done ? Colors.transparent : (active ? status.color : AppColors.borderStrong),
               width: 1.5,
             ),
-            boxShadow: done ? AppShadows.glow(color, strength: 0.5) : null,
+            boxShadow: done ? AppShadows.glow(color, strength: 0.2) : null,
           ),
           child: Icon(
             active ? status.icon : Icons.check_rounded,

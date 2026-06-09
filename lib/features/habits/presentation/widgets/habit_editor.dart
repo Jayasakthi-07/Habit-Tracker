@@ -468,7 +468,7 @@ class _ColorPicker extends StatelessWidget {
                   color: c.toARGB32() == selected ? Colors.white : Colors.transparent,
                   width: 2,
                 ),
-                boxShadow: c.toARGB32() == selected ? AppShadows.glow(c, strength: 0.6) : null,
+                boxShadow: c.toARGB32() == selected ? AppShadows.glow(c, strength: 0.25) : null,
               ),
               child: c.toARGB32() == selected
                   ? const Icon(Icons.check_rounded, size: 16, color: Colors.black)

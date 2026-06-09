@@ -62,7 +62,7 @@ class _AmbientBackground extends StatelessWidget {
                     center: const Alignment(-0.95, -1.1),
                     radius: 1.25,
                     colors: [
-                      AppColors.alpha(AppColors.ambientA, 0.16),
+                      AppColors.alpha(AppColors.ambientA, 0.09),
                       Colors.transparent,
                     ],
                     stops: const [0, 0.7],
@@ -78,7 +78,7 @@ class _AmbientBackground extends StatelessWidget {
                     center: const Alignment(1.15, 1.2),
                     radius: 1.15,
                     colors: [
-                      AppColors.alpha(AppColors.ambientB, 0.13),
+                      AppColors.alpha(AppColors.ambientB, 0.07),
                       Colors.transparent,
                     ],
                     stops: const [0, 0.65],
@@ -94,7 +94,7 @@ class _AmbientBackground extends StatelessWidget {
                     center: const Alignment(0.3, -0.2),
                     radius: 1.4,
                     colors: [
-                      AppColors.alpha(AppColors.ambientC, 0.05),
+                      AppColors.alpha(AppColors.ambientC, 0.03),
                       Colors.transparent,
                     ],
                     stops: const [0, 0.55],

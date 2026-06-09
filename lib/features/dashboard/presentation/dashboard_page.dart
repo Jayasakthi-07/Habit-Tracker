@@ -230,7 +230,7 @@ class _LevelBar extends ConsumerWidget {
             decoration: BoxDecoration(
               gradient: AppColors.primaryGradient,
               borderRadius: BorderRadius.circular(14),
-              boxShadow: AppShadows.glow(AppColors.primary, strength: 0.4),
+              boxShadow: AppShadows.glow(AppColors.primary, strength: 0.18),
             ),
             child: Text('${game.level}',
                 style: const TextStyle(color: Color(0xFF002417), fontWeight: FontWeight.w800, fontSize: 20)),

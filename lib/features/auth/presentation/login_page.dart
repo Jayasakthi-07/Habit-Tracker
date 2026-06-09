@@ -14,9 +14,9 @@ enum _Mode { signIn, signUp, verify, forgot }
 
 /// Premium split-panel authentication screen.
 ///
-/// Supports email + password sign-up with a 6-digit email verification code,
-/// sign-in, password reset, Google sign-in, and an offline guest fallback —
-/// all backed by Supabase (except guest, which stays local).
+/// Supports email + password sign-up with an email verification code, sign-in,
+/// password reset, and Google sign-in — all backed by Supabase. An account is
+/// required to use the app.
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
@@ -320,16 +320,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 ),
                 const SizedBox(height: 16),
                 _GoogleButton(loading: _loading, onPressed: _loading ? null : _googleSignIn),
-                const SizedBox(height: 14),
-                Center(
-                  child: TextButton.icon(
-                    onPressed: _loading ? null : () => ref.read(authProvider.notifier).continueAsGuest(),
-                    icon: const Icon(Icons.person_outline_rounded, size: 16, color: AppColors.muted),
-                    label: const Text('Continue offline as guest',
-                        style: TextStyle(color: AppColors.muted, fontSize: 13)),
-                  ),
-                ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 12),
                 _toggleRow(),
               ],
             ],

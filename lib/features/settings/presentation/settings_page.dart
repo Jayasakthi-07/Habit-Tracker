@@ -113,7 +113,7 @@ class _ProfileCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(user?.name ?? 'User', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 17)),
-                  Text(user?.email.isNotEmpty == true ? user!.email : (user?.isGuest == true ? 'Guest session' : 'No email'),
+                  Text(user?.email.isNotEmpty == true ? user!.email : 'No email',
                       style: const TextStyle(color: AppColors.muted, fontSize: 13)),
                 ],
               ),
