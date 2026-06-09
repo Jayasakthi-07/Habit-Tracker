@@ -201,13 +201,19 @@ class _StatusToggleState extends State<_StatusToggle> {
                 duration: const Duration(milliseconds: 220),
                 transitionBuilder: (child, anim) =>
                     ScaleTransition(scale: anim, child: FadeTransition(opacity: anim, child: child)),
+                // Completed shows a clean, bold white check (not a circle-in-a-
+                // circle); other active states use their own glyph; pending is a
+                // faint check hinting the control is tappable.
                 child: Icon(
-                  active ? status.icon : Icons.check_rounded,
+                  done
+                      ? Icons.check_rounded
+                      : (active ? status.icon : Icons.check_rounded),
                   key: ValueKey(status),
-                  size: 19,
+                  size: done ? 24 : 18,
+                  weight: done ? 700 : 400,
                   color: done
-                      ? const Color(0xFF002417)
-                      : (active ? status.color : AppColors.faint),
+                      ? Colors.white
+                      : (active ? status.color : AppColors.alpha(AppColors.faint, 0.7)),
                 ),
               ),
             ),
