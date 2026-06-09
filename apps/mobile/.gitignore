@@ -4,10 +4,6 @@
 *.pyc
 *.swp
 .DS_Store
-
-# Local secrets / environment (Supabase URL+anon key, AI keys, etc.)
-env.json
-env.local.json
 .atom/
 .build/
 .buildlog/
@@ -47,6 +43,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# Mobile build artifacts / scratch
-apps/mobile/.run_*.png
