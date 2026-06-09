@@ -257,7 +257,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 child: TextButton(
                                   onPressed:
                                       _loading ? null : () => _switch(_Mode.forgot),
-                                  child: const Text('Forgot password?',
+                                  child: Text('Forgot password?',
                                       style: TextStyle(
                                           color: AppColors.muted, fontSize: 12)),
                                 ),
@@ -282,13 +282,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                             color: AppColors.secondary,
                                             fontSize: 13)),
                                   ),
-                                  const Text('·',
+                                  Text('·',
                                       style: TextStyle(color: AppColors.faint)),
                                   TextButton(
                                     onPressed: _loading
                                         ? null
                                         : () => _switch(_Mode.signUp),
-                                    child: const Text('Change email',
+                                    child: Text('Change email',
                                         style: TextStyle(
                                             color: AppColors.muted,
                                             fontSize: 13)),
@@ -302,7 +302,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 child: TextButton(
                                   onPressed:
                                       _loading ? null : () => _switch(_Mode.signIn),
-                                  child: const Text('Back to sign in',
+                                  child: Text('Back to sign in',
                                       style: TextStyle(
                                           color: AppColors.muted, fontSize: 13)),
                                 ),
@@ -312,7 +312,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               const SizedBox(height: 18),
                               Row(
                                 children: [
-                                  const Expanded(
+                                  Expanded(
                                       child: Divider(color: AppColors.border)),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -320,7 +320,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     child: Text('or',
                                         style: theme.textTheme.bodySmall),
                                   ),
-                                  const Expanded(
+                                  Expanded(
                                       child: Divider(color: AppColors.border)),
                                 ],
                               ),
@@ -385,7 +385,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(isSignUp ? 'Already have an account?' : 'New to Aura Habits?',
-            style: const TextStyle(color: AppColors.muted, fontSize: 13)),
+            style: TextStyle(color: AppColors.muted, fontSize: 13)),
         TextButton(
           onPressed: _loading
               ? null
@@ -416,11 +416,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscure,
-      style: const TextStyle(color: AppColors.text),
+      style: TextStyle(color: AppColors.text),
       onSubmitted: (_) => _submit(),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: AppColors.muted),
+        labelStyle: TextStyle(color: AppColors.muted),
         prefixIcon: Icon(icon, size: 18, color: AppColors.muted),
         suffixIcon: suffix,
         filled: true,
@@ -440,7 +440,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       maxLength: 8,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       onSubmitted: (_) => _submit(),
-      style: const TextStyle(
+      style: TextStyle(
         color: AppColors.text,
         fontSize: 24,
         fontWeight: FontWeight.w700,
@@ -449,13 +449,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       decoration: InputDecoration(
         counterText: '',
         hintText: 'Enter code',
-        hintStyle: const TextStyle(
+        hintStyle: TextStyle(
             color: AppColors.faint, letterSpacing: 1, fontSize: 16),
         filled: true,
         fillColor: AppColors.alpha(Colors.white, 0.03),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),

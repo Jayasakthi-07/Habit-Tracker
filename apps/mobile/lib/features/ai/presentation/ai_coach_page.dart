@@ -71,7 +71,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
         actions: [
           if (providers.length > 1)
             PopupMenuButton<AiProviderKind>(
-              icon: const Icon(Icons.tune_rounded, color: AppColors.muted),
+              icon: Icon(Icons.tune_rounded, color: AppColors.muted),
               color: AppColors.cardElevated,
               onSelected: ctrl.setProvider,
               itemBuilder: (_) => [
@@ -87,7 +87,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                           const SizedBox(width: 16),
                         const SizedBox(width: 8),
                         Text(p.label,
-                            style: const TextStyle(color: AppColors.text)),
+                            style: TextStyle(color: AppColors.text)),
                       ],
                     ),
                   ),
@@ -95,7 +95,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
             ),
           if (state.messages.isNotEmpty)
             IconButton(
-              icon: const Icon(Icons.refresh_rounded, color: AppColors.muted),
+              icon: Icon(Icons.refresh_rounded, color: AppColors.muted),
               onPressed: ctrl.clear,
             ),
         ],
@@ -150,14 +150,14 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
               : 'Add a Gemini or OpenAI API key to unlock personalised coaching. '
                   'See ANDROID setup notes / AI_SETUP.md.',
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
               color: AppColors.muted, fontSize: 14, height: 1.5),
         ),
         if (configured) ...[
           const SizedBox(height: 8),
           Center(
             child: Text('Powered by ${provider?.label ?? 'AI'}',
-                style: const TextStyle(color: AppColors.faint, fontSize: 12)),
+                style: TextStyle(color: AppColors.faint, fontSize: 12)),
           ),
           const SizedBox(height: 24),
           Wrap(
@@ -234,23 +234,23 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
             Expanded(
               child: TextField(
                 controller: _input,
-                style: const TextStyle(color: AppColors.text),
+                style: TextStyle(color: AppColors.text),
                 textInputAction: TextInputAction.send,
                 onSubmitted: (_) => _send(),
                 decoration: InputDecoration(
                   hintText: 'Ask your coach…',
-                  hintStyle: const TextStyle(color: AppColors.faint),
+                  hintStyle: TextStyle(color: AppColors.faint),
                   filled: true,
                   fillColor: AppColors.surface,
                   contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 12),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
-                    borderSide: const BorderSide(color: AppColors.border),
+                    borderSide: BorderSide(color: AppColors.border),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
-                    borderSide: const BorderSide(color: AppColors.border),
+                    borderSide: BorderSide(color: AppColors.border),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
@@ -291,7 +291,7 @@ class _Typing extends StatelessWidget {
         padding: const EdgeInsets.all(14),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          children: const [
+          children: [
             SizedBox(
               width: 16,
               height: 16,

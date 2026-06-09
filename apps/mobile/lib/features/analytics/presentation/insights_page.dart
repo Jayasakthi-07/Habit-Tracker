@@ -50,7 +50,7 @@ class _InsightsPageState extends ConsumerState<InsightsPage> {
                   style: Theme.of(context).textTheme.headlineMedium),
               const Spacer(),
               IconButton(
-                icon: const Icon(Icons.ios_share_rounded,
+                icon: Icon(Icons.ios_share_rounded,
                     color: AppColors.muted),
                 onPressed: () => ShareCardPage.open(
                   context,
@@ -137,7 +137,7 @@ class _InsightsPageState extends ConsumerState<InsightsPage> {
               const Spacer(),
               Text(
                   '${achievements.where((a) => a.unlocked).length} / ${achievements.length}',
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: AppColors.muted,
                       fontSize: 14,
                       fontWeight: FontWeight.w600)),
@@ -202,7 +202,7 @@ class _InsightsPageState extends ConsumerState<InsightsPage> {
             child: Text(name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(color: AppColors.text, fontSize: 13)),
+                style: TextStyle(color: AppColors.text, fontSize: 13)),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -221,7 +221,7 @@ class _InsightsPageState extends ConsumerState<InsightsPage> {
             width: 38,
             child: Text('${(rate * 100).round()}%',
                 textAlign: TextAlign.right,
-                style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+                style: TextStyle(color: AppColors.muted, fontSize: 12)),
           ),
         ],
       ),
@@ -294,18 +294,18 @@ class _LevelCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Level ${game.level}',
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: AppColors.text,
                             fontSize: 17,
                             fontWeight: FontWeight.w700)),
                     Text('${game.xp} XP · ${game.coins} coins',
                         style:
-                            const TextStyle(color: AppColors.muted, fontSize: 13)),
+                            TextStyle(color: AppColors.muted, fontSize: 13)),
                   ],
                 ),
               ),
               Text('${game.xpToNext} to next',
-                  style: const TextStyle(color: AppColors.faint, fontSize: 12)),
+                  style: TextStyle(color: AppColors.faint, fontSize: 12)),
             ],
           ),
           const SizedBox(height: 14),
@@ -347,7 +347,7 @@ class _StatCard extends StatelessWidget {
           Text(value, style: AppTypography.numeric(24)),
           const SizedBox(height: 2),
           Text(label,
-              style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+              style: TextStyle(color: AppColors.muted, fontSize: 12)),
         ],
       ),
     );
@@ -397,7 +397,7 @@ class _AchievementCard extends StatelessWidget {
           Text(a.description,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: AppColors.faint, fontSize: 11)),
+              style: TextStyle(color: AppColors.faint, fontSize: 11)),
           const SizedBox(height: 6),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
@@ -421,7 +421,7 @@ class _TrendChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (trend.isEmpty) {
-      return const Center(
+      return Center(
         child: Text('No data yet', style: TextStyle(color: AppColors.muted)),
       );
     }

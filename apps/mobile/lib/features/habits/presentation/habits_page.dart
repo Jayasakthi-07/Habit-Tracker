@@ -31,7 +31,7 @@ class HabitsPage extends ConsumerWidget {
                       style: Theme.of(context).textTheme.headlineMedium),
                   const Spacer(),
                   Text('${habits.length}',
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: AppColors.muted, fontSize: 15)),
                 ],
               ),
@@ -77,7 +77,7 @@ class HabitsPage extends ConsumerWidget {
             Text('No habits yet',
                 style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Create your first habit and start a streak.\nIt syncs to all your devices automatically.',
               textAlign: TextAlign.center,
               style: TextStyle(color: AppColors.muted, fontSize: 14, height: 1.5),

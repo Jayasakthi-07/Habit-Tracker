@@ -23,7 +23,7 @@ class WeeklyChart extends StatelessWidget {
             getTooltipColor: (_) => AppColors.cardElevated,
             getTooltipItem: (group, _, rod, __) => BarTooltipItem(
               '${(rod.toY * 100).round()}%',
-              const TextStyle(color: AppColors.text, fontWeight: FontWeight.w600, fontSize: 12),
+              TextStyle(color: AppColors.text, fontWeight: FontWeight.w600, fontSize: 12),
             ),
           ),
         ),
@@ -41,7 +41,7 @@ class WeeklyChart extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(date.weekdayShort.substring(0, 1),
-                      style: const TextStyle(fontSize: 11, color: AppColors.muted)),
+                      style: TextStyle(fontSize: 11, color: AppColors.muted)),
                 );
               },
             ),

@@ -58,7 +58,7 @@ class DashboardPage extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('${greeting()},',
-                            style: const TextStyle(
+                            style: TextStyle(
                                 color: AppColors.muted, fontSize: 14)),
                         const SizedBox(height: 2),
                         Text(
@@ -110,7 +110,7 @@ class DashboardPage extends ConsumerWidget {
                         ? 'Nothing scheduled today.\nTap + to add a habit.'
                         : 'All done for today 🎉',
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: AppColors.muted, fontSize: 14, height: 1.5),
                   ),
                 ),
@@ -162,7 +162,7 @@ class _HeroCard extends StatelessWidget {
                   total == 0
                       ? 'No habits scheduled'
                       : '$completed of $total completed today',
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: AppColors.muted, fontSize: 14),
                 ),
               ],

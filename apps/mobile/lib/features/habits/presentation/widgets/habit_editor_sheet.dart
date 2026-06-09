@@ -142,13 +142,13 @@ class _EditorState extends ConsumerState<_Editor> {
               const SizedBox(height: 18),
               TextField(
                 controller: _name,
-                style: const TextStyle(color: AppColors.text),
+                style: TextStyle(color: AppColors.text),
                 decoration: const InputDecoration(labelText: 'Name'),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: _description,
-                style: const TextStyle(color: AppColors.text),
+                style: TextStyle(color: AppColors.text),
                 decoration: const InputDecoration(
                     labelText: 'Description (optional)'),
               ),
@@ -210,7 +210,7 @@ class _EditorState extends ConsumerState<_Editor> {
   }
 
   Widget _label(String t) => Text(t,
-      style: const TextStyle(
+      style: TextStyle(
           color: AppColors.muted, fontSize: 13, fontWeight: FontWeight.w600));
 
   Widget _iconPicker() {

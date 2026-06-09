@@ -87,7 +87,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
           ),
           if (selectedHabits.isEmpty)
             SliverToBoxAdapter(
-              child: const Padding(
+              child: Padding(
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 child: Center(
                   child: Text('No habits scheduled this day.',
@@ -132,7 +132,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
           child: Text(
             _month.monthLabel,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: AppColors.text),
@@ -154,7 +154,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
           .map((l) => Expanded(
                 child: Center(
                   child: Text(l,
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: AppColors.faint,
                           fontSize: 11,
                           fontWeight: FontWeight.w600)),

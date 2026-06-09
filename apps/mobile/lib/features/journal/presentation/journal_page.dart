@@ -78,7 +78,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                         style: const TextStyle(fontSize: 18)),
                     const SizedBox(width: 6),
                     Text('avg ${avg.toStringAsFixed(1)}',
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: AppColors.muted, fontSize: 13)),
                   ],
                 ),
@@ -100,19 +100,19 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                 TextField(
                   controller: _text,
                   maxLines: 3,
-                  style: const TextStyle(color: AppColors.text),
+                  style: TextStyle(color: AppColors.text),
                   decoration: InputDecoration(
                     hintText: 'Write a few words about your day…',
-                    hintStyle: const TextStyle(color: AppColors.faint),
+                    hintStyle: TextStyle(color: AppColors.faint),
                     filled: true,
                     fillColor: AppColors.alpha(Colors.white, 0.03),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                      borderSide: const BorderSide(color: AppColors.border),
+                      borderSide: BorderSide(color: AppColors.border),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                      borderSide: const BorderSide(color: AppColors.border),
+                      borderSide: BorderSide(color: AppColors.border),
                     ),
                   ),
                 ),
@@ -192,7 +192,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                   Row(
                     children: [
                       Text(e.date.pretty,
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: AppColors.text,
                               fontSize: 13,
                               fontWeight: FontWeight.w600)),
@@ -204,7 +204,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                   if (e.text.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(e.text,
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: AppColors.muted, fontSize: 13, height: 1.4)),
                   ],
                 ],
@@ -212,7 +212,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
             ),
             GestureDetector(
               onTap: () => ref.read(journalProvider.notifier).delete(e.date),
-              child: const Padding(
+              child: Padding(
                 padding: EdgeInsets.all(4),
                 child: Icon(Icons.close_rounded,
                     size: 16, color: AppColors.faint),

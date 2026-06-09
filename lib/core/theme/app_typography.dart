@@ -30,25 +30,26 @@ abstract class AppTypography {
   static TextStyle _f(
     double size,
     FontWeight weight, {
-    Color color = AppColors.text,
+    Color? color,
     double? height,
     double letterSpacing = 0,
   }) {
     return GoogleFonts.inter(
       fontSize: size,
       fontWeight: weight,
-      color: color,
+      color: color ?? AppColors.text,
       height: height,
       letterSpacing: letterSpacing,
     );
   }
 
   /// Tabular figures for animated counters / stats.
-  static TextStyle numeric(double size, {FontWeight weight = FontWeight.w700, Color color = AppColors.text}) {
+  static TextStyle numeric(double size,
+      {FontWeight weight = FontWeight.w700, Color? color}) {
     return GoogleFonts.spaceGrotesk(
       fontSize: size,
       fontWeight: weight,
-      color: color,
+      color: color ?? AppColors.text,
       fontFeatures: const [FontFeature.tabularFigures()],
     );
   }

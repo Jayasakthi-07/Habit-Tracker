@@ -117,7 +117,7 @@ class _SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       onChanged: onChanged,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         hintText: 'Search habits…',
         prefixIcon: Icon(Icons.search_rounded, size: 19, color: AppColors.muted),
       ),

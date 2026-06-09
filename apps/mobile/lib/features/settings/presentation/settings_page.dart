@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/theme_controller.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../ai/presentation/ai_coach_page.dart';
 import '../../auth/auth_provider.dart';
@@ -40,13 +41,13 @@ class SettingsPage extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(profile?.name ?? 'User',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
                               color: AppColors.text)),
                       const SizedBox(height: 3),
                       Text(profile?.email ?? '',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 13, color: AppColors.muted)),
                     ],
                   ),
@@ -70,6 +71,8 @@ class SettingsPage extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 16),
+          _appearanceCard(context, ref),
+          const SizedBox(height: 16),
           _licenseCard(context, ref, license),
           const SizedBox(height: 16),
           GlassCard(
@@ -83,7 +86,7 @@ class SettingsPage extends ConsumerWidget {
                   color: AppColors.primary,
                   onTap: () => _push(context, const AiCoachPage()),
                 ),
-                const Divider(height: 1, color: AppColors.border),
+                Divider(height: 1, color: AppColors.border),
                 _tile(
                   icon: Icons.flag_rounded,
                   title: 'Goals',
@@ -91,7 +94,7 @@ class SettingsPage extends ConsumerWidget {
                   color: AppColors.secondary,
                   onTap: () => _push(context, const GoalsPage()),
                 ),
-                const Divider(height: 1, color: AppColors.border),
+                Divider(height: 1, color: AppColors.border),
                 _tile(
                   icon: Icons.calendar_month_rounded,
                   title: 'Calendar',
@@ -114,7 +117,7 @@ class SettingsPage extends ConsumerWidget {
                   subtitle: 'Your habits sync across all your devices',
                   color: AppColors.primary,
                 ),
-                const Divider(height: 1, color: AppColors.border),
+                Divider(height: 1, color: AppColors.border),
                 _tile(
                   icon: Icons.logout_rounded,
                   title: 'Sign out',
@@ -126,9 +129,75 @@ class SettingsPage extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 24),
-          const Center(
+          Center(
             child: Text('Aura Habits · v1.0.0',
                 style: TextStyle(color: AppColors.faint, fontSize: 12)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _appearanceCard(BuildContext context, WidgetRef ref) {
+    final mode = ref.watch(themeModeProvider);
+    final ctrl = ref.read(themeModeProvider.notifier);
+    Widget seg(ThemeMode m, IconData icon, String label) {
+      final sel = mode == m;
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => ctrl.setMode(m),
+          child: AnimatedContainer(
+            duration: AppSpacing.fast,
+            margin: const EdgeInsets.all(4),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: sel
+                  ? AppColors.alpha(AppColors.primary, 0.16)
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              border: Border.all(
+                  color: sel ? AppColors.primary : Colors.transparent),
+            ),
+            child: Column(
+              children: [
+                Icon(icon,
+                    size: 20, color: sel ? AppColors.primary : AppColors.muted),
+                const SizedBox(height: 6),
+                Text(label,
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: sel ? AppColors.primary : AppColors.muted)),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return GlassCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.palette_outlined,
+                  color: AppColors.secondary, size: 20),
+              const SizedBox(width: 10),
+              Text('Appearance',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.text)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              seg(ThemeMode.system, Icons.brightness_auto_rounded, 'System'),
+              seg(ThemeMode.light, Icons.light_mode_rounded, 'Light'),
+              seg(ThemeMode.dark, Icons.dark_mode_rounded, 'Dark'),
+            ],
           ),
         ],
       ),
@@ -176,7 +245,7 @@ class SettingsPage extends ConsumerWidget {
                   size: 20),
               const SizedBox(width: 10),
               Text(license.activated ? 'Premium active' : 'Unlock Premium',
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: AppColors.text)),
@@ -187,7 +256,7 @@ class SettingsPage extends ConsumerWidget {
             license.activated
                 ? 'Thank you for supporting Aura Habits.'
                 : 'Enter a license key to unlock all premium features.',
-            style: const TextStyle(color: AppColors.muted, fontSize: 13),
+            style: TextStyle(color: AppColors.muted, fontSize: 13),
           ),
           const SizedBox(height: 14),
           if (license.activated)
@@ -198,7 +267,7 @@ class SettingsPage extends ConsumerWidget {
               },
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.muted,
-                side: const BorderSide(color: AppColors.border),
+                side: BorderSide(color: AppColors.border),
               ),
               child: const Text('Deactivate'),
             )
@@ -226,7 +295,7 @@ class SettingsPage extends ConsumerWidget {
         return StatefulBuilder(
           builder: (ctx, setState) => AlertDialog(
             backgroundColor: AppColors.card,
-            title: const Text('Activate Premium',
+            title: Text('Activate Premium',
                 style: TextStyle(color: AppColors.text)),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -235,7 +304,7 @@ class SettingsPage extends ConsumerWidget {
                   controller: controller,
                   autofocus: true,
                   textCapitalization: TextCapitalization.characters,
-                  style: const TextStyle(color: AppColors.text),
+                  style: TextStyle(color: AppColors.text),
                   decoration: const InputDecoration(
                       hintText: 'AURA-XXXX-XXXX-XXXX'),
                 ),
@@ -250,7 +319,7 @@ class SettingsPage extends ConsumerWidget {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(dialogContext).pop(),
-                child: const Text('Cancel',
+                child: Text('Cancel',
                     style: TextStyle(color: AppColors.muted)),
               ),
               FilledButton(
@@ -283,8 +352,8 @@ class SettingsPage extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.card,
-        title: const Text('Sign out?', style: TextStyle(color: AppColors.text)),
-        content: const Text(
+        title: Text('Sign out?', style: TextStyle(color: AppColors.text)),
+        content: Text(
           'Your data stays safely in the cloud and on this device.',
           style: TextStyle(color: AppColors.muted),
         ),
@@ -292,7 +361,7 @@ class SettingsPage extends ConsumerWidget {
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
             child:
-                const Text('Cancel', style: TextStyle(color: AppColors.muted)),
+                Text('Cancel', style: TextStyle(color: AppColors.muted)),
           ),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: AppColors.danger),
@@ -327,14 +396,14 @@ class SettingsPage extends ConsumerWidget {
         child: Icon(icon, color: color, size: 19),
       ),
       title: Text(title,
-          style: const TextStyle(
+          style: TextStyle(
               color: AppColors.text,
               fontSize: 15,
               fontWeight: FontWeight.w600)),
       subtitle: Text(subtitle,
-          style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+          style: TextStyle(color: AppColors.muted, fontSize: 12)),
       trailing: onTap != null
-          ? const Icon(Icons.chevron_right_rounded, color: AppColors.faint)
+          ? Icon(Icons.chevron_right_rounded, color: AppColors.faint)
           : null,
     );
   }

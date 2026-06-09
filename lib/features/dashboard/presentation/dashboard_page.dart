@@ -178,7 +178,7 @@ class _TodayHero extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Today's progress",
+          Text("Today's progress",
               style: TextStyle(fontSize: 14, color: AppColors.muted, fontWeight: FontWeight.w600)),
           const SizedBox(height: 18),
           Center(
@@ -195,7 +195,7 @@ class _TodayHero extends StatelessWidget {
                     curve: Curves.easeOutCubic,
                     builder: (_, v, __) => Text('${v.round()}%', style: AppTypography.numeric(40)),
                   ),
-                  const Text('complete', style: TextStyle(fontSize: 12, color: AppColors.muted)),
+                  Text('complete', style: TextStyle(fontSize: 12, color: AppColors.muted)),
                 ],
               ),
             ),
@@ -206,7 +206,7 @@ class _TodayHero extends StatelessWidget {
               metrics.todayTotal == 0
                   ? 'No habits scheduled today'
                   : '${metrics.todayDone} of ${metrics.todayTotal} habits done',
-              style: const TextStyle(color: AppColors.muted),
+              style: TextStyle(color: AppColors.muted),
             ),
           ),
         ],
@@ -245,7 +245,7 @@ class _LevelBar extends ConsumerWidget {
                     Text('Level ${game.level}', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                     const Spacer(),
                     Text('${game.xpToNext} XP to level ${game.level + 1}',
-                        style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+                        style: TextStyle(color: AppColors.muted, fontSize: 12)),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -307,9 +307,9 @@ class _TodayHabits extends ConsumerWidget {
               child: Center(
                 child: Column(
                   children: [
-                    const Icon(Icons.wb_sunny_rounded, color: AppColors.muted, size: 36),
+                    Icon(Icons.wb_sunny_rounded, color: AppColors.muted, size: 36),
                     const SizedBox(height: 12),
-                    const Text('Nothing scheduled for today.', style: TextStyle(color: AppColors.muted)),
+                    Text('Nothing scheduled for today.', style: TextStyle(color: AppColors.muted)),
                     const SizedBox(height: 12),
                     GlowButton(label: 'Add a habit', icon: Icons.add_rounded, onPressed: () => showHabitEditor(context, ref)),
                   ],
@@ -369,7 +369,7 @@ class _HeatmapSection extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              const Text('Less', style: TextStyle(fontSize: 11, color: AppColors.muted)),
+              Text('Less', style: TextStyle(fontSize: 11, color: AppColors.muted)),
               const SizedBox(width: 8),
               for (final o in [0.1, 0.35, 0.6, 0.85, 1.0])
                 Container(
@@ -382,7 +382,7 @@ class _HeatmapSection extends ConsumerWidget {
                   ),
                 ),
               const SizedBox(width: 8),
-              const Text('More', style: TextStyle(fontSize: 11, color: AppColors.muted)),
+              Text('More', style: TextStyle(fontSize: 11, color: AppColors.muted)),
             ],
           ),
         ],

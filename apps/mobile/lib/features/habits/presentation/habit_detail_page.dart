@@ -31,7 +31,7 @@ class HabitDetailPage extends ConsumerWidget {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (context.mounted) Navigator.of(context).maybePop();
       });
-      return const Scaffold(backgroundColor: AppColors.background);
+      return Scaffold(backgroundColor: AppColors.background);
     }
 
     final stats = repo.statsFor(habit);
@@ -49,7 +49,7 @@ class HabitDetailPage extends ConsumerWidget {
         title: const Text('Habit'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.ios_share_rounded, color: AppColors.muted),
+            icon: Icon(Icons.ios_share_rounded, color: AppColors.muted),
             onPressed: () => ShareCardPage.open(
               context,
               ShareCardSpec(
@@ -77,7 +77,7 @@ class HabitDetailPage extends ConsumerWidget {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.edit_rounded, color: AppColors.muted),
+            icon: Icon(Icons.edit_rounded, color: AppColors.muted),
             onPressed: () => HabitEditorSheet.show(context, habit: habit),
           ),
         ],
@@ -106,7 +106,7 @@ class HabitDetailPage extends ConsumerWidget {
                         style: Theme.of(context).textTheme.headlineSmall),
                     const SizedBox(height: 4),
                     Text('${category.name} · ${habit.frequency.label}',
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: AppColors.muted, fontSize: 13)),
                   ],
                 ),
@@ -116,7 +116,7 @@ class HabitDetailPage extends ConsumerWidget {
           if (habit.description.isNotEmpty) ...[
             const SizedBox(height: 12),
             Text(habit.description,
-                style: const TextStyle(
+                style: TextStyle(
                     color: AppColors.muted, fontSize: 14, height: 1.5)),
           ],
           const SizedBox(height: 20),
@@ -189,7 +189,7 @@ class HabitDetailPage extends ConsumerWidget {
             Text(value, style: AppTypography.numeric(24)),
             const SizedBox(height: 2),
             Text(label,
-                style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+                style: TextStyle(color: AppColors.muted, fontSize: 12)),
           ],
         ),
       ),
@@ -206,7 +206,7 @@ class HabitDetailPage extends ConsumerWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(log.date.pretty,
-                style: const TextStyle(color: AppColors.text, fontSize: 14)),
+                style: TextStyle(color: AppColors.text, fontSize: 14)),
           ),
           Text(status.label,
               style: TextStyle(color: status.color, fontSize: 13)),
@@ -236,7 +236,7 @@ class _WeekdayBars extends StatelessWidget {
                   width: 38,
                   child: Text(_labels[wd - 1],
                       style:
-                          const TextStyle(color: AppColors.muted, fontSize: 13)),
+                          TextStyle(color: AppColors.muted, fontSize: 13)),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -256,7 +256,7 @@ class _WeekdayBars extends StatelessWidget {
                   child: Text('${((performance[wd] ?? 0) * 100).round()}%',
                       textAlign: TextAlign.right,
                       style:
-                          const TextStyle(color: AppColors.muted, fontSize: 12)),
+                          TextStyle(color: AppColors.muted, fontSize: 12)),
                 ),
               ],
             ),

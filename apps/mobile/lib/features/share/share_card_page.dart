@@ -91,7 +91,7 @@ class _ShareCardPageState extends State<ShareCardPage> {
                 onPressed: _sharing ? null : _share,
               ),
               const SizedBox(height: 8),
-              const Text('Shares a high-res image to any app',
+              Text('Shares a high-res image to any app',
                   style: TextStyle(color: AppColors.faint, fontSize: 12)),
             ],
           ),
@@ -147,7 +147,7 @@ class _AuraShareCard extends StatelessWidget {
                             color: Color(0xFF002417), size: 20),
                       ),
                       const SizedBox(width: 10),
-                      const Text('Aura Habits',
+                      Text('Aura Habits',
                           style: TextStyle(
                               color: AppColors.text,
                               fontSize: 16,
@@ -177,13 +177,13 @@ class _AuraShareCard extends StatelessWidget {
                   Text(spec.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: AppColors.text,
                           fontSize: 22,
                           fontWeight: FontWeight.w600)),
                   const SizedBox(height: 4),
                   Text(spec.subtitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: AppColors.muted, fontSize: 14)),
                   if (spec.stats.isNotEmpty) ...[
                     const SizedBox(height: 20),
@@ -205,7 +205,7 @@ class _AuraShareCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      const Text('Build habits that actually stick',
+                      Text('Build habits that actually stick',
                           style: TextStyle(
                               color: AppColors.faint, fontSize: 13)),
                     ],
@@ -228,7 +228,7 @@ class _AuraShareCard extends StatelessWidget {
           Text(value, style: AppTypography.numeric(22)),
           const SizedBox(height: 2),
           Text(label,
-              style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+              style: TextStyle(color: AppColors.muted, fontSize: 12)),
         ],
       ),
     );

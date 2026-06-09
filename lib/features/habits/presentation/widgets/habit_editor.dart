@@ -144,7 +144,7 @@ class _HabitEditorDialogState extends ConsumerState<_HabitEditorDialog> {
                       style: Theme.of(context).textTheme.titleLarge),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(Icons.close_rounded, color: AppColors.muted),
+                    icon: Icon(Icons.close_rounded, color: AppColors.muted),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -355,7 +355,7 @@ class _HabitEditorDialogState extends ConsumerState<_HabitEditorDialog> {
       lastDate: DateTime(2100),
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.dark(
+          colorScheme: ColorScheme.dark(
             primary: AppColors.primary,
             onPrimary: Color(0xFF002417),
             surface: AppColors.card,
@@ -369,7 +369,7 @@ class _HabitEditorDialogState extends ConsumerState<_HabitEditorDialog> {
   Widget _label(String text) => Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Text(text,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.muted)),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.muted)),
       );
 }
 
@@ -627,7 +627,7 @@ class _DateField extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Icon(Icons.calendar_today_rounded, size: 15, color: AppColors.muted),
+            Icon(Icons.calendar_today_rounded, size: 15, color: AppColors.muted),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
@@ -638,7 +638,7 @@ class _DateField extends StatelessWidget {
             if (onClear != null)
               GestureDetector(
                 onTap: onClear,
-                child: const Icon(Icons.close_rounded, size: 15, color: AppColors.muted),
+                child: Icon(Icons.close_rounded, size: 15, color: AppColors.muted),
               ),
           ],
         ),
@@ -711,7 +711,7 @@ class _ReminderEditor extends StatelessWidget {
                 const SizedBox(width: 4),
                 GestureDetector(
                   onTap: () => onRemove(r),
-                  child: const Icon(Icons.close_rounded, size: 14, color: AppColors.muted),
+                  child: Icon(Icons.close_rounded, size: 14, color: AppColors.muted),
                 ),
               ],
             ),

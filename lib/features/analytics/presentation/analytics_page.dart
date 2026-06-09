@@ -147,7 +147,7 @@ class _Kpi extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: AppTypography.numeric(small ? 18 : 26)),
             const SizedBox(height: 2),
-            Text(label, style: const TextStyle(fontSize: 12, color: AppColors.muted)),
+            Text(label, style: TextStyle(fontSize: 12, color: AppColors.muted)),
           ],
         ),
       ),
@@ -178,7 +178,7 @@ class _TrendChart extends StatelessWidget {
               reservedSize: 34,
               interval: 0.5,
               getTitlesWidget: (v, _) => Text('${(v * 100).round()}%',
-                  style: const TextStyle(fontSize: 10, color: AppColors.muted)),
+                  style: TextStyle(fontSize: 10, color: AppColors.muted)),
             ),
           ),
           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -217,7 +217,7 @@ class _CategoryChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (data.isEmpty) {
-      return const Center(child: Text('No category data', style: TextStyle(color: AppColors.muted)));
+      return Center(child: Text('No category data', style: TextStyle(color: AppColors.muted)));
     }
     return Row(
       children: [
@@ -252,7 +252,7 @@ class _CategoryChart extends StatelessWidget {
                       Container(width: 9, height: 9, decoration: BoxDecoration(color: c.color, shape: BoxShape.circle)),
                       const SizedBox(width: 8),
                       Expanded(child: Text(c.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12))),
-                      Text('${(c.rate * 100).round()}%', style: const TextStyle(fontSize: 12, color: AppColors.muted)),
+                      Text('${(c.rate * 100).round()}%', style: TextStyle(fontSize: 12, color: AppColors.muted)),
                     ],
                   ),
                 ),

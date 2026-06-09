@@ -55,7 +55,7 @@ class HabitCard extends ConsumerWidget {
                     habit.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: AppColors.text),
@@ -77,7 +77,7 @@ class HabitCard extends ConsumerWidget {
                               : AppColors.faint),
                       const SizedBox(width: 3),
                       Text('${stats.currentStreak}',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 12, color: AppColors.muted)),
                     ],
                   ),

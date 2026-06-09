@@ -54,7 +54,7 @@ class GoalsPage extends ConsumerWidget {
             const SizedBox(height: 16),
             Text('No goals yet', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
-            const Text('Set a target and track your progress toward it.',
+            Text('Set a target and track your progress toward it.',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: AppColors.muted)),
           ],
@@ -94,13 +94,13 @@ class _GoalCard extends ConsumerWidget {
                       Text(goal.title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: AppColors.text,
                               fontSize: 16,
                               fontWeight: FontWeight.w600)),
                       const SizedBox(height: 3),
                       Text('${goal.type.label} · ${goal.progress}/${goal.target}',
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: AppColors.muted, fontSize: 13)),
                     ],
                   ),
@@ -156,15 +156,15 @@ class _GoalCard extends ConsumerWidget {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.card,
-        title: const Text('Delete goal?',
+        title: Text('Delete goal?',
             style: TextStyle(color: AppColors.text)),
         content: Text(goal.title,
-            style: const TextStyle(color: AppColors.muted)),
+            style: TextStyle(color: AppColors.muted)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
             child:
-                const Text('Cancel', style: TextStyle(color: AppColors.muted)),
+                Text('Cancel', style: TextStyle(color: AppColors.muted)),
           ),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: AppColors.danger),
@@ -311,11 +311,11 @@ class _GoalEditorState extends ConsumerState<_GoalEditor> {
               const SizedBox(height: 18),
               TextField(
                 controller: _title,
-                style: const TextStyle(color: AppColors.text),
+                style: TextStyle(color: AppColors.text),
                 decoration: const InputDecoration(labelText: 'Title'),
               ),
               const SizedBox(height: 20),
-              const Text('Type',
+              Text('Type',
                   style: TextStyle(
                       color: AppColors.muted,
                       fontSize: 13,
@@ -351,7 +351,7 @@ class _GoalEditorState extends ConsumerState<_GoalEditor> {
               const SizedBox(height: 20),
               Row(
                 children: [
-                  const Text('Target',
+                  Text('Target',
                       style: TextStyle(
                           color: AppColors.muted,
                           fontSize: 13,
@@ -369,7 +369,7 @@ class _GoalEditorState extends ConsumerState<_GoalEditor> {
                 ],
               ),
               const SizedBox(height: 20),
-              const Text('Color',
+              Text('Color',
                   style: TextStyle(
                       color: AppColors.muted,
                       fontSize: 13,

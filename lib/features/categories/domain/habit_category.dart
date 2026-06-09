@@ -59,7 +59,7 @@ abstract class BuiltInCategories {
   static HabitCategory byId(String id) =>
       all.firstWhere((c) => c.id == id, orElse: () => fallback);
 
-  static const HabitCategory fallback = HabitCategory(
+  static final HabitCategory fallback = HabitCategory(
     id: 'other',
     name: 'Other',
     icon: Icons.category_rounded,

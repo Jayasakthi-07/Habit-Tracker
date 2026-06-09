@@ -260,7 +260,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: _loading ? null : () => _switch(_Mode.forgot),
-                    child: const Text('Forgot password?',
+                    child: Text('Forgot password?',
                         style: TextStyle(color: AppColors.muted, fontSize: 12)),
                   ),
                 ),
@@ -285,10 +285,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       child: const Text('Resend code',
                           style: TextStyle(color: AppColors.secondary, fontSize: 13)),
                     ),
-                    const Text('·', style: TextStyle(color: AppColors.faint)),
+                    Text('·', style: TextStyle(color: AppColors.faint)),
                     TextButton(
                       onPressed: _loading ? null : () => _switch(_Mode.signUp),
-                      child: const Text('Change email',
+                      child: Text('Change email',
                           style: TextStyle(color: AppColors.muted, fontSize: 13)),
                     ),
                   ],
@@ -300,7 +300,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 Center(
                   child: TextButton(
                     onPressed: _loading ? null : () => _switch(_Mode.signIn),
-                    child: const Text('Back to sign in',
+                    child: Text('Back to sign in',
                         style: TextStyle(color: AppColors.muted, fontSize: 13)),
                   ),
                 ),
@@ -310,12 +310,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    const Expanded(child: Divider(color: AppColors.border)),
+                    Expanded(child: Divider(color: AppColors.border)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Text('or', style: theme.textTheme.bodySmall),
                     ),
-                    const Expanded(child: Divider(color: AppColors.border)),
+                    Expanded(child: Divider(color: AppColors.border)),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -336,7 +336,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(isSignUp ? 'Already have an account?' : 'New to Aura Habits?',
-            style: const TextStyle(color: AppColors.muted, fontSize: 13)),
+            style: TextStyle(color: AppColors.muted, fontSize: 13)),
         TextButton(
           onPressed: _loading ? null : () => _switch(isSignUp ? _Mode.signIn : _Mode.signUp),
           child: Text(isSignUp ? 'Sign in' : 'Create one',
@@ -362,11 +362,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscure,
-      style: const TextStyle(color: AppColors.text),
+      style: TextStyle(color: AppColors.text),
       onSubmitted: (_) => _submit(),
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: AppColors.muted),
+        labelStyle: TextStyle(color: AppColors.muted),
         prefixIcon: Icon(icon, size: 18, color: AppColors.muted),
         suffixIcon: suffix,
         filled: true,
@@ -386,7 +386,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       maxLength: 8,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       onSubmitted: (_) => _submit(),
-      style: const TextStyle(
+      style: TextStyle(
         color: AppColors.text,
         fontSize: 24,
         fontWeight: FontWeight.w700,
@@ -395,12 +395,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       decoration: InputDecoration(
         counterText: '',
         hintText: 'Enter code',
-        hintStyle: const TextStyle(color: AppColors.faint, letterSpacing: 1, fontSize: 16),
+        hintStyle: TextStyle(color: AppColors.faint, letterSpacing: 1, fontSize: 16),
         filled: true,
         fillColor: AppColors.alpha(Colors.white, 0.03),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -672,7 +672,7 @@ class _FeatureChip extends StatelessWidget {
         children: [
           Icon(icon, size: 15, color: AppColors.primary),
           const SizedBox(width: 8),
-          Text(label, style: const TextStyle(fontSize: 12, color: AppColors.text)),
+          Text(label, style: TextStyle(fontSize: 12, color: AppColors.text)),
         ],
       ),
     );
