@@ -1,0 +1,19 @@
+name: aura_core
+description: Shared core for Aura Habit Tracker — Supabase client, cloud-sync engine, AI providers, and cross-platform business logic shared by the desktop and mobile apps.
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.12.1
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  supabase_flutter: ^2.8.0
+  connectivity_plus: ^6.1.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
