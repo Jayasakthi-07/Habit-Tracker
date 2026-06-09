@@ -52,7 +52,18 @@ class _AuraAppState extends ConsumerState<AuraApp>
       title: 'Aura Habits',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.themeFor(brightness),
+      scrollBehavior: const _AuraScrollBehavior(),
       routerConfig: router,
     );
   }
+}
+
+/// Removes the Material overscroll glow for a cleaner, premium scroll feel.
+class _AuraScrollBehavior extends MaterialScrollBehavior {
+  const _AuraScrollBehavior();
+
+  @override
+  Widget buildOverscrollIndicator(
+          BuildContext context, Widget child, ScrollableDetails details) =>
+      child;
 }

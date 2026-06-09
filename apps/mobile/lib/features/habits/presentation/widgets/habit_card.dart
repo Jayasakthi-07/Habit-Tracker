@@ -28,6 +28,7 @@ class HabitCard extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: GlassCard(
         padding: const EdgeInsets.all(14),
+        blur: 0,
         glowColor: done ? habit.color : null,
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(

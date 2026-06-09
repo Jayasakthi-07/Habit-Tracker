@@ -71,17 +71,31 @@ class _GlassCardState extends State<GlassCard> {
               ...AppShadows.glow(widget.glowColor!, strength: 0.10),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: radius,
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: widget.blur, sigmaY: widget.blur),
-            child: Container(
-              padding: widget.padding,
-              color: AppColors.alpha(AppColors.card, 0.82),
-              child: widget.child,
-            ),
-          ),
-        ),
+        // Skip the (GPU-expensive) BackdropFilter when blur <= 0. List cells
+        // pass blur:0 so long scrolling lists stay buttery — the gradient +
+        // translucent surface still read as glass.
+        child: widget.blur <= 0
+            ? ClipRRect(
+                borderRadius: radius,
+                child: Container(
+                  padding: widget.padding,
+                  color: AppColors.alpha(
+                      AppColors.card, AppColors.isLight ? 0.92 : 0.86),
+                  child: widget.child,
+                ),
+              )
+            : ClipRRect(
+                borderRadius: radius,
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                      sigmaX: widget.blur, sigmaY: widget.blur),
+                  child: Container(
+                    padding: widget.padding,
+                    color: AppColors.alpha(AppColors.card, 0.82),
+                    child: widget.child,
+                  ),
+                ),
+              ),
       ),
     );
 

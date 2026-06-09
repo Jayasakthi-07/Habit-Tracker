@@ -75,6 +75,7 @@ class _GoalCard extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GlassCard(
+        blur: 0,
         glowColor: goal.isComplete ? color : null,
         onLongPress: () => _confirmDelete(context, ref),
         child: Column(

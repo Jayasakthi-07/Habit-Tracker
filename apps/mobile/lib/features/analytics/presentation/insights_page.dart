@@ -363,6 +363,7 @@ class _AchievementCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GlassCard(
       padding: const EdgeInsets.all(14),
+      blur: 0,
       glowColor: a.unlocked ? a.color : null,
       onTap: onTap,
       child: Column(

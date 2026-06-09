@@ -170,6 +170,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
       padding: const EdgeInsets.only(bottom: 10),
       child: GlassCard(
         padding: const EdgeInsets.all(14),
+        blur: 0,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
