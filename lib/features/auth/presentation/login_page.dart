@@ -77,7 +77,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           v = 'Password must be at least 6 characters.';
         }
       case _Mode.verify:
-        if (code.length < 6) v = 'Enter the 6-digit code from your email.';
+        if (code.length < 6) v = 'Enter the full code from your email.';
       case _Mode.forgot:
         if (!_validEmail(email)) v = 'Enter a valid email address.';
     }
@@ -104,7 +104,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             _loading = false;
             if (r.needsVerification) {
               _mode = _Mode.verify;
-              _info = 'We emailed a 6-digit verification code to $email.';
+              _info = 'We emailed a verification code to $email.';
             }
             // else: confirmation disabled → already signed in; router redirects.
           });
@@ -195,7 +195,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   String get _subtitle => switch (_mode) {
         _Mode.signIn => 'Sign in to sync your habits across all your devices.',
         _Mode.signUp => 'Start building better habits — your data syncs everywhere.',
-        _Mode.verify => 'Enter the 6-digit code we emailed to confirm your account.',
+        _Mode.verify => 'Enter the code we emailed to confirm your account.',
         _Mode.forgot => 'We\'ll email you a link to set a new password.',
       };
 
@@ -392,19 +392,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       controller: _code,
       keyboardType: TextInputType.number,
       textAlign: TextAlign.center,
-      maxLength: 6,
+      maxLength: 8,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       onSubmitted: (_) => _submit(),
       style: const TextStyle(
         color: AppColors.text,
-        fontSize: 28,
+        fontSize: 24,
         fontWeight: FontWeight.w700,
-        letterSpacing: 14,
+        letterSpacing: 8,
       ),
       decoration: InputDecoration(
         counterText: '',
-        hintText: '••••••',
-        hintStyle: const TextStyle(color: AppColors.faint, letterSpacing: 14, fontSize: 28),
+        hintText: 'Enter code',
+        hintStyle: const TextStyle(color: AppColors.faint, letterSpacing: 1, fontSize: 16),
         filled: true,
         fillColor: AppColors.alpha(Colors.white, 0.03),
         border: OutlineInputBorder(
