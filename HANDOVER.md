@@ -63,7 +63,7 @@ guide). Be patient and encouraging.
 | 1 | Accounts & auth (email+code, Google) | ✅ DONE & verified |
 | 2 | Cloud sync engine (offline-first + realtime) | ✅ DONE & verified end-to-end |
 | — | Post-fixes: remove guest, per-account isolation, glow reduction, completion-UI redesign + crash fix | ✅ DONE |
-| **3** | **Android app MVP** | **⬅️ NEXT — not started** |
+| **3** | **Android app MVP** | **🚧 IN PROGRESS** — app scaffolded at `apps/mobile/` on shared `aura_core`; auth + sync + MVP screens built; analyze clean, debug APK builds, runs on emulator (Supabase ready=true). Pending: Google client (guide written: `apps/mobile/ANDROID_GOOGLE_AUTH_SETUP.md`, debug SHA-1 `E4:EC:3A:E4:3A:5F:C8:B7:85:93:EE:22:37:95:51:32:64:AB:3E:D4`), visual + live-sync verification on a stable emulator. |
 | 4 | Android feature parity | ⬜ pending |
 | 5 | Advanced analytics & insights | ⬜ pending |
 | 6 | Social & sharing cards | ⬜ pending |
