@@ -41,6 +41,10 @@ class HabitsController extends Notifier<HabitsState> {
     );
   }
 
+  /// Reloads habit + log data from local storage. Called when cloud sync has
+  /// applied remote changes to the Hive boxes, so the UI reflects them live.
+  void refreshFromStore() => _reload();
+
   void toggleShowArchived() {
     state = state.copyWith(showArchived: !state.showArchived);
     _reload();

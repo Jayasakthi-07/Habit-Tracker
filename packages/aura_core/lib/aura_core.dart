@@ -11,5 +11,7 @@ export 'package:supabase_flutter/supabase_flutter.dart'
 export 'src/auth/auth_service.dart';
 export 'src/config/supabase_config.dart';
 export 'src/supabase/aura_supabase.dart';
+export 'src/sync/sync_engine.dart';
 export 'src/sync/sync_entity.dart';
+export 'src/sync/sync_manager.dart';
 export 'src/sync/syncable.dart';
