@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,11 +10,13 @@ import '../../../shared/widgets/gradient_text.dart';
 import '../../../shared/widgets/window_buttons.dart';
 import '../auth_provider.dart';
 
+enum _Mode { signIn, signUp, verify, forgot }
+
 /// Premium split-panel authentication screen.
 ///
-/// Sign-in is handled exclusively through Google (desktop OAuth loopback flow).
-/// A discreet offline-guest option remains so the app is still usable without
-/// an internet connection.
+/// Supports email + password sign-up with an email verification code, sign-in,
+/// password reset, and Google sign-in — all backed by Supabase. An account is
+/// required to use the app.
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
@@ -22,19 +25,132 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  bool _loading = false;
-  String? _error;
+  _Mode _mode = _Mode.signIn;
+  final _name = TextEditingController();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  final _code = TextEditingController();
 
-  Future<void> _signInWithGoogle() async {
+  bool _loading = false;
+  bool _obscure = true;
+  String? _error;
+  String? _info;
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _email.dispose();
+    _password.dispose();
+    _code.dispose();
+    super.dispose();
+  }
+
+  void _switch(_Mode mode) => setState(() {
+        _mode = mode;
+        _error = null;
+        _info = null;
+      });
+
+  bool _validEmail(String v) => RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(v);
+
+  Future<void> _submit() async {
+    FocusScope.of(context).unfocus();
+    final email = _email.text.trim();
+    final pass = _password.text;
+    final name = _name.text.trim();
+    final code = _code.text.trim();
+
+    String? v;
+    switch (_mode) {
+      case _Mode.signIn:
+        if (!_validEmail(email)) {
+          v = 'Enter a valid email address.';
+        } else if (pass.isEmpty) {
+          v = 'Enter your password.';
+        }
+      case _Mode.signUp:
+        if (name.isEmpty) {
+          v = 'Enter your name.';
+        } else if (!_validEmail(email)) {
+          v = 'Enter a valid email address.';
+        } else if (pass.length < 6) {
+          v = 'Password must be at least 6 characters.';
+        }
+      case _Mode.verify:
+        if (code.length < 6) v = 'Enter the full code from your email.';
+      case _Mode.forgot:
+        if (!_validEmail(email)) v = 'Enter a valid email address.';
+    }
+    if (v != null) {
+      setState(() => _error = v);
+      return;
+    }
+
     setState(() {
       _loading = true;
       _error = null;
+      _info = null;
+    });
+    final ctrl = ref.read(authProvider.notifier);
+    String? err;
+    switch (_mode) {
+      case _Mode.signIn:
+        err = await ctrl.signInWithEmail(email: email, password: pass);
+      case _Mode.signUp:
+        final r = await ctrl.signUpWithEmail(name: name, email: email, password: pass);
+        if (!mounted) return;
+        if (r.error == null) {
+          setState(() {
+            _loading = false;
+            if (r.needsVerification) {
+              _mode = _Mode.verify;
+              _info = 'We emailed a verification code to $email.';
+            }
+            // else: confirmation disabled → already signed in; router redirects.
+          });
+          return;
+        }
+        err = r.error;
+      case _Mode.verify:
+        err = await ctrl.verifyEmailCode(email: email, code: code);
+      case _Mode.forgot:
+        err = await ctrl.sendPasswordReset(email);
+        if (err == null && mounted) {
+          setState(() {
+            _loading = false;
+            _mode = _Mode.signIn;
+            _info = 'Password reset link sent to $email.';
+          });
+          return;
+        }
+    }
+    if (!mounted) return;
+    setState(() {
+      _loading = false;
+      _error = err; // null on success → router redirects automatically.
+    });
+  }
+
+  Future<void> _googleSignIn() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+      _info = null;
     });
     final err = await ref.read(authProvider.notifier).signInWithGoogle();
     if (!mounted) return;
     setState(() {
       _loading = false;
-      _error = err; // null on success; router redirects automatically.
+      _error = err;
+    });
+  }
+
+  Future<void> _resendCode() async {
+    final err = await ref.read(authProvider.notifier).resendCode(_email.text.trim());
+    if (!mounted) return;
+    setState(() {
+      _error = err;
+      _info = err == null ? 'A new code is on its way.' : null;
     });
   }
 
@@ -69,94 +185,301 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     );
   }
 
+  String get _title => switch (_mode) {
+        _Mode.signIn => 'Welcome back',
+        _Mode.signUp => 'Create your account',
+        _Mode.verify => 'Check your email',
+        _Mode.forgot => 'Reset your password',
+      };
+
+  String get _subtitle => switch (_mode) {
+        _Mode.signIn => 'Sign in to sync your habits across all your devices.',
+        _Mode.signUp => 'Start building better habits — your data syncs everywhere.',
+        _Mode.verify => 'Enter the code we emailed to confirm your account.',
+        _Mode.forgot => 'We\'ll email you a link to set a new password.',
+      };
+
+  String get _primaryLabel => switch (_mode) {
+        _Mode.signIn => 'Sign in',
+        _Mode.signUp => 'Create account',
+        _Mode.verify => 'Verify & continue',
+        _Mode.forgot => 'Send reset link',
+      };
+
   Widget _card(BuildContext context) {
     final theme = Theme.of(context);
+    final isVerify = _mode == _Mode.verify;
+    final isForgot = _mode == _Mode.forgot;
+    final showSocial = !isVerify && !isForgot;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(40),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 400),
+        constraints: const BoxConstraints(maxWidth: 430),
         child: GlassCard(
           padding: const EdgeInsets.all(34),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Welcome to Aura Habits', style: theme.textTheme.headlineSmall),
+              Text(_title, style: theme.textTheme.headlineSmall),
               const SizedBox(height: 8),
-              Text(
-                'Sign in with your Google account to get started and keep your '
-                'identity across sessions.',
-                style: theme.textTheme.bodyMedium,
+              Text(_subtitle, style: theme.textTheme.bodyMedium),
+              const SizedBox(height: 24),
+
+              if (_mode == _Mode.signUp) ...[
+                _field(controller: _name, label: 'Full name', icon: Icons.person_outline_rounded),
+                const SizedBox(height: 14),
+              ],
+              if (!isVerify) ...[
+                _field(
+                  controller: _email,
+                  label: 'Email',
+                  icon: Icons.alternate_email_rounded,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 14),
+              ],
+              if (_mode == _Mode.signIn || _mode == _Mode.signUp) ...[
+                _field(
+                  controller: _password,
+                  label: 'Password',
+                  icon: Icons.lock_outline_rounded,
+                  obscure: _obscure,
+                  suffix: IconButton(
+                    icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                        size: 18, color: AppColors.muted),
+                    onPressed: () => setState(() => _obscure = !_obscure),
+                  ),
+                ),
+              ],
+              if (isVerify) _codeField(),
+
+              if (_mode == _Mode.signIn)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: _loading ? null : () => _switch(_Mode.forgot),
+                    child: Text('Forgot password?',
+                        style: TextStyle(color: AppColors.muted, fontSize: 12)),
+                  ),
+                ),
+
+              if (_info != null) _banner(_info!, isError: false),
+              if (_error != null) _banner(_error!, isError: true),
+
+              const SizedBox(height: 18),
+              _PrimaryButton(
+                label: _primaryLabel,
+                loading: _loading,
+                onPressed: _loading ? null : _submit,
               ),
-              const SizedBox(height: 30),
-              _GoogleButton(loading: _loading, onPressed: _loading ? null : _signInWithGoogle),
-              if (_loading) ...[
-                const SizedBox(height: 16),
+
+              if (isVerify) ...[
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.open_in_new_rounded, size: 14, color: AppColors.muted),
-                    SizedBox(width: 8),
-                    Flexible(
-                      child: Text(
-                        'Complete sign-in in the browser window that just opened…',
-                        style: TextStyle(fontSize: 12, color: AppColors.muted),
-                      ),
+                  children: [
+                    TextButton(
+                      onPressed: _loading ? null : _resendCode,
+                      child: const Text('Resend code',
+                          style: TextStyle(color: AppColors.secondary, fontSize: 13)),
+                    ),
+                    Text('·', style: TextStyle(color: AppColors.faint)),
+                    TextButton(
+                      onPressed: _loading ? null : () => _switch(_Mode.signUp),
+                      child: Text('Change email',
+                          style: TextStyle(color: AppColors.muted, fontSize: 13)),
                     ),
                   ],
                 ),
               ],
-              if (_error != null) ...[
-                const SizedBox(height: 14),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.alpha(AppColors.danger, 0.1),
-                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-                    border: Border.all(color: AppColors.alpha(AppColors.danger, 0.3)),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.error_outline_rounded, size: 16, color: AppColors.danger),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(_error!,
-                            style: const TextStyle(fontSize: 12, color: AppColors.danger)),
-                      ),
-                    ],
+
+              if (isForgot) ...[
+                const SizedBox(height: 8),
+                Center(
+                  child: TextButton(
+                    onPressed: _loading ? null : () => _switch(_Mode.signIn),
+                    child: Text('Back to sign in',
+                        style: TextStyle(color: AppColors.muted, fontSize: 13)),
                   ),
                 ),
               ],
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  const Expanded(child: Divider(color: AppColors.border)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text('or', style: theme.textTheme.bodySmall),
-                  ),
-                  const Expanded(child: Divider(color: AppColors.border)),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Center(
-                child: TextButton.icon(
-                  onPressed: _loading ? null : () => ref.read(authProvider.notifier).continueAsGuest(),
-                  icon: const Icon(Icons.person_outline_rounded, size: 16, color: AppColors.muted),
-                  label: const Text('Continue offline as guest',
-                      style: TextStyle(color: AppColors.muted, fontSize: 13)),
+
+              if (showSocial) ...[
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(child: Divider(color: AppColors.border)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text('or', style: theme.textTheme.bodySmall),
+                    ),
+                    Expanded(child: Divider(color: AppColors.border)),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Your habit data always stays local on this device. Google sign-in is '
-                'only used for your name, email and avatar.',
-                textAlign: TextAlign.center,
-                style: theme.textTheme.labelSmall?.copyWith(color: AppColors.faint),
-              ),
+                const SizedBox(height: 16),
+                _GoogleButton(loading: _loading, onPressed: _loading ? null : _googleSignIn),
+                const SizedBox(height: 12),
+                _toggleRow(),
+              ],
             ],
           ),
-        ).animate().fadeIn(duration: 500.ms).slideY(begin: 0.06, curve: Curves.easeOutCubic),
+        ).animate().fadeIn(duration: 450.ms).slideY(begin: 0.05, curve: Curves.easeOutCubic),
+      ),
+    );
+  }
+
+  Widget _toggleRow() {
+    final isSignUp = _mode == _Mode.signUp;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(isSignUp ? 'Already have an account?' : 'New to Aura Habits?',
+            style: TextStyle(color: AppColors.muted, fontSize: 13)),
+        TextButton(
+          onPressed: _loading ? null : () => _switch(isSignUp ? _Mode.signIn : _Mode.signUp),
+          child: Text(isSignUp ? 'Sign in' : 'Create one',
+              style: const TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w600)),
+        ),
+      ],
+    );
+  }
+
+  Widget _field({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType? keyboardType,
+    bool obscure = false,
+    Widget? suffix,
+  }) {
+    OutlineInputBorder border(Color c) => OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          borderSide: BorderSide(color: c),
+        );
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      obscureText: obscure,
+      style: TextStyle(color: AppColors.text),
+      onSubmitted: (_) => _submit(),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: AppColors.muted),
+        prefixIcon: Icon(icon, size: 18, color: AppColors.muted),
+        suffixIcon: suffix,
+        filled: true,
+        fillColor: AppColors.alpha(Colors.white, 0.03),
+        border: border(AppColors.border),
+        enabledBorder: border(AppColors.border),
+        focusedBorder: border(AppColors.primary),
+      ),
+    );
+  }
+
+  Widget _codeField() {
+    return TextField(
+      controller: _code,
+      keyboardType: TextInputType.number,
+      textAlign: TextAlign.center,
+      maxLength: 8,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      onSubmitted: (_) => _submit(),
+      style: TextStyle(
+        color: AppColors.text,
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 8,
+      ),
+      decoration: InputDecoration(
+        counterText: '',
+        hintText: 'Enter code',
+        hintStyle: TextStyle(color: AppColors.faint, letterSpacing: 1, fontSize: 16),
+        filled: true,
+        fillColor: AppColors.alpha(Colors.white, 0.03),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          borderSide: BorderSide(color: AppColors.border),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          borderSide: const BorderSide(color: AppColors.primary),
+        ),
+      ),
+    );
+  }
+
+  Widget _banner(String msg, {required bool isError}) {
+    final color = isError ? AppColors.danger : AppColors.primary;
+    return Container(
+      margin: const EdgeInsets.only(top: 14),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.alpha(color, 0.1),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+        border: Border.all(color: AppColors.alpha(color, 0.3)),
+      ),
+      child: Row(
+        children: [
+          Icon(isError ? Icons.error_outline_rounded : Icons.check_circle_outline_rounded,
+              size: 16, color: color),
+          const SizedBox(width: 8),
+          Expanded(child: Text(msg, style: TextStyle(fontSize: 12, color: color))),
+        ],
+      ),
+    );
+  }
+}
+
+/// Gradient primary action button with hover + loading states.
+class _PrimaryButton extends StatefulWidget {
+  const _PrimaryButton({required this.label, required this.loading, required this.onPressed});
+  final String label;
+  final bool loading;
+  final VoidCallback? onPressed;
+
+  @override
+  State<_PrimaryButton> createState() => _PrimaryButtonState();
+}
+
+class _PrimaryButtonState extends State<_PrimaryButton> {
+  bool _hover = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = widget.onPressed != null;
+    return MouseRegion(
+      cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      onEnter: (_) => setState(() => _hover = true),
+      onExit: (_) => setState(() => _hover = false),
+      child: GestureDetector(
+        onTap: widget.onPressed,
+        child: AnimatedContainer(
+          duration: AppSpacing.fast,
+          height: 50,
+          decoration: BoxDecoration(
+            gradient: AppColors.primaryGradient,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            boxShadow: enabled && _hover ? AppShadows.glow(AppColors.primary) : null,
+          ),
+          child: Center(
+            child: widget.loading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF002417)),
+                  )
+                : Text(
+                    widget.label,
+                    style: const TextStyle(
+                      color: Color(0xFF002417),
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15,
+                    ),
+                  ),
+          ),
+        ),
       ),
     );
   }
@@ -297,7 +620,7 @@ class _BrandPanel extends StatelessWidget {
                   width: 420,
                   child: Text(
                     'A premium, offline-first habit tracker with streaks, analytics, '
-                    'gamification and beautiful insights — designed to keep you consistent.',
+                    'gamification and beautiful insights — now syncing across all your devices.',
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.muted),
                   ),
                 ).animate().fadeIn(delay: 300.ms, duration: 700.ms),
@@ -309,7 +632,7 @@ class _BrandPanel extends StatelessWidget {
                     _FeatureChip(Icons.local_fire_department_rounded, 'Streaks'),
                     _FeatureChip(Icons.insights_rounded, 'Analytics'),
                     _FeatureChip(Icons.emoji_events_rounded, 'Achievements'),
-                    _FeatureChip(Icons.timer_rounded, 'Focus mode'),
+                    _FeatureChip(Icons.cloud_done_rounded, 'Cloud sync'),
                   ],
                 ).animate().fadeIn(delay: 450.ms, duration: 700.ms),
               ],
@@ -349,7 +672,7 @@ class _FeatureChip extends StatelessWidget {
         children: [
           Icon(icon, size: 15, color: AppColors.primary),
           const SizedBox(width: 8),
-          Text(label, style: const TextStyle(fontSize: 12, color: AppColors.text)),
+          Text(label, style: TextStyle(fontSize: 12, color: AppColors.text)),
         ],
       ),
     );

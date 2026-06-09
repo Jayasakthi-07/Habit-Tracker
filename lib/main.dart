@@ -1,3 +1,4 @@
+import 'package:aura_core/aura_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +15,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await HiveService.init();
+  // Initializes the Supabase client only if SUPABASE_URL/ANON_KEY were provided
+  // via --dart-define; otherwise this is a safe no-op (pure offline mode).
+  await AuraSupabase.init();
+  assert(() {
+    debugPrint('[Aura] Supabase configured=${SupabaseConfig.isConfigured} '
+        'ready=${AuraSupabase.isReady}');
+    return true;
+  }());
   await WindowService.init();
   await NotificationService.instance.init();
 

@@ -117,7 +117,7 @@ class _GoalCard extends ConsumerWidget {
                     style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
                 const SizedBox(height: 2),
                 Text('${goal.progress} / ${goal.target}',
-                    style: const TextStyle(fontSize: 12, color: AppColors.muted)),
+                    style: TextStyle(fontSize: 12, color: AppColors.muted)),
                 const SizedBox(height: 10),
                 Row(
                   children: [
@@ -127,7 +127,7 @@ class _GoalCard extends ConsumerWidget {
                     const Spacer(),
                     GestureDetector(
                       onTap: () => ref.read(goalsProvider.notifier).delete(goal.id),
-                      child: const Icon(Icons.delete_outline_rounded, size: 18, color: AppColors.muted),
+                      child: Icon(Icons.delete_outline_rounded, size: 18, color: AppColors.muted),
                     ),
                   ],
                 ),
@@ -181,7 +181,7 @@ void _showGoalDialog(BuildContext context, WidgetRef ref) {
                   decoration: const InputDecoration(hintText: 'Goal title, e.g. Run 30 km this week'),
                 ),
                 const SizedBox(height: 16),
-                const Text('Type', style: TextStyle(color: AppColors.muted, fontSize: 13)),
+                Text('Type', style: TextStyle(color: AppColors.muted, fontSize: 13)),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
@@ -201,11 +201,11 @@ void _showGoalDialog(BuildContext context, WidgetRef ref) {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    const Text('Target', style: TextStyle(color: AppColors.muted, fontSize: 13)),
+                    Text('Target', style: TextStyle(color: AppColors.muted, fontSize: 13)),
                     const Spacer(),
                     IconButton(
                       onPressed: () => setState(() => target = (target - 1).clamp(1, 999)),
-                      icon: const Icon(Icons.remove_circle_outline_rounded, color: AppColors.muted),
+                      icon: Icon(Icons.remove_circle_outline_rounded, color: AppColors.muted),
                     ),
                     Text('$target', style: AppTypography.numeric(18)),
                     IconButton(

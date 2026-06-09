@@ -1,0 +1,9 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    prefer_const_constructors: true
+    prefer_final_locals: true
+    # We intentionally use clean named params (box:, client:) with private fields,
+    # which would otherwise expose `_box:` to callers via initializing formals.
+    prefer_initializing_formals: false

@@ -165,7 +165,7 @@ class _FocusPageState extends ConsumerState<FocusPage> {
                         children: [
                           Text(_formatted, style: AppTypography.numeric(56)),
                           Text(_running ? 'In progress' : 'Ready',
-                              style: const TextStyle(color: AppColors.muted)),
+                              style: TextStyle(color: AppColors.muted)),
                         ],
                       ),
                     ),
@@ -200,7 +200,7 @@ class _FocusPageState extends ConsumerState<FocusPage> {
                     ),
                     const SizedBox(height: 24),
                     Text('Completed focus sessions today: $_completedSessions',
-                        style: const TextStyle(color: AppColors.muted, fontSize: 13)),
+                        style: TextStyle(color: AppColors.muted, fontSize: 13)),
                   ],
                 ),
               ).animate().fadeIn(duration: 500.ms).scale(

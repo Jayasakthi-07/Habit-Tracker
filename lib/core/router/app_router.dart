@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/ai/presentation/ai_coach_page.dart';
 import '../../features/analytics/presentation/analytics_page.dart';
 import '../../features/auth/auth_provider.dart';
 import '../../features/auth/presentation/login_page.dart';
@@ -50,6 +51,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(path: Routes.journal, pageBuilder: (c, s) => _fade(s, const JournalPage())),
           GoRoute(path: Routes.achievements, pageBuilder: (c, s) => _fade(s, const AchievementsPage())),
           GoRoute(path: Routes.focus, pageBuilder: (c, s) => _fade(s, const FocusPage())),
+          GoRoute(path: Routes.ai, pageBuilder: (c, s) => _fade(s, const AiCoachPage())),
           GoRoute(path: Routes.settings, pageBuilder: (c, s) => _fade(s, const SettingsPage())),
         ],
       ),

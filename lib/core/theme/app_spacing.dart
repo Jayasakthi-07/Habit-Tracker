@@ -28,27 +28,29 @@ abstract class AppSpacing {
 abstract class AppShadows {
   static List<BoxShadow> soft = [
     const BoxShadow(
-      color: Color(0x66000000),
-      blurRadius: 24,
-      offset: Offset(0, 12),
+      color: Color(0x4D000000),
+      blurRadius: 18,
+      offset: Offset(0, 8),
     ),
   ];
 
   static List<BoxShadow> card = [
     const BoxShadow(
-      color: Color(0x4D000000),
-      blurRadius: 30,
-      spreadRadius: -8,
-      offset: Offset(0, 18),
+      color: Color(0x40000000),
+      blurRadius: 20,
+      spreadRadius: -10,
+      offset: Offset(0, 12),
     ),
   ];
 
-  static List<BoxShadow> glow(Color color, {double strength = 0.45}) => [
+  /// A subtle accent halo. Kept minimal and tight so the UI reads crisp rather
+  /// than blurry/neon.
+  static List<BoxShadow> glow(Color color, {double strength = 0.16}) => [
         BoxShadow(
           color: color.withValues(alpha: strength),
-          blurRadius: 28,
-          spreadRadius: -4,
-          offset: const Offset(0, 6),
+          blurRadius: 14,
+          spreadRadius: -10,
+          offset: const Offset(0, 3),
         ),
       ];
 }

@@ -10,7 +10,7 @@ class AnimatedCounter extends StatelessWidget {
     super.key,
     required this.value,
     this.fontSize = 28,
-    this.color = AppColors.text,
+    this.color,
     this.suffix = '',
     this.prefix = '',
     this.duration = const Duration(milliseconds: 800),
@@ -18,7 +18,7 @@ class AnimatedCounter extends StatelessWidget {
 
   final int value;
   final double fontSize;
-  final Color color;
+  final Color? color;
   final String suffix;
   final String prefix;
   final Duration duration;
@@ -32,7 +32,7 @@ class AnimatedCounter extends StatelessWidget {
       builder: (context, v, _) {
         return Text(
           '$prefix${v.round()}$suffix',
-          style: AppTypography.numeric(fontSize, color: color),
+          style: AppTypography.numeric(fontSize, color: color ?? AppColors.text),
         );
       },
     );

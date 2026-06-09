@@ -66,7 +66,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
           const SectionHeader(title: 'Past Entries', icon: Icons.history_rounded),
           const SizedBox(height: 16),
           if (entries.isEmpty)
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(vertical: 30),
               child: Center(child: Text('No journal entries yet.', style: TextStyle(color: AppColors.muted))),
             )
@@ -175,7 +175,7 @@ class _MoodInsights extends StatelessWidget {
                   Text(entries.isEmpty ? 'No data' : 'Average: ${avgMood.label}',
                       style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
                   const SizedBox(height: 2),
-                  Text('${entries.length} entries logged', style: const TextStyle(color: AppColors.muted, fontSize: 12)),
+                  Text('${entries.length} entries logged', style: TextStyle(color: AppColors.muted, fontSize: 12)),
                 ],
               ),
             ],
@@ -231,13 +231,13 @@ class _EntryCard extends ConsumerWidget {
                     const Spacer(),
                     GestureDetector(
                       onTap: () => ref.read(journalProvider.notifier).delete(entry.date),
-                      child: const Icon(Icons.delete_outline_rounded, size: 17, color: AppColors.muted),
+                      child: Icon(Icons.delete_outline_rounded, size: 17, color: AppColors.muted),
                     ),
                   ],
                 ),
                 if (entry.text.isNotEmpty) ...[
                   const SizedBox(height: 6),
-                  Text(entry.text, style: const TextStyle(color: AppColors.muted, height: 1.5)),
+                  Text(entry.text, style: TextStyle(color: AppColors.muted, height: 1.5)),
                 ],
               ],
             ),

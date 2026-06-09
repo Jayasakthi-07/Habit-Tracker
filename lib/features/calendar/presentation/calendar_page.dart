@@ -108,7 +108,7 @@ class _MonthGrid extends ConsumerWidget {
               for (final d in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
                 Expanded(
                   child: Center(
-                    child: Text(d, style: const TextStyle(fontSize: 11, color: AppColors.muted, fontWeight: FontWeight.w600)),
+                    child: Text(d, style: TextStyle(fontSize: 11, color: AppColors.muted, fontWeight: FontWeight.w600)),
                   ),
                 ),
             ],
@@ -207,7 +207,7 @@ class _DayDetail extends ConsumerWidget {
           const SizedBox(height: 16),
           Expanded(
             child: scheduled.isEmpty
-                ? const Center(
+                ? Center(
                     child: Text('No habits scheduled on this day.', style: TextStyle(color: AppColors.muted)))
                 : ListView.separated(
                     itemCount: scheduled.length,

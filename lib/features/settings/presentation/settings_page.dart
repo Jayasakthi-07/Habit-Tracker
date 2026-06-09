@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/theme_controller.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/glow_button.dart';
 import '../../../shared/widgets/section_header.dart';
@@ -113,8 +114,8 @@ class _ProfileCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(user?.name ?? 'User', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 17)),
-                  Text(user?.email.isNotEmpty == true ? user!.email : (user?.isGuest == true ? 'Guest session' : 'No email'),
-                      style: const TextStyle(color: AppColors.muted, fontSize: 13)),
+                  Text(user?.email.isNotEmpty == true ? user!.email : 'No email',
+                      style: TextStyle(color: AppColors.muted, fontSize: 13)),
                 ],
               ),
             ),
@@ -151,7 +152,7 @@ class _ProfileCard extends ConsumerWidget {
     final email = TextEditingController(text: user?.email ?? '');
     showDialog(
       context: context,
-      builder: (_) => Dialog(
+      builder: (dialogContext) => Dialog(
         backgroundColor: AppColors.card,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
         child: ConstrainedBox(
@@ -162,7 +163,7 @@ class _ProfileCard extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Edit profile', style: Theme.of(context).textTheme.titleLarge),
+                Text('Edit profile', style: Theme.of(dialogContext).textTheme.titleLarge),
                 const SizedBox(height: 18),
                 TextField(controller: name, decoration: const InputDecoration(hintText: 'Name')),
                 const SizedBox(height: 12),
@@ -175,7 +176,7 @@ class _ProfileCard extends ConsumerWidget {
                     icon: Icons.check_rounded,
                     onPressed: () {
                       ref.read(authProvider.notifier).updateProfile(name: name.text.trim(), email: email.text.trim());
-                      Navigator.pop(context);
+                      Navigator.pop(dialogContext);
                     },
                   ),
                 ),
@@ -220,11 +221,68 @@ class _GeneralCard extends ConsumerWidget {
         _Toggle(label: 'Minimize to system tray', value: settings.minimizeToTray, onChanged: c.setMinimizeToTray),
         _Toggle(label: 'Start with Windows', value: settings.startWithWindows, onChanged: c.setStartWithWindows),
         _Toggle(label: 'Week starts on Monday', value: settings.weekStartsMonday, onChanged: c.setWeekStart),
+        const SizedBox(height: 14),
+        Text('Appearance',
+            style: TextStyle(
+                color: AppColors.muted,
+                fontSize: 12,
+                fontWeight: FontWeight.w600)),
         const SizedBox(height: 8),
-        const Text(
-          'Theme: Aura Dark (more premium themes coming soon)',
-          style: TextStyle(color: AppColors.muted, fontSize: 12),
+        const _ThemeSelector(),
+      ],
+    );
+  }
+}
+
+/// Segmented System / Light / Dark theme picker (desktop).
+class _ThemeSelector extends ConsumerWidget {
+  const _ThemeSelector();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mode = ref.watch(themeModeProvider);
+    final ctrl = ref.read(themeModeProvider.notifier);
+    Widget seg(ThemeMode m, IconData icon, String label) {
+      final sel = mode == m;
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => ctrl.setMode(m),
+          child: AnimatedContainer(
+            duration: AppSpacing.fast,
+            margin: const EdgeInsets.all(4),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            decoration: BoxDecoration(
+              color: sel
+                  ? AppColors.alpha(AppColors.primary, 0.16)
+                  : AppColors.alpha(Colors.white, 0.03),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              border: Border.all(
+                  color: sel ? AppColors.primary : AppColors.border),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon,
+                    size: 16,
+                    color: sel ? AppColors.primary : AppColors.muted),
+                const SizedBox(width: 8),
+                Text(label,
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: sel ? AppColors.primary : AppColors.muted)),
+              ],
+            ),
+          ),
         ),
+      );
+    }
+
+    return Row(
+      children: [
+        seg(ThemeMode.system, Icons.brightness_auto_rounded, 'System'),
+        seg(ThemeMode.light, Icons.light_mode_rounded, 'Light'),
+        seg(ThemeMode.dark, Icons.dark_mode_rounded, 'Dark'),
       ],
     );
   }
@@ -256,9 +314,9 @@ class _PremiumCard extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
           if (license.activated) ...[
-            Text('License: ${license.key}', style: const TextStyle(color: AppColors.muted, fontSize: 13)),
+            Text('License: ${license.key}', style: TextStyle(color: AppColors.muted, fontSize: 13)),
             const SizedBox(height: 4),
-            Text('Device: ${license.deviceId}', style: const TextStyle(color: AppColors.muted, fontSize: 13)),
+            Text('Device: ${license.deviceId}', style: TextStyle(color: AppColors.muted, fontSize: 13)),
             const SizedBox(height: 16),
             GlowButton(
               label: 'Deactivate license',
@@ -271,7 +329,7 @@ class _PremiumCard extends ConsumerWidget {
               },
             ),
           ] else ...[
-            const Text(
+            Text(
               'Unlock unlimited habits, advanced analytics, premium themes and AI features.',
               style: TextStyle(color: AppColors.muted, height: 1.5),
             ),
@@ -318,7 +376,7 @@ class _PremiumCard extends ConsumerWidget {
                 children: [
                   Text('Activate Premium', style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 8),
-                  const Text('Enter your license key (AURA-XXXX-XXXX-XXXX).',
+                  Text('Enter your license key (AURA-XXXX-XXXX-XXXX).',
                       style: TextStyle(color: AppColors.muted, fontSize: 13)),
                   const SizedBox(height: 16),
                   TextField(
@@ -384,7 +442,7 @@ class _Perk extends StatelessWidget {
         children: [
           const Icon(Icons.check_rounded, size: 13, color: AppColors.primary),
           const SizedBox(width: 5),
-          Text(label, style: const TextStyle(fontSize: 11, color: AppColors.text)),
+          Text(label, style: TextStyle(fontSize: 11, color: AppColors.text)),
         ],
       ),
     );
@@ -462,7 +520,7 @@ class _AboutCard extends StatelessWidget {
     return _Card(
       title: 'About & Security',
       icon: Icons.info_rounded,
-      children: const [
+      children: [
         _InfoRow(label: 'Version', value: '1.0.0'),
         _InfoRow(label: 'Storage', value: 'Local & encrypted-at-rest'),
         _InfoRow(label: 'Privacy', value: 'Offline-first — your data never leaves this device'),
@@ -489,7 +547,7 @@ class _InfoRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 90, child: Text(label, style: const TextStyle(color: AppColors.muted, fontSize: 13))),
+          SizedBox(width: 90, child: Text(label, style: TextStyle(color: AppColors.muted, fontSize: 13))),
           Expanded(child: Text(value, style: const TextStyle(fontSize: 13))),
         ],
       ),

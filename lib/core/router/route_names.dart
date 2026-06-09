@@ -9,6 +9,7 @@ abstract class Routes {
   static const journal = '/journal';
   static const achievements = '/achievements';
   static const focus = '/focus';
+  static const ai = '/ai';
   static const settings = '/settings';
 
   static const all = [
@@ -20,6 +21,7 @@ abstract class Routes {
     journal,
     achievements,
     focus,
+    ai,
     settings,
   ];
 }

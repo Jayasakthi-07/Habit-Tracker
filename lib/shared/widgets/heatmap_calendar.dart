@@ -66,7 +66,7 @@ class HeatmapCalendar extends StatelessWidget {
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(4),
-          boxShadow: intensity > 0.6 ? AppShadows.glow(baseColor, strength: 0.25) : null,
+          boxShadow: intensity > 0.6 ? AppShadows.glow(baseColor, strength: 0.14) : null,
         ),
       ),
     );

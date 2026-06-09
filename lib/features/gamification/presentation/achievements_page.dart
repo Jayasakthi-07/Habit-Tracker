@@ -97,7 +97,7 @@ class AchievementsPage extends ConsumerWidget {
                     Text(a.description,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 12, color: AppColors.muted)),
+                        style: TextStyle(fontSize: 12, color: AppColors.muted)),
                     const SizedBox(height: 10),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(99),
@@ -144,7 +144,7 @@ class _MiniStat extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(value, style: AppTypography.numeric(20)),
-                Text(label, style: const TextStyle(fontSize: 12, color: AppColors.muted)),
+                Text(label, style: TextStyle(fontSize: 12, color: AppColors.muted)),
               ],
             ),
           ],

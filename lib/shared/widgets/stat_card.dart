@@ -46,7 +46,7 @@ class StatCard extends StatelessWidget {
               ),
               const Spacer(),
               if (caption != null)
-                Text(caption!, style: const TextStyle(fontSize: 11, color: AppColors.muted)),
+                Text(caption!, style: TextStyle(fontSize: 11, color: AppColors.muted)),
             ],
           ),
           const SizedBox(height: 12),
@@ -55,7 +55,7 @@ class StatCard extends StatelessWidget {
             children: [
               AnimatedCounter(value: value, suffix: suffix, fontSize: 28, color: AppColors.text),
               const SizedBox(height: 2),
-              Text(label, style: const TextStyle(fontSize: 13, color: AppColors.muted)),
+              Text(label, style: TextStyle(fontSize: 13, color: AppColors.muted)),
             ],
           ),
         ],

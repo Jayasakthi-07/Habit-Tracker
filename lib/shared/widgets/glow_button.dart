@@ -79,7 +79,7 @@ class _GlowButtonState extends State<GlowButton> {
                   ? Border.all(color: AppColors.alpha(accent, _hovered ? 0.9 : 0.45))
                   : null,
               boxShadow: isFilled && enabled && _hovered
-                  ? AppShadows.glow(accent, strength: 0.55)
+                  ? AppShadows.glow(accent, strength: 0.22)
                   : null,
             ),
             child: Row(

@@ -57,6 +57,9 @@ dependencies:
   animations: ^2.2.0
   url_launcher: ^6.3.2
   http: ^1.6.0
+  # Shared cross-platform core (Supabase client, cloud sync, AI). Local package.
+  aura_core:
+    path: packages/aura_core
 
 dev_dependencies:
   flutter_test:

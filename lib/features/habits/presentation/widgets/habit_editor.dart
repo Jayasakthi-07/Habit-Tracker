@@ -1,3 +1,4 @@
+import 'package:aura_core/aura_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,16 +11,8 @@ import '../../domain/habit.dart';
 import '../../domain/habit_enums.dart';
 import '../providers/habit_providers.dart';
 
-/// Curated set of icons users can pick for a habit.
-const _iconChoices = <IconData>[
-  Icons.favorite_rounded, Icons.fitness_center_rounded, Icons.menu_book_rounded,
-  Icons.water_drop_rounded, Icons.directions_run_rounded, Icons.self_improvement_rounded,
-  Icons.bedtime_rounded, Icons.restaurant_rounded, Icons.code_rounded,
-  Icons.brush_rounded, Icons.music_note_rounded, Icons.savings_rounded,
-  Icons.translate_rounded, Icons.spa_rounded, Icons.work_rounded,
-  Icons.school_rounded, Icons.local_drink_rounded, Icons.pedal_bike_rounded,
-  Icons.sunny, Icons.nightlight_rounded, Icons.psychology_rounded, Icons.eco_rounded,
-];
+/// Shared habit-icon set — identical to the Android app (`aura_core`).
+const _iconChoices = kHabitIconChoices;
 
 /// Opens the create/edit habit dialog.
 Future<void> showHabitEditor(BuildContext context, WidgetRef ref, {Habit? existing}) {
@@ -151,7 +144,7 @@ class _HabitEditorDialogState extends ConsumerState<_HabitEditorDialog> {
                       style: Theme.of(context).textTheme.titleLarge),
                   const Spacer(),
                   IconButton(
-                    icon: const Icon(Icons.close_rounded, color: AppColors.muted),
+                    icon: Icon(Icons.close_rounded, color: AppColors.muted),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -362,7 +355,7 @@ class _HabitEditorDialogState extends ConsumerState<_HabitEditorDialog> {
       lastDate: DateTime(2100),
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.dark(
+          colorScheme: ColorScheme.dark(
             primary: AppColors.primary,
             onPrimary: Color(0xFF002417),
             surface: AppColors.card,
@@ -376,7 +369,7 @@ class _HabitEditorDialogState extends ConsumerState<_HabitEditorDialog> {
   Widget _label(String text) => Padding(
         padding: const EdgeInsets.only(bottom: 8),
         child: Text(text,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.muted)),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.muted)),
       );
 }
 
@@ -468,7 +461,7 @@ class _ColorPicker extends StatelessWidget {
                   color: c.toARGB32() == selected ? Colors.white : Colors.transparent,
                   width: 2,
                 ),
-                boxShadow: c.toARGB32() == selected ? AppShadows.glow(c, strength: 0.6) : null,
+                boxShadow: c.toARGB32() == selected ? AppShadows.glow(c, strength: 0.25) : null,
               ),
               child: c.toARGB32() == selected
                   ? const Icon(Icons.check_rounded, size: 16, color: Colors.black)
@@ -634,7 +627,7 @@ class _DateField extends StatelessWidget {
         ),
         child: Row(
           children: [
-            const Icon(Icons.calendar_today_rounded, size: 15, color: AppColors.muted),
+            Icon(Icons.calendar_today_rounded, size: 15, color: AppColors.muted),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
@@ -645,7 +638,7 @@ class _DateField extends StatelessWidget {
             if (onClear != null)
               GestureDetector(
                 onTap: onClear,
-                child: const Icon(Icons.close_rounded, size: 15, color: AppColors.muted),
+                child: Icon(Icons.close_rounded, size: 15, color: AppColors.muted),
               ),
           ],
         ),
@@ -718,7 +711,7 @@ class _ReminderEditor extends StatelessWidget {
                 const SizedBox(width: 4),
                 GestureDetector(
                   onTap: () => onRemove(r),
-                  child: const Icon(Icons.close_rounded, size: 14, color: AppColors.muted),
+                  child: Icon(Icons.close_rounded, size: 14, color: AppColors.muted),
                 ),
               ],
             ),
