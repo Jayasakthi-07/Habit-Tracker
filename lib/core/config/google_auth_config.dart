@@ -1,18 +1,25 @@
-/// Google OAuth 2.0 configuration for the desktop "installed app" flow.
+/// Google OAuth 2.0 configuration for the desktop "installed app" loopback flow.
 ///
-/// For a **Desktop** OAuth client, Google does not treat the client secret as
-/// confidential — it is expected to ship inside the distributed application and
-/// is safe to embed here. Sign-in uses the loopback redirect (`http://localhost`)
-/// authorization-code flow, which is the supported pattern for native desktop
-/// apps (the `google_sign_in` plugin does not support Windows).
+/// Values are injected at build time via `--dart-define` (kept out of source):
 ///
-/// To use a different Google Cloud project, replace these two values (or load
-/// them from a bundled JSON at runtime).
+/// ```
+/// --dart-define=GOOGLE_DESKTOP_CLIENT_ID=<new desktop client id>
+/// --dart-define=GOOGLE_DESKTOP_CLIENT_SECRET=<its secret>
+/// ```
+///
+/// The Windows app uses these to obtain a Google **id_token** via the loopback
+/// flow, which is then exchanged for a Supabase session
+/// (`AuthService.signInWithGoogleIdToken`). The desktop client id must also be
+/// listed in Supabase → Auth → Google → "Authorized Client IDs".
 abstract class GoogleAuthConfig {
   static const String clientId =
-      'YOUR_GOOGLE_CLIENT_ID_HERE';
+      String.fromEnvironment('GOOGLE_DESKTOP_CLIENT_ID');
 
-  static const String clientSecret = 'YOUR_GOOGLE_CLIENT_SECRET_HERE';
+  static const String clientSecret =
+      String.fromEnvironment('GOOGLE_DESKTOP_CLIENT_SECRET');
+
+  /// True when both values were provided at build time.
+  static bool get isConfigured => clientId.isNotEmpty && clientSecret.isNotEmpty;
 
   /// OpenID Connect scopes needed to read the user's basic profile + email.
   static const List<String> scopes = ['openid', 'email', 'profile'];

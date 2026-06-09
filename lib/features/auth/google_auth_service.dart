@@ -9,12 +9,22 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/config/google_auth_config.dart';
 
-/// Basic profile returned by Google sign-in.
+/// Basic profile + tokens returned by Google sign-in.
 class GoogleUser {
-  const GoogleUser({required this.name, required this.email, this.photo = ''});
+  const GoogleUser({
+    required this.name,
+    required this.email,
+    this.photo = '',
+    this.idToken = '',
+    this.accessToken = '',
+  });
   final String name;
   final String email;
   final String photo;
+
+  /// OIDC id_token — exchanged for a Supabase session via signInWithIdToken.
+  final String idToken;
+  final String accessToken;
 }
 
 class GoogleAuthException implements Exception {
@@ -134,6 +144,7 @@ abstract class GoogleAuthService {
 
   static Future<GoogleUser> _fetchProfile(Map<String, dynamic> tokens) async {
     final accessToken = tokens['access_token'] as String?;
+    final idToken = tokens['id_token'] as String? ?? '';
     if (accessToken == null) {
       throw GoogleAuthException('No access token returned by Google.');
     }
@@ -149,6 +160,8 @@ abstract class GoogleAuthService {
       name: (d['name'] ?? d['given_name'] ?? d['email'] ?? 'User').toString(),
       email: (d['email'] ?? '').toString(),
       photo: (d['picture'] ?? '').toString(),
+      idToken: idToken,
+      accessToken: accessToken,
     );
   }
 
