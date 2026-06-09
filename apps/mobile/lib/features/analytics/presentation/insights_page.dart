@@ -10,6 +10,7 @@ import '../../../shared/widgets/heatmap_calendar.dart';
 import '../../gamification/achievements.dart';
 import '../../gamification/gamification_provider.dart';
 import '../../habits/presentation/providers/habit_providers.dart';
+import '../../share/share_card_page.dart';
 import 'analytics_providers.dart';
 
 /// The "Insights" tab: gamification progress, headline stats, a trend chart
@@ -43,7 +44,36 @@ class _InsightsPageState extends ConsumerState<InsightsPage> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 120),
         children: [
-          Text('Insights', style: Theme.of(context).textTheme.headlineMedium),
+          Row(
+            children: [
+              Text('Insights',
+                  style: Theme.of(context).textTheme.headlineMedium),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.ios_share_rounded,
+                    color: AppColors.muted),
+                onPressed: () => ShareCardPage.open(
+                  context,
+                  ShareCardSpec(
+                    icon: Icons.auto_graph_rounded,
+                    headline: 'Level ${game.level}',
+                    title: '${(data.overallSuccess * 100).round()}% success',
+                    subtitle: '${data.activeDays} active days · ${game.xp} XP',
+                    stats: [
+                      (label: 'Level', value: '${game.level}'),
+                      (label: 'XP', value: '${game.xp}'),
+                      (
+                        label: 'Active',
+                        value: '${data.activeDays}d'
+                      ),
+                    ],
+                    shareText:
+                        'Level ${game.level} on Aura Habits — ${(data.overallSuccess * 100).round()}% habit success ✨',
+                  ),
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 16),
           _LevelCard(game: game),
           const SizedBox(height: 16),
@@ -102,7 +132,7 @@ class _InsightsPageState extends ConsumerState<InsightsPage> {
           const SizedBox(height: 20),
           Text('Achievements', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
-          _achievementsGrid(achievements),
+          _achievementsGrid(context, achievements),
         ],
       ),
     );
@@ -186,7 +216,7 @@ class _InsightsPageState extends ConsumerState<InsightsPage> {
     );
   }
 
-  Widget _achievementsGrid(List<Achievement> items) {
+  Widget _achievementsGrid(BuildContext context, List<Achievement> items) {
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
@@ -194,7 +224,26 @@ class _InsightsPageState extends ConsumerState<InsightsPage> {
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
       childAspectRatio: 1.55,
-      children: items.map((a) => _AchievementCard(a: a)).toList(),
+      children: items
+          .map((a) => _AchievementCard(
+                a: a,
+                onTap: a.unlocked ? () => _shareAchievement(context, a) : null,
+              ))
+          .toList(),
+    );
+  }
+
+  void _shareAchievement(BuildContext context, Achievement a) {
+    ShareCardPage.open(
+      context,
+      ShareCardSpec(
+        icon: a.icon,
+        headline: 'Unlocked!',
+        title: a.title,
+        subtitle: a.description,
+        accent: a.color,
+        shareText: 'I just unlocked "${a.title}" on Aura Habits 🏆',
+      ),
     );
   }
 }
@@ -294,14 +343,16 @@ class _StatCard extends StatelessWidget {
 }
 
 class _AchievementCard extends StatelessWidget {
-  const _AchievementCard({required this.a});
+  const _AchievementCard({required this.a, this.onTap});
   final Achievement a;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return GlassCard(
       padding: const EdgeInsets.all(14),
       glowColor: a.unlocked ? a.color : null,
+      onTap: onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -319,7 +370,7 @@ class _AchievementCard extends StatelessWidget {
               ),
               const Spacer(),
               if (a.unlocked)
-                Icon(Icons.check_circle_rounded, color: a.color, size: 16),
+                Icon(Icons.ios_share_rounded, color: a.color, size: 15),
             ],
           ),
           const Spacer(),

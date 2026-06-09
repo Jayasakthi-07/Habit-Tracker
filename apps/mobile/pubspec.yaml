@@ -30,6 +30,7 @@ dependencies:
   # Mobile-specific:
   google_sign_in: ^6.2.2
   flutter_local_notifications: ^18.0.1
+  share_plus: ^10.1.4
   # Shared cross-platform core (Supabase client, cloud sync, AI). Local package.
   aura_core:
     path: ../../packages/aura_core

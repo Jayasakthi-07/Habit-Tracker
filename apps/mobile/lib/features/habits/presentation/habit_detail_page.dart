@@ -7,6 +7,7 @@ import '../../../core/utils/date_x.dart';
 import '../../../shared/widgets/glass_card.dart';
 import '../../../shared/widgets/heatmap_calendar.dart';
 import '../../categories/domain/habit_category.dart';
+import '../../share/share_card_page.dart';
 import '../domain/habit_enums.dart';
 import '../domain/habit_log.dart';
 import 'providers/habit_providers.dart';
@@ -47,6 +48,34 @@ class HabitDetailPage extends ConsumerWidget {
         elevation: 0,
         title: const Text('Habit'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.ios_share_rounded, color: AppColors.muted),
+            onPressed: () => ShareCardPage.open(
+              context,
+              ShareCardSpec(
+                icon: stats.currentStreak > 0
+                    ? Icons.local_fire_department_rounded
+                    : habit.icon,
+                headline: stats.currentStreak > 0
+                    ? '${stats.currentStreak}-day streak'
+                    : habit.name,
+                title: habit.name,
+                subtitle:
+                    '${(stats.successRate * 100).round()}% success · ${stats.totalCompleted} done',
+                accent: color,
+                stats: [
+                  (label: 'Best', value: '${stats.bestStreak}'),
+                  (label: 'Done', value: '${stats.totalCompleted}'),
+                  (
+                    label: 'Success',
+                    value: '${(stats.successRate * 100).round()}%'
+                  ),
+                ],
+                shareText:
+                    'I\'m on a ${stats.currentStreak}-day streak with "${habit.name}" on Aura Habits 🔥',
+              ),
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.edit_rounded, color: AppColors.muted),
             onPressed: () => HabitEditorSheet.show(context, habit: habit),
