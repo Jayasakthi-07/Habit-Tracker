@@ -6,8 +6,8 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../shared/widgets/glass_card.dart';
 import '../../domain/habit.dart';
 import '../../domain/habit_enums.dart';
+import '../habit_detail_page.dart';
 import '../providers/habit_providers.dart';
-import 'habit_editor_sheet.dart';
 import 'status_picker.dart';
 
 /// A single habit row: tap the tick to complete, tap the card to edit, and
@@ -29,7 +29,11 @@ class HabitCard extends ConsumerWidget {
       child: GlassCard(
         padding: const EdgeInsets.all(14),
         glowColor: done ? habit.color : null,
-        onTap: () => HabitEditorSheet.show(context, habit: habit),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => HabitDetailPage(habitId: habit.id),
+          ),
+        ),
         onLongPress: () => _openPicker(context, ref, status),
         child: Row(
           children: [

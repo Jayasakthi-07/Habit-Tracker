@@ -260,4 +260,85 @@ class HabitRepository {
     }
     return (total: scheduled.length, completed: credit);
   }
+
+  // ---- Advanced analytics (Phase 5, derived — not synced) ----
+
+  /// Per-day completion intensity (0..1) for a *single* habit, for its detail
+  /// heatmap. Only scheduled days carry a value.
+  Map<DateTime, double> habitHeatmap(Habit habit, {int days = 182}) {
+    final today = DateTime.now().dateOnly;
+    final start = today.subtract(Duration(days: days));
+    final logs = {for (final l in logsForHabit(habit.id)) l.date.dateOnly.key: l};
+    final result = <DateTime, double>{};
+    for (final day in daysBetween(start, today)) {
+      if (!habit.isScheduledOn(day)) continue;
+      result[day] = (logs[day.key]?.status.credit ?? 0).clamp(0, 1).toDouble();
+    }
+    return result;
+  }
+
+  /// Success rate (0..1) for each weekday (DateTime.monday..sunday) for a single
+  /// habit, across its scheduled history. Days the habit isn't scheduled on are
+  /// ignored, so e.g. a weekday-only habit shows 0 weekends.
+  Map<int, double> weekdayPerformance(Habit habit, {DateTime? asOf}) {
+    final today = (asOf ?? DateTime.now()).dateOnly;
+    final logs = {for (final l in logsForHabit(habit.id)) l.date.dateOnly.key: l};
+    final credit = <int, double>{};
+    final count = <int, int>{};
+    for (final day in daysBetween(habit.startDate, today)) {
+      if (!habit.isScheduledOn(day)) continue;
+      credit[day.weekday] = (credit[day.weekday] ?? 0) +
+          (logs[day.key]?.status.credit ?? 0);
+      count[day.weekday] = (count[day.weekday] ?? 0) + 1;
+    }
+    return {
+      for (var wd = 1; wd <= 7; wd++)
+        wd: (count[wd] ?? 0) == 0 ? 0.0 : credit[wd]! / count[wd]!,
+    };
+  }
+
+  /// Most recent logs for a habit, newest first.
+  List<HabitLog> recentLogs(Habit habit, {int limit = 14}) {
+    final logs = logsForHabit(habit.id)
+      ..sort((a, b) => b.date.compareTo(a.date));
+    return logs.take(limit).toList();
+  }
+
+  /// Success rate over an arbitrary lookback window for a single habit (0..1).
+  double periodSuccess(Habit habit, {int days = 30, DateTime? asOf}) {
+    final end = (asOf ?? DateTime.now()).dateOnly;
+    final start = end.subtract(Duration(days: days - 1));
+    double credit = 0;
+    var scheduled = 0;
+    for (final day in daysBetween(start, end)) {
+      if (!habit.isScheduledOn(day)) continue;
+      scheduled++;
+      credit += logFor(habit.id, day)?.status.credit ?? 0;
+    }
+    return scheduled == 0 ? 0 : (credit / scheduled).clamp(0, 1);
+  }
+
+  /// Overall success rate (0..1) per weekday across *all* active habits.
+  Map<int, double> overallWeekdayPerformance({int days = 84}) {
+    final habits = getHabits();
+    final today = DateTime.now().dateOnly;
+    final start = today.subtract(Duration(days: days));
+    final credit = <int, double>{};
+    final count = <int, int>{};
+    for (final day in daysBetween(start, today)) {
+      final scheduled = habits.where((h) => h.isScheduledOn(day)).toList();
+      if (scheduled.isEmpty) continue;
+      double dayCredit = 0;
+      for (final h in scheduled) {
+        dayCredit += logFor(h.id, day)?.status.credit ?? 0;
+      }
+      credit[day.weekday] =
+          (credit[day.weekday] ?? 0) + dayCredit / scheduled.length;
+      count[day.weekday] = (count[day.weekday] ?? 0) + 1;
+    }
+    return {
+      for (var wd = 1; wd <= 7; wd++)
+        wd: (count[wd] ?? 0) == 0 ? 0.0 : credit[wd]! / count[wd]!,
+    };
+  }
 }

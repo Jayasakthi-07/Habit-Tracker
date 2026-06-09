@@ -3,25 +3,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/glass_card.dart';
+import '../../../shared/widgets/heatmap_calendar.dart';
 import '../../gamification/achievements.dart';
 import '../../gamification/gamification_provider.dart';
 import '../../habits/presentation/providers/habit_providers.dart';
 import 'analytics_providers.dart';
 
-/// The "Insights" tab: gamification progress, headline stats, a 30-day trend
-/// chart, per-habit success bars, and the achievements grid — all derived live
-/// from synced data.
-class InsightsPage extends ConsumerWidget {
+/// The "Insights" tab: gamification progress, headline stats, a trend chart
+/// with a time-range selector, per-weekday performance, a contribution heatmap,
+/// per-habit success bars, and the achievements grid — all derived live.
+class InsightsPage extends ConsumerStatefulWidget {
   const InsightsPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<InsightsPage> createState() => _InsightsPageState();
+}
+
+class _InsightsPageState extends ConsumerState<InsightsPage> {
+  int _range = 30; // 7 / 30 / 90 days
+
+  static const _labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  @override
+  Widget build(BuildContext context) {
     ref.watch(habitsControllerProvider); // recompute on any change
+    final repo = ref.read(habitRepositoryProvider);
     final data = ref.watch(analyticsProvider);
     final game = ref.watch(gameProfileProvider);
     final achievements = ref.watch(achievementsProvider);
+    final trend = repo.completionTrend(days: _range);
+    final weekday = repo.overallWeekdayPerformance();
+    final heatmap = repo.heatmapIntensities();
 
     return SafeArea(
       bottom: false,
@@ -34,12 +49,42 @@ class InsightsPage extends ConsumerWidget {
           const SizedBox(height: 16),
           _statGrid(data),
           const SizedBox(height: 16),
-          Text('30-day trend',
-              style: Theme.of(context).textTheme.titleLarge),
+          Row(
+            children: [
+              Text('Trend', style: Theme.of(context).textTheme.titleLarge),
+              const Spacer(),
+              _rangeChip(7),
+              const SizedBox(width: 6),
+              _rangeChip(30),
+              const SizedBox(width: 6),
+              _rangeChip(90),
+            ],
+          ),
           const SizedBox(height: 12),
           GlassCard(
             padding: const EdgeInsets.fromLTRB(8, 20, 16, 12),
-            child: SizedBox(height: 160, child: _TrendChart(data.trend30)),
+            child: SizedBox(height: 160, child: _TrendChart(trend)),
+          ),
+          const SizedBox(height: 20),
+          Text('By weekday', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 12),
+          GlassCard(
+            child: Column(
+              children: [
+                for (var wd = 1; wd <= 7; wd++)
+                  _bar(_labels[wd - 1], weekday[wd] ?? 0, AppColors.secondary),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text('Activity', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 12),
+          GlassCard(
+            padding: const EdgeInsets.all(16),
+            child: SizedBox(
+              height: 7 * 19.0,
+              child: HeatmapCalendar(intensities: heatmap, weeks: 26),
+            ),
           ),
           if (data.habitSuccess.isNotEmpty) ...[
             const SizedBox(height: 20),
@@ -59,6 +104,28 @@ class InsightsPage extends ConsumerWidget {
           const SizedBox(height: 12),
           _achievementsGrid(achievements),
         ],
+      ),
+    );
+  }
+
+  Widget _rangeChip(int days) {
+    final sel = _range == days;
+    return GestureDetector(
+      onTap: () => setState(() => _range = days),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: sel
+              ? AppColors.alpha(AppColors.primary, 0.16)
+              : AppColors.alpha(Colors.white, 0.03),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
+          border: Border.all(color: sel ? AppColors.primary : AppColors.border),
+        ),
+        child: Text('${days}d',
+            style: TextStyle(
+                color: sel ? AppColors.primary : AppColors.muted,
+                fontSize: 12,
+                fontWeight: FontWeight.w600)),
       ),
     );
   }
