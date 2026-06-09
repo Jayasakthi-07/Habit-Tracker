@@ -1,69 +1,75 @@
-import 'package:flutter/material.dart';
+import 'package:aura_core/aura_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/theme/app_colors.dart';
+import '../goals/goals_provider.dart';
 import '../habits/presentation/providers/habit_providers.dart';
+import '../journal/journal_provider.dart';
 import 'gamification_provider.dart';
 
-class Achievement {
-  const Achievement({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.color,
-    required this.unlocked,
-    required this.progress,
-  });
+// Re-export the shared Achievement type so existing imports keep working.
+export 'package:aura_core/aura_core.dart' show Achievement;
 
-  final String id;
-  final String title;
-  final String description;
-  final IconData icon;
-  final Color color;
-  final bool unlocked;
-  final double progress; // 0..1
-}
-
-/// Computes the list of achievements and their unlock state from real data.
-final achievementsProvider = Provider<List<Achievement>>((ref) {
-  ref.watch(habitsControllerProvider.select((s) => s.revision));
+/// Builds the metric snapshot the shared achievements catalog evaluates against.
+/// Computed entirely from local (synced) data so it matches the Windows app.
+Map<String, num> buildAchievementMetrics(Ref ref) {
   final repo = ref.read(habitRepositoryProvider);
   final game = ref.watch(gameProfileProvider);
   final habits = repo.getHabits(includeArchived: true);
 
   var bestStreak = 0;
-  var totalCompleted = 0;
+  var currentStreak = 0;
+  var completed = 0;
+  var scheduledTotal = 0;
+  var creditTotal = 0.0;
   for (final h in habits) {
     final s = repo.statsFor(h);
     if (s.bestStreak > bestStreak) bestStreak = s.bestStreak;
-    totalCompleted += s.totalCompleted;
+    if (s.currentStreak > currentStreak) currentStreak = s.currentStreak;
+    completed += s.totalCompleted;
+    creditTotal += s.successRate * s.scheduledElapsed;
+    scheduledTotal += s.scheduledElapsed;
   }
 
-  Achievement milestone(String id, String title, String desc, IconData icon,
-          Color color, num value, num goal) =>
-      Achievement(
-        id: id,
-        title: title,
-        description: desc,
-        icon: icon,
-        color: color,
-        unlocked: value >= goal,
-        progress: (value / goal).clamp(0, 1).toDouble(),
-      );
+  final heatmap = repo.heatmapIntensities(days: 365);
+  final activeDays = heatmap.values.where((v) => v > 0).length;
+  final perfectDays = heatmap.values.where((v) => v >= 0.999).length;
+  final categories = habits.map((h) => h.categoryId).toSet().length;
 
-  return [
-    milestone('first_step', 'First Step', 'Create your first habit',
-        Icons.flag_rounded, AppColors.primary, habits.length, 1),
-    milestone('week_warrior', 'Week Warrior', 'Reach a 7-day streak',
-        Icons.local_fire_department_rounded, AppColors.warning, bestStreak, 7),
-    milestone('unstoppable', 'Unstoppable', 'Reach a 30-day streak',
-        Icons.bolt_rounded, AppColors.secondary, bestStreak, 30),
-    milestone('centurion', 'Centurion', 'Complete 100 habits total',
-        Icons.military_tech_rounded, AppColors.success, totalCompleted, 100),
-    milestone('level_5', 'Rising Star', 'Reach level 5',
-        Icons.star_rounded, AppColors.partial, game.level, 5),
-    milestone('collector', 'Collector', 'Track 5 different habits',
-        Icons.dashboard_customize_rounded, AppColors.info, habits.length, 5),
-  ];
+  final goals = ref.watch(goalsProvider);
+  final journal = ref.watch(journalProvider);
+
+  return {
+    AchMetric.habits: habits.length,
+    AchMetric.bestStreak: bestStreak,
+    AchMetric.currentStreak: currentStreak,
+    AchMetric.completed: completed,
+    AchMetric.level: game.level,
+    AchMetric.xp: game.xp,
+    AchMetric.activeDays: activeDays,
+    AchMetric.perfectDays: perfectDays,
+    AchMetric.categories: categories,
+    AchMetric.goals: goals.length,
+    AchMetric.goalsDone: goals.where((g) => g.isComplete).length,
+    AchMetric.journal: journal.length,
+    AchMetric.successPct:
+        scheduledTotal == 0 ? 0 : (creditTotal / scheduledTotal * 100).round(),
+  };
+}
+
+/// The full 74-achievement catalog, evaluated against the user's real data.
+/// Unlocked first, then by progress — keeps the grid motivating.
+final achievementsProvider = Provider<List<Achievement>>((ref) {
+  ref.watch(habitsControllerProvider.select((s) => s.revision));
+  final metrics = buildAchievementMetrics(ref);
+  final all = evaluateAchievements(metrics);
+  all.sort((a, b) {
+    if (a.unlocked != b.unlocked) return a.unlocked ? -1 : 1;
+    return b.progress.compareTo(a.progress);
+  });
+  return all;
+});
+
+/// How many of the catalog are unlocked (for headline stats).
+final unlockedCountProvider = Provider<int>((ref) {
+  return ref.watch(achievementsProvider).where((a) => a.unlocked).length;
 });

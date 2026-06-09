@@ -1,3 +1,4 @@
+import 'package:aura_core/aura_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,16 +11,8 @@ import '../../domain/habit.dart';
 import '../../domain/habit_enums.dart';
 import '../providers/habit_providers.dart';
 
-/// Curated set of icons users can pick for a habit.
-const _iconChoices = <IconData>[
-  Icons.favorite_rounded, Icons.fitness_center_rounded, Icons.menu_book_rounded,
-  Icons.water_drop_rounded, Icons.directions_run_rounded, Icons.self_improvement_rounded,
-  Icons.bedtime_rounded, Icons.restaurant_rounded, Icons.code_rounded,
-  Icons.brush_rounded, Icons.music_note_rounded, Icons.savings_rounded,
-  Icons.translate_rounded, Icons.spa_rounded, Icons.work_rounded,
-  Icons.school_rounded, Icons.local_drink_rounded, Icons.pedal_bike_rounded,
-  Icons.sunny, Icons.nightlight_rounded, Icons.psychology_rounded, Icons.eco_rounded,
-];
+/// Shared habit-icon set — identical to the Android app (`aura_core`).
+const _iconChoices = kHabitIconChoices;
 
 /// Opens the create/edit habit dialog.
 Future<void> showHabitEditor(BuildContext context, WidgetRef ref, {Habit? existing}) {

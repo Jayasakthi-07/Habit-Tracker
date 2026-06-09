@@ -130,7 +130,19 @@ class _InsightsPageState extends ConsumerState<InsightsPage> {
             ),
           ],
           const SizedBox(height: 20),
-          Text('Achievements', style: Theme.of(context).textTheme.titleLarge),
+          Row(
+            children: [
+              Text('Achievements',
+                  style: Theme.of(context).textTheme.titleLarge),
+              const Spacer(),
+              Text(
+                  '${achievements.where((a) => a.unlocked).length} / ${achievements.length}',
+                  style: const TextStyle(
+                      color: AppColors.muted,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600)),
+            ],
+          ),
           const SizedBox(height: 12),
           _achievementsGrid(context, achievements),
         ],

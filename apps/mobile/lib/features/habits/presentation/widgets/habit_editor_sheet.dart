@@ -1,3 +1,4 @@
+import 'package:aura_core/aura_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,22 +22,9 @@ class HabitEditorSheet {
   }
 }
 
-/// A small curated set of habit icons (runtime IconData → needs
-/// --no-tree-shake-icons, which the build flag already sets).
-const _icons = <int>[
-  0xe87d, // favorite
-  0xe1a3, // fitness_center
-  0xe566, // self_improvement
-  0xe80c, // local_drink-ish
-  0xe0c9, // book / menu_book
-  0xe3ab, // brush
-  0xe57f, // music_note
-  0xe88a, // home
-  0xe332, // code
-  0xeb49, // bedtime
-  0xe567, // directions_run
-  0xe540, // restaurant
-];
+/// The shared habit-icon set (identical to the Windows app) — see
+/// `aura_core` `kHabitIconChoices`.
+final _icons = kHabitIconChoices.map((i) => i.codePoint).toList();
 
 class _Editor extends ConsumerStatefulWidget {
   const _Editor({this.habit});
