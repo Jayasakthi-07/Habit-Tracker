@@ -8,6 +8,9 @@ library;
 export 'package:supabase_flutter/supabase_flutter.dart'
     show AuthState, AuthChangeEvent, User, Session, AuthResponse, AuthException, OtpType;
 
+export 'src/ai/ai_coach.dart';
+export 'src/ai/ai_coach_factory.dart';
+export 'src/ai/ai_config.dart';
 export 'src/auth/auth_service.dart';
 export 'src/config/supabase_config.dart';
 export 'src/supabase/aura_supabase.dart';

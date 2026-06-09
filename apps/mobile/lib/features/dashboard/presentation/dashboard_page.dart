@@ -8,6 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/utils/date_x.dart';
 import '../../../shared/widgets/glass_card.dart';
+import '../../ai/presentation/ai_coach_page.dart';
 import '../../auth/auth_provider.dart';
 import '../../calendar/presentation/calendar_page.dart';
 import '../../goals/presentation/goals_page.dart';
@@ -68,6 +69,9 @@ class DashboardPage extends ConsumerWidget {
                       ],
                     ),
                   ),
+                  _headerIcon(context, Icons.auto_awesome_outlined,
+                      () => _push(context, const AiCoachPage())),
+                  const SizedBox(width: 4),
                   _headerIcon(context, Icons.flag_outlined,
                       () => _push(context, const GoalsPage())),
                   const SizedBox(width: 4),
