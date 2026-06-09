@@ -151,7 +151,7 @@ class _ProfileCard extends ConsumerWidget {
     final email = TextEditingController(text: user?.email ?? '');
     showDialog(
       context: context,
-      builder: (_) => Dialog(
+      builder: (dialogContext) => Dialog(
         backgroundColor: AppColors.card,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
         child: ConstrainedBox(
@@ -162,7 +162,7 @@ class _ProfileCard extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Edit profile', style: Theme.of(context).textTheme.titleLarge),
+                Text('Edit profile', style: Theme.of(dialogContext).textTheme.titleLarge),
                 const SizedBox(height: 18),
                 TextField(controller: name, decoration: const InputDecoration(hintText: 'Name')),
                 const SizedBox(height: 12),
@@ -175,7 +175,7 @@ class _ProfileCard extends ConsumerWidget {
                     icon: Icons.check_rounded,
                     onPressed: () {
                       ref.read(authProvider.notifier).updateProfile(name: name.text.trim(), email: email.text.trim());
-                      Navigator.pop(context);
+                      Navigator.pop(dialogContext);
                     },
                   ),
                 ),
