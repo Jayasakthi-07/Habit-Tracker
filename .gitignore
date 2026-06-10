@@ -50,3 +50,9 @@ app.*.map.json
 
 # Mobile build artifacts / scratch
 apps/mobile/.run_*.png
+
+# Release env (safe Supabase-only defines; still keep out of git)
+env.release.json
+
+# Release artifacts
+dist/

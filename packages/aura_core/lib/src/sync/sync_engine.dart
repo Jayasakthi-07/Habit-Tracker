@@ -37,6 +37,10 @@ class SyncEngine {
   final void Function(SyncEntity entity)? onRemoteApplied;
 
   final Map<String, String> _shadow = {}; // id -> last-synced json
+  // Pushes are chained per id so rapid successive edits (e.g. toggling a habit
+  // twice quickly) reach the server in order — otherwise an earlier upsert can
+  // land after a later one and the cloud ends up holding stale state.
+  final Map<String, Future<void>> _pushChain = {};
   StreamSubscription<BoxEvent>? _boxSub;
   RealtimeChannel? _channel;
   bool _started = false;
@@ -81,8 +85,15 @@ class SyncEngine {
         }
       } else {
         final data = (row['data'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{};
-        await _applyPut(id, data);
-        applied = true;
+        final incoming = jsonEncode(data);
+        final local = _box.containsKey(id) ? jsonEncode(_mapOf(id)) : null;
+        if (incoming == local) {
+          // Already identical — just record the shadow, no write & no UI churn.
+          _shadow[id] = incoming;
+        } else {
+          await _applyPut(id, data);
+          applied = true;
+        }
       }
     }
     // Migrate local-only records up to the cloud.
@@ -100,9 +111,11 @@ class SyncEngine {
     for (final key in _box.keys.map((k) => k.toString())) {
       final data = _mapOf(key);
       if (_shadow[key] != jsonEncode(data)) {
-        await _pushPut(key, data);
+        _enqueue(key, () => _pushPut(key, data));
       }
     }
+    // Wait for the queue to drain so callers can rely on "flushed" semantics.
+    await Future.wait(_pushChain.values.toList());
   }
 
   Map<String, dynamic> _mapOf(String key) {
@@ -132,12 +145,31 @@ class SyncEngine {
     if (event.deleted) {
       // No shadow => never synced, or this is the echo of a remote delete.
       if (!_shadow.containsKey(id)) return;
-      _pushDelete(id);
+      _enqueue(id, () => _pushDelete(id));
     } else {
       final data = _mapOf(id);
       if (_shadow[id] == jsonEncode(data)) return; // echo / no real change
-      _pushPut(id, data);
+      _enqueue(id, () => _pushPut(id, data));
     }
+  }
+
+  /// Chains [op] after any in-flight push for the same id, so per-record
+  /// writes hit the server strictly in the order they happened locally.
+  void _enqueue(String id, Future<void> Function() op) {
+    final prev = _pushChain[id] ?? Future<void>.value();
+    late final Future<void> next;
+    next = prev.then((_) => op()).whenComplete(() {
+      if (_pushChain[id] == next) _pushChain.remove(id);
+    });
+    _pushChain[id] = next;
+  }
+
+  /// True when the local box holds a change that hasn't been pushed yet (or a
+  /// pending local delete). While dirty, the local value must win over any
+  /// incoming realtime event — our queued push will overwrite the cloud anyway.
+  bool _isLocallyDirty(String id) {
+    if (!_box.containsKey(id)) return _shadow.containsKey(id); // pending delete
+    return _shadow[id] != jsonEncode(_mapOf(id));
   }
 
   Future<void> _pushPut(String id, Map<String, dynamic> data) async {
@@ -195,14 +227,24 @@ class SyncEngine {
     final id = rec['id'] as String?;
     if (id == null) return;
     if (rec['deleted_at'] != null) {
-      if (_box.containsKey(id)) {
-        await _applyDelete(id);
-        onRemoteApplied?.call(entity);
-      }
+      if (!_box.containsKey(id)) return;
+      // A fresher local edit is in flight — let our push win, don't delete.
+      if (_isLocallyDirty(id)) return;
+      await _applyDelete(id);
+      onRemoteApplied?.call(entity);
       return;
     }
     final data = (rec['data'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{};
-    if (_shadow[id] == jsonEncode(data)) return; // our own echo
+    final incoming = jsonEncode(data);
+    final local = _box.containsKey(id) ? jsonEncode(_mapOf(id)) : null;
+    if (incoming == local) {
+      // Same content as local (our echo, or convergent edit): record + skip.
+      _shadow[id] = incoming;
+      return;
+    }
+    // CRITICAL: while a local change is unpushed/in flight, an arriving echo of
+    // an *older* push must not stomp it — that's the "tap reverts itself" bug.
+    if (_isLocallyDirty(id)) return;
     await _applyPut(id, data);
     onRemoteApplied?.call(entity);
   }

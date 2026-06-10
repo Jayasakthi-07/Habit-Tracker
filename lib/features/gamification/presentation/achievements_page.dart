@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -104,13 +103,13 @@ class AchievementsPage extends ConsumerWidget {
                       child: LinearProgressIndicator(
                         value: a.progress,
                         minHeight: 6,
-                        backgroundColor: AppColors.alpha(Colors.white, 0.06),
+                        backgroundColor: AppColors.alpha(AppColors.text, 0.06),
                         valueColor: AlwaysStoppedAnimation(a.unlocked ? a.color : AppColors.muted),
                       ),
                     ),
                   ],
                 ),
-              ).animate().fadeIn(delay: (40 * i).ms, duration: 300.ms).scale(begin: const Offset(0.96, 0.96));
+              );
             },
           ),
         ],

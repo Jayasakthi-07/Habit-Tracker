@@ -40,20 +40,20 @@ class HabitCategory {
 /// The 14 built-in categories required by the product spec.
 abstract class BuiltInCategories {
   static const List<HabitCategory> all = [
-    HabitCategory(id: 'health', name: 'Health', icon: Icons.favorite_rounded, color: Color(0xFFFF5A6E)),
-    HabitCategory(id: 'fitness', name: 'Fitness', icon: Icons.fitness_center_rounded, color: Color(0xFF00FF88)),
-    HabitCategory(id: 'reading', name: 'Reading', icon: Icons.menu_book_rounded, color: Color(0xFFFFC857)),
-    HabitCategory(id: 'productivity', name: 'Productivity', icon: Icons.bolt_rounded, color: Color(0xFF00D4FF)),
-    HabitCategory(id: 'work', name: 'Work', icon: Icons.work_rounded, color: Color(0xFF9575CD)),
-    HabitCategory(id: 'study', name: 'Study', icon: Icons.school_rounded, color: Color(0xFF4DD0E1)),
-    HabitCategory(id: 'sleep', name: 'Sleep', icon: Icons.bedtime_rounded, color: Color(0xFFB388FF)),
-    HabitCategory(id: 'meditation', name: 'Meditation', icon: Icons.self_improvement_rounded, color: Color(0xFFAED581)),
-    HabitCategory(id: 'diet', name: 'Diet', icon: Icons.restaurant_rounded, color: Color(0xFFFF8A65)),
-    HabitCategory(id: 'finance', name: 'Finance', icon: Icons.savings_rounded, color: Color(0xFF00FF88)),
-    HabitCategory(id: 'language', name: 'Language', icon: Icons.translate_rounded, color: Color(0xFF00D4FF)),
-    HabitCategory(id: 'creativity', name: 'Creativity', icon: Icons.palette_rounded, color: Color(0xFFF06292)),
-    HabitCategory(id: 'spiritual', name: 'Spiritual', icon: Icons.spa_rounded, color: Color(0xFFAED581)),
-    HabitCategory(id: 'personal_care', name: 'Personal Care', icon: Icons.spa_outlined, color: Color(0xFFFFC857)),
+    HabitCategory(id: 'health', name: 'Health', icon: Icons.favorite_rounded, color: Color(0xFFFB7185)),
+    HabitCategory(id: 'fitness', name: 'Fitness', icon: Icons.fitness_center_rounded, color: Color(0xFF34D399)),
+    HabitCategory(id: 'reading', name: 'Reading', icon: Icons.menu_book_rounded, color: Color(0xFFFBBF24)),
+    HabitCategory(id: 'productivity', name: 'Productivity', icon: Icons.bolt_rounded, color: Color(0xFF38BDF8)),
+    HabitCategory(id: 'work', name: 'Work', icon: Icons.work_rounded, color: Color(0xFFA78BFA)),
+    HabitCategory(id: 'study', name: 'Study', icon: Icons.school_rounded, color: Color(0xFF22D3EE)),
+    HabitCategory(id: 'sleep', name: 'Sleep', icon: Icons.bedtime_rounded, color: Color(0xFF818CF8)),
+    HabitCategory(id: 'meditation', name: 'Meditation', icon: Icons.self_improvement_rounded, color: Color(0xFF2DD4BF)),
+    HabitCategory(id: 'diet', name: 'Diet', icon: Icons.restaurant_rounded, color: Color(0xFFFB923C)),
+    HabitCategory(id: 'finance', name: 'Finance', icon: Icons.savings_rounded, color: Color(0xFF4ADE80)),
+    HabitCategory(id: 'language', name: 'Language', icon: Icons.translate_rounded, color: Color(0xFF60A5FA)),
+    HabitCategory(id: 'creativity', name: 'Creativity', icon: Icons.palette_rounded, color: Color(0xFFF472B6)),
+    HabitCategory(id: 'spiritual', name: 'Spiritual', icon: Icons.spa_rounded, color: Color(0xFFC4B5FD)),
+    HabitCategory(id: 'personal_care', name: 'Personal Care', icon: Icons.spa_outlined, color: Color(0xFFFDBA74)),
   ];
 
   static HabitCategory byId(String id) =>

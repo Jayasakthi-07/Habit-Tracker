@@ -12,13 +12,14 @@ class HeatmapCalendar extends StatelessWidget {
     required this.intensities,
     this.weeks = 26,
     this.cell = 15,
-    this.baseColor = AppColors.primary,
+    this.baseColor,
   });
 
   final Map<DateTime, double> intensities;
   final int weeks;
   final double cell;
-  final Color baseColor;
+  final Color? baseColor;
+  Color get _base => baseColor ?? AppColors.primary;
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +52,11 @@ class HeatmapCalendar extends StatelessWidget {
   Widget _cell(DateTime date, double intensity, bool future) {
     final Color color;
     if (future || !intensities.containsKey(date)) {
-      color = AppColors.alpha(Colors.white, 0.025);
+      color = AppColors.alpha(AppColors.text, 0.025);
     } else if (intensity <= 0) {
-      color = AppColors.alpha(Colors.white, 0.06);
+      color = AppColors.alpha(AppColors.text, 0.06);
     } else {
-      color = AppColors.alpha(baseColor, 0.25 + 0.75 * intensity.clamp(0, 1));
+      color = AppColors.alpha(_base, 0.25 + 0.75 * intensity.clamp(0, 1));
     }
     return Container(
       width: cell,

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 
 enum GlowButtonVariant { filled, outline, ghost }
 
-/// A premium button with a gradient fill, subtle glow and a satisfying press
-/// scale. Replaces stock [ElevatedButton] everywhere. Mobile variant: hover is
-/// dropped in favour of touch press-feedback.
+/// The primary action button of the Aurora design language: a saturated
+/// indigo→violet gradient with a colored shadow, white label and a tactile
+/// press scale (+ light haptic). Outline/ghost variants for secondary actions.
 class GlowButton extends StatefulWidget {
   const GlowButton({
     super.key,
@@ -41,11 +42,18 @@ class _GlowButtonState extends State<GlowButton> {
   Widget build(BuildContext context) {
     final enabled = widget.onPressed != null && !widget.busy;
     final accent = widget.color ?? AppColors.primary;
+    final custom = widget.color != null;
     final isFilled = widget.variant == GlowButtonVariant.filled;
     final radius = BorderRadius.circular(AppSpacing.radiusMd);
 
+    // Default fill is the brand indigo→violet; a custom color blends toward
+    // violet so every filled button keeps the gradient signature.
+    final fill = custom
+        ? [accent, Color.lerp(accent, AppColors.fillEnd, 0.55)!]
+        : const [AppColors.fillStart, AppColors.fillEnd];
+
     final fg = switch (widget.variant) {
-      GlowButtonVariant.filled => const Color(0xFF002417),
+      GlowButtonVariant.filled => Colors.white,
       _ => accent,
     };
 
@@ -53,10 +61,16 @@ class _GlowButtonState extends State<GlowButton> {
       onTapDown: enabled ? (_) => setState(() => _pressed = true) : null,
       onTapUp: enabled ? (_) => setState(() => _pressed = false) : null,
       onTapCancel: enabled ? () => setState(() => _pressed = false) : null,
-      onTap: enabled ? widget.onPressed : null,
+      onTap: enabled
+          ? () {
+              HapticFeedback.selectionClick();
+              widget.onPressed!();
+            }
+          : null,
       child: AnimatedScale(
         scale: _pressed ? 0.96 : 1.0,
         duration: AppSpacing.fast,
+        curve: AppSpacing.ease,
         child: AnimatedContainer(
           duration: AppSpacing.fast,
           width: widget.expand ? double.infinity : null,
@@ -65,19 +79,26 @@ class _GlowButtonState extends State<GlowButton> {
           decoration: BoxDecoration(
             borderRadius: radius,
             gradient: isFilled && enabled
-                ? LinearGradient(colors: [accent, AppColors.secondary])
+                ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: fill)
                 : null,
             color: switch (widget.variant) {
-              GlowButtonVariant.ghost => Colors.transparent,
+              GlowButtonVariant.ghost => _pressed
+                  ? AppColors.alpha(accent, 0.10)
+                  : Colors.transparent,
               GlowButtonVariant.outline => Colors.transparent,
               GlowButtonVariant.filled =>
-                enabled ? null : AppColors.alpha(Colors.white, 0.05),
+                enabled ? null : AppColors.alpha(AppColors.text, 0.06),
             },
             border: widget.variant == GlowButtonVariant.outline
                 ? Border.all(color: AppColors.alpha(accent, 0.45))
                 : null,
-            boxShadow: isFilled && enabled && _pressed
-                ? AppShadows.glow(accent, strength: 0.20)
+            boxShadow: isFilled && enabled
+                ? (custom
+                    ? AppShadows.glow(accent, strength: 0.30)
+                    : AppShadows.accent)
                 : null,
           ),
           child: Row(
@@ -103,8 +124,9 @@ class _GlowButtonState extends State<GlowButton> {
                 widget.label,
                 style: TextStyle(
                   color: enabled ? fg : AppColors.faint,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                   fontSize: 15,
+                  letterSpacing: 0.1,
                 ),
               ),
             ],

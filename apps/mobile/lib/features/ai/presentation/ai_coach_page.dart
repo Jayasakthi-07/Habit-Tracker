@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/glass_card.dart';
+import '../../../shared/widgets/glow_button.dart';
 import '../ai_coach_provider.dart';
 
 /// The AI coach: a chat-style screen grounded in the user's habit data, powered
@@ -61,14 +62,19 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                 gradient: AppColors.primaryGradient,
                 borderRadius: BorderRadius.circular(9),
               ),
-              child: const Icon(Icons.auto_awesome_rounded,
-                  color: Color(0xFF002417), size: 17),
+              child: Icon(Icons.auto_awesome_rounded,
+                  color: AppColors.onPrimary, size: 17),
             ),
             const SizedBox(width: 10),
             const Text('AI Coach'),
           ],
         ),
         actions: [
+          IconButton(
+            tooltip: 'API keys',
+            icon: Icon(Icons.key_rounded, color: AppColors.muted),
+            onPressed: () => _ApiKeySheet.show(context, ref),
+          ),
           if (providers.length > 1)
             PopupMenuButton<AiProviderKind>(
               icon: Icon(Icons.tune_rounded, color: AppColors.muted),
@@ -81,7 +87,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                     child: Row(
                       children: [
                         if (state.provider == p)
-                          const Icon(Icons.check_rounded,
+                          Icon(Icons.check_rounded,
                               size: 16, color: AppColors.primary)
                         else
                           const SizedBox(width: 16),
@@ -127,16 +133,18 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
       children: [
-        Container(
-          width: 72,
-          height: 72,
-          decoration: BoxDecoration(
-            gradient: AppColors.primaryGradient,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: AppShadows.glow(AppColors.primary),
+        Center(
+          child: Container(
+            width: 72,
+            height: 72,
+            decoration: BoxDecoration(
+              gradient: AppColors.primaryGradient,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: AppShadows.glow(AppColors.primary),
+            ),
+            child: Icon(Icons.auto_awesome_rounded,
+                color: AppColors.onPrimary, size: 38),
           ),
-          child: const Icon(Icons.auto_awesome_rounded,
-              color: Color(0xFF002417), size: 38),
         ),
         const SizedBox(height: 20),
         Text('Your habit coach',
@@ -147,12 +155,22 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
           configured
               ? 'Ask anything about your habits. I read your real streaks and '
                   'success rates to give advice that fits you.'
-              : 'Add a Gemini or OpenAI API key to unlock personalised coaching. '
-                  'See ANDROID setup notes / AI_SETUP.md.',
+              : 'Paste your own OpenRouter, OpenAI or Gemini API key to unlock '
+                  'personalised coaching. Your key is stored only on this device.',
           textAlign: TextAlign.center,
           style: TextStyle(
               color: AppColors.muted, fontSize: 14, height: 1.5),
         ),
+        if (!configured) ...[
+          const SizedBox(height: 20),
+          Center(
+            child: GlowButton(
+              label: 'Add API key',
+              icon: Icons.key_rounded,
+              onPressed: () => _ApiKeySheet.show(context, ref),
+            ),
+          ),
+        ],
         if (configured) ...[
           const SizedBox(height: 8),
           Center(
@@ -179,7 +197,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                           color: AppColors.alpha(AppColors.primary, 0.3)),
                     ),
                     child: Text(label,
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: AppColors.primary,
                             fontSize: 13,
                             fontWeight: FontWeight.w600)),
@@ -214,7 +232,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
         child: Text(
           m.text,
           style: TextStyle(
-            color: user ? const Color(0xFF002417) : AppColors.text,
+            color: user ? AppColors.onPrimary : AppColors.text,
             fontSize: 14,
             height: 1.5,
             fontWeight: user ? FontWeight.w500 : FontWeight.w400,
@@ -254,7 +272,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
-                    borderSide: const BorderSide(color: AppColors.primary),
+                    borderSide: BorderSide(color: AppColors.primary),
                   ),
                 ),
               ),
@@ -269,12 +287,119 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                   gradient: AppColors.primaryGradient,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.arrow_upward_rounded,
-                    color: Color(0xFF002417)),
+                child: Icon(Icons.arrow_upward_rounded,
+                    color: AppColors.onPrimary),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Bottom sheet for entering AI provider API keys. Keys are stored only in the
+/// local settings box (never synced, never embedded in builds).
+class _ApiKeySheet extends ConsumerStatefulWidget {
+  const _ApiKeySheet();
+
+  static Future<void> show(BuildContext context, WidgetRef ref) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      builder: (_) => const _ApiKeySheet(),
+    );
+  }
+
+  @override
+  ConsumerState<_ApiKeySheet> createState() => _ApiKeySheetState();
+}
+
+class _ApiKeySheetState extends ConsumerState<_ApiKeySheet> {
+  late final TextEditingController _openRouter;
+  late final TextEditingController _openAi;
+  late final TextEditingController _gemini;
+
+  @override
+  void initState() {
+    super.initState();
+    final ctrl = ref.read(aiCoachProvider.notifier);
+    _openRouter =
+        TextEditingController(text: ctrl.savedKeyFor(AiProviderKind.openrouter));
+    _openAi =
+        TextEditingController(text: ctrl.savedKeyFor(AiProviderKind.openai));
+    _gemini =
+        TextEditingController(text: ctrl.savedKeyFor(AiProviderKind.gemini));
+  }
+
+  @override
+  void dispose() {
+    _openRouter.dispose();
+    _openAi.dispose();
+    _gemini.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    ref.read(aiCoachProvider.notifier).saveApiKeys(
+          openRouter: _openRouter.text,
+          openAi: _openAi.text,
+          gemini: _gemini.text,
+        );
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('AI keys saved')),
+    );
+  }
+
+  Widget _field(String label, String hint, TextEditingController c) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.text)),
+        const SizedBox(height: 6),
+        TextField(
+          controller: c,
+          style: TextStyle(color: AppColors.text, fontSize: 13),
+          decoration: InputDecoration(hintText: hint),
+        ),
+        const SizedBox(height: 14),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final inset = MediaQuery.of(context).viewInsets.bottom;
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20, 8, 20, 20 + inset),
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Text('AI API keys',
+              style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 6),
+          Text(
+            'Add at least one key. OpenRouter is tried first, then OpenAI, '
+            'then Gemini. Keys are stored only on this device.',
+            style: TextStyle(color: AppColors.muted, fontSize: 13, height: 1.4),
+          ),
+          const SizedBox(height: 18),
+          _field('OpenRouter (recommended)', 'sk-or-v1-…', _openRouter),
+          _field('OpenAI', 'sk-…', _openAi),
+          _field('Google Gemini', 'AIza…', _gemini),
+          GlowButton(
+            label: 'Save keys',
+            icon: Icons.check_rounded,
+            expand: true,
+            onPressed: _save,
+          ),
+        ],
       ),
     );
   }

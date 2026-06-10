@@ -282,7 +282,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   children: [
                     TextButton(
                       onPressed: _loading ? null : _resendCode,
-                      child: const Text('Resend code',
+                      child: Text('Resend code',
                           style: TextStyle(color: AppColors.secondary, fontSize: 13)),
                     ),
                     Text('·', style: TextStyle(color: AppColors.faint)),
@@ -340,7 +340,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         TextButton(
           onPressed: _loading ? null : () => _switch(isSignUp ? _Mode.signIn : _Mode.signUp),
           child: Text(isSignUp ? 'Sign in' : 'Create one',
-              style: const TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w600)),
+              style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w600)),
         ),
       ],
     );
@@ -370,7 +370,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         prefixIcon: Icon(icon, size: 18, color: AppColors.muted),
         suffixIcon: suffix,
         filled: true,
-        fillColor: AppColors.alpha(Colors.white, 0.03),
+        fillColor: AppColors.alpha(AppColors.text, 0.03),
         border: border(AppColors.border),
         enabledBorder: border(AppColors.border),
         focusedBorder: border(AppColors.primary),
@@ -397,14 +397,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         hintText: 'Enter code',
         hintStyle: TextStyle(color: AppColors.faint, letterSpacing: 1, fontSize: 16),
         filled: true,
-        fillColor: AppColors.alpha(Colors.white, 0.03),
+        fillColor: AppColors.alpha(AppColors.text, 0.03),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          borderSide: const BorderSide(color: AppColors.primary),
+          borderSide: BorderSide(color: AppColors.primary),
         ),
       ),
     );
@@ -465,15 +465,15 @@ class _PrimaryButtonState extends State<_PrimaryButton> {
           ),
           child: Center(
             child: widget.loading
-                ? const SizedBox(
+                ? SizedBox(
                     width: 20,
                     height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF002417)),
+                    child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary),
                   )
                 : Text(
                     widget.label,
-                    style: const TextStyle(
-                      color: Color(0xFF002417),
+                    style: TextStyle(
+                      color: AppColors.onPrimary,
                       fontWeight: FontWeight.w700,
                       fontSize: 15,
                     ),
@@ -603,7 +603,7 @@ class _BrandPanel extends StatelessWidget {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: AppShadows.glow(AppColors.primary),
                       ),
-                      child: const Icon(Icons.bolt_rounded, color: Color(0xFF002417), size: 30),
+                      child: Icon(Icons.bolt_rounded, color: AppColors.onPrimary, size: 30),
                     ),
                     const SizedBox(width: 16),
                     GradientText('Aura Habits',
@@ -663,7 +663,7 @@ class _FeatureChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
       decoration: BoxDecoration(
-        color: AppColors.alpha(Colors.white, 0.04),
+        color: AppColors.alpha(AppColors.text, 0.04),
         borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
         border: Border.all(color: AppColors.border),
       ),

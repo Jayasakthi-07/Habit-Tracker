@@ -159,7 +159,7 @@ class _InsightsPageState extends ConsumerState<InsightsPage> {
         decoration: BoxDecoration(
           color: sel
               ? AppColors.alpha(AppColors.primary, 0.16)
-              : AppColors.alpha(Colors.white, 0.03),
+              : AppColors.alpha(AppColors.text, 0.03),
           borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
           border: Border.all(color: sel ? AppColors.primary : AppColors.border),
         ),
@@ -211,7 +211,7 @@ class _InsightsPageState extends ConsumerState<InsightsPage> {
               child: LinearProgressIndicator(
                 value: rate,
                 minHeight: 8,
-                backgroundColor: AppColors.alpha(Colors.white, 0.06),
+                backgroundColor: AppColors.alpha(AppColors.text, 0.06),
                 valueColor: AlwaysStoppedAnimation(color),
               ),
             ),
@@ -282,8 +282,8 @@ class _LevelCard extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text('${game.level}',
-                      style: const TextStyle(
-                          color: Color(0xFF002417),
+                      style: TextStyle(
+                          color: AppColors.onPrimary,
                           fontSize: 22,
                           fontWeight: FontWeight.w800)),
                 ),
@@ -314,8 +314,8 @@ class _LevelCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: game.levelProgress,
               minHeight: 10,
-              backgroundColor: AppColors.alpha(Colors.white, 0.06),
-              valueColor: const AlwaysStoppedAnimation(AppColors.primary),
+              backgroundColor: AppColors.alpha(AppColors.text, 0.06),
+              valueColor: AlwaysStoppedAnimation(AppColors.primary),
             ),
           ),
         ],
@@ -405,7 +405,7 @@ class _AchievementCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: a.progress,
               minHeight: 4,
-              backgroundColor: AppColors.alpha(Colors.white, 0.06),
+              backgroundColor: AppColors.alpha(AppColors.text, 0.06),
               valueColor: AlwaysStoppedAnimation(a.color),
             ),
           ),
@@ -438,7 +438,7 @@ class _TrendChart extends StatelessWidget {
           drawVerticalLine: false,
           horizontalInterval: 0.25,
           getDrawingHorizontalLine: (_) =>
-              FlLine(color: AppColors.alpha(Colors.white, 0.05), strokeWidth: 1),
+              FlLine(color: AppColors.alpha(AppColors.text, 0.05), strokeWidth: 1),
         ),
         titlesData: const FlTitlesData(show: false),
         borderData: FlBorderData(show: false),

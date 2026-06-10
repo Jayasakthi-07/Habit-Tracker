@@ -12,7 +12,7 @@ class StatCard extends StatelessWidget {
     required this.label,
     required this.value,
     this.suffix = '',
-    this.color = AppColors.primary,
+    this.color,
     this.caption,
   });
 
@@ -20,11 +20,12 @@ class StatCard extends StatelessWidget {
   final String label;
   final int value;
   final String suffix;
-  final Color color;
+  final Color? color;
   final String? caption;
 
   @override
   Widget build(BuildContext context) {
+    final color = this.color ?? AppColors.primary;
     return GlassCard(
       hoverable: true,
       glowColor: color,

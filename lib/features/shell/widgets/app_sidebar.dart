@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../../core/theme/app_typography.dart';
 import '../../../shared/widgets/gradient_text.dart';
 import '../../auth/auth_provider.dart';
 import '../../auth/presentation/user_avatar.dart';
@@ -17,11 +17,14 @@ class _NavItem {
   final String route;
 }
 
-const _items = [
+const _primary = [
   _NavItem('Dashboard', Icons.dashboard_rounded, Routes.dashboard),
   _NavItem('Habits', Icons.checklist_rounded, Routes.habits),
   _NavItem('Calendar', Icons.calendar_month_rounded, Routes.calendar),
   _NavItem('Analytics', Icons.insights_rounded, Routes.analytics),
+];
+
+const _secondary = [
   _NavItem('Goals', Icons.flag_rounded, Routes.goals),
   _NavItem('Journal', Icons.menu_book_rounded, Routes.journal),
   _NavItem('Achievements', Icons.emoji_events_rounded, Routes.achievements),
@@ -29,7 +32,7 @@ const _items = [
   _NavItem('AI Coach', Icons.auto_awesome_rounded, Routes.ai),
 ];
 
-/// The vertical navigation rail with branding, routes and user card.
+/// The vertical navigation rail with branding, grouped routes and user card.
 class AppSidebar extends ConsumerWidget {
   const AppSidebar({super.key, required this.location});
   final String location;
@@ -41,7 +44,7 @@ class AppSidebar extends ConsumerWidget {
     return Container(
       width: 248,
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.alpha(AppColors.surface, AppColors.isLight ? 0.85 : 0.55),
         border: Border(right: BorderSide(color: AppColors.border)),
       ),
       child: Column(
@@ -49,7 +52,7 @@ class AppSidebar extends ConsumerWidget {
         children: [
           // Brand.
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
             child: Row(
               children: [
                 Container(
@@ -58,16 +61,20 @@ class AppSidebar extends ConsumerWidget {
                   decoration: BoxDecoration(
                     gradient: AppColors.primaryGradient,
                     borderRadius: BorderRadius.circular(12),
-                    boxShadow: AppShadows.glow(AppColors.primary, strength: 0.2),
+                    boxShadow: AppShadows.accent,
                   ),
-                  child: const Icon(Icons.bolt_rounded, color: Color(0xFF002417), size: 22),
+                  child: const Icon(Icons.bolt_rounded,
+                      color: Colors.white, size: 22),
                 ),
                 const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GradientText('Aura',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(fontWeight: FontWeight.w800)),
                     Text('HABITS',
                         style: TextStyle(
                             fontSize: 10,
@@ -84,12 +91,26 @@ class AppSidebar extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               children: [
-                for (var i = 0; i < _items.length; i++)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 2, 14, 8),
+                  child: Text('OVERVIEW', style: AppTypography.overline()),
+                ),
+                for (final item in _primary)
                   _SidebarTile(
-                    item: _items[i],
-                    active: location == _items[i].route,
-                    onTap: () => context.go(_items[i].route),
-                  ).animate().fadeIn(delay: (40 * i).ms, duration: 300.ms).slideX(begin: -0.1),
+                    item: item,
+                    active: location == item.route,
+                    onTap: () => context.go(item.route),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14, 18, 14, 8),
+                  child: Text('GROW', style: AppTypography.overline()),
+                ),
+                for (final item in _secondary)
+                  _SidebarTile(
+                    item: item,
+                    active: location == item.route,
+                    onTap: () => context.go(item.route),
+                  ),
               ],
             ),
           ),
@@ -100,7 +121,8 @@ class AppSidebar extends ConsumerWidget {
             child: Column(
               children: [
                 _SidebarTile(
-                  item: const _NavItem('Settings', Icons.settings_rounded, Routes.settings),
+                  item: const _NavItem(
+                      'Settings', Icons.settings_rounded, Routes.settings),
                   active: location == Routes.settings,
                   onTap: () => context.go(Routes.settings),
                 ),
@@ -116,7 +138,8 @@ class AppSidebar extends ConsumerWidget {
 }
 
 class _SidebarTile extends StatefulWidget {
-  const _SidebarTile({required this.item, required this.active, required this.onTap});
+  const _SidebarTile(
+      {required this.item, required this.active, required this.onTap});
   final _NavItem item;
   final bool active;
   final VoidCallback onTap;
@@ -140,45 +163,43 @@ class _SidebarTileState extends State<_SidebarTile> {
         child: AnimatedContainer(
           duration: AppSpacing.fast,
           margin: const EdgeInsets.symmetric(vertical: 3),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-            gradient: active
-                ? LinearGradient(colors: [
-                    AppColors.alpha(AppColors.primary, 0.18),
-                    AppColors.alpha(AppColors.secondary, 0.06),
-                  ])
-                : null,
-            color: !active && _hover ? AppColors.alpha(Colors.white, 0.05) : null,
-            border: Border.all(
-              color: active ? AppColors.alpha(AppColors.primary, 0.4) : Colors.transparent,
-            ),
+            color: active
+                ? AppColors.alpha(
+                    AppColors.primary, AppColors.isLight ? 0.10 : 0.14)
+                : (_hover ? AppColors.alpha(AppColors.text, 0.05) : null),
           ),
           child: Row(
             children: [
+              // Accent bar marks the active route.
+              AnimatedContainer(
+                duration: AppSpacing.fast,
+                width: 3,
+                height: 18,
+                margin: const EdgeInsets.only(right: 11),
+                decoration: BoxDecoration(
+                  gradient: active ? AppColors.accentGlow : null,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
               Icon(widget.item.icon,
                   size: 19,
-                  color: active ? AppColors.primary : (_hover ? AppColors.text : AppColors.muted)),
-              const SizedBox(width: 13),
+                  color: active
+                      ? AppColors.primary
+                      : (_hover ? AppColors.text : AppColors.muted)),
+              const SizedBox(width: 12),
               Text(
                 widget.item.label,
                 style: TextStyle(
-                  color: active ? AppColors.text : (_hover ? AppColors.text : AppColors.muted),
-                  fontWeight: active ? FontWeight.w600 : FontWeight.w500,
-                  fontSize: 14,
+                  color: active
+                      ? AppColors.text
+                      : (_hover ? AppColors.text : AppColors.muted),
+                  fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                  fontSize: 13.5,
                 ),
               ),
-              const Spacer(),
-              if (active)
-                Container(
-                  width: 6,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    shape: BoxShape.circle,
-                    boxShadow: AppShadows.glow(AppColors.primary, strength: 0.25),
-                  ),
-                ),
             ],
           ),
         ),
@@ -200,6 +221,7 @@ class _UserCard extends StatelessWidget {
         color: AppColors.card,
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         border: Border.all(color: AppColors.border),
+        boxShadow: AppShadows.card,
       ),
       child: Row(
         children: [
@@ -212,19 +234,23 @@ class _UserCard extends StatelessWidget {
                 Text(u?.name ?? 'User',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 13)),
                 Text(
                   (u?.isPremium ?? false) ? 'Premium' : 'Free plan',
                   style: TextStyle(
                     fontSize: 11,
-                    color: (u?.isPremium ?? false) ? AppColors.primary : AppColors.muted,
+                    color: (u?.isPremium ?? false)
+                        ? AppColors.primary
+                        : AppColors.muted,
                   ),
                 ),
               ],
             ),
           ),
           if (u?.isPremium ?? false)
-            const Icon(Icons.workspace_premium_rounded, color: AppColors.primary, size: 18),
+            Icon(Icons.workspace_premium_rounded,
+                color: AppColors.primary, size: 18),
         ],
       ),
     );

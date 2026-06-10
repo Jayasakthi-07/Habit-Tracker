@@ -169,7 +169,7 @@ class _TrendChart extends StatelessWidget {
           show: true,
           drawVerticalLine: false,
           horizontalInterval: 0.25,
-          getDrawingHorizontalLine: (_) => FlLine(color: AppColors.alpha(Colors.white, 0.04), strokeWidth: 1),
+          getDrawingHorizontalLine: (_) => FlLine(color: AppColors.alpha(AppColors.text, 0.04), strokeWidth: 1),
         ),
         titlesData: FlTitlesData(
           leftTitles: AxisTitles(
@@ -291,7 +291,7 @@ class _HabitBar extends StatelessWidget {
             builder: (_, v, __) => LinearProgressIndicator(
               value: v,
               minHeight: 7,
-              backgroundColor: AppColors.alpha(Colors.white, 0.06),
+              backgroundColor: AppColors.alpha(AppColors.text, 0.06),
               valueColor: AlwaysStoppedAnimation(color),
             ),
           ),

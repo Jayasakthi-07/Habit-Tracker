@@ -13,7 +13,7 @@ class ShareCardSpec {
     required this.headline,
     required this.title,
     required this.subtitle,
-    this.accent = AppColors.primary,
+    this.accent,
     this.stats = const [],
     this.shareText = 'Tracking my habits with Aura Habits ✨',
   });
@@ -22,9 +22,11 @@ class ShareCardSpec {
   final String headline; // big focal line, e.g. "12-day streak"
   final String title; // e.g. habit / achievement name
   final String subtitle; // context line
-  final Color accent;
+  final Color? accent;
   final List<({String label, String value})> stats;
   final String shareText;
+
+  Color get accentColor => accent ?? AppColors.primary;
 }
 
 /// A full-screen preview of a branded share card with a Share button. Captures
@@ -123,7 +125,7 @@ class _AuraShareCard extends StatelessWidget {
             Positioned(
                 top: -40,
                 right: -30,
-                child: _glow(spec.accent, 200)),
+                child: _glow(spec.accentColor, 200)),
             Positioned(
                 bottom: -50,
                 left: -40,
@@ -143,13 +145,13 @@ class _AuraShareCard extends StatelessWidget {
                           gradient: AppColors.primaryGradient,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(Icons.bolt_rounded,
-                            color: Color(0xFF002417), size: 20),
+                        child: Icon(Icons.bolt_rounded,
+                            color: AppColors.onPrimary, size: 20),
                       ),
                       const SizedBox(width: 10),
                       Text('Aura Habits',
                           style: TextStyle(
-                              color: AppColors.text,
+                              color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w700)),
                     ],
@@ -160,17 +162,17 @@ class _AuraShareCard extends StatelessWidget {
                     width: 76,
                     height: 76,
                     decoration: BoxDecoration(
-                      color: AppColors.alpha(spec.accent, 0.16),
+                      color: AppColors.alpha(spec.accentColor, 0.16),
                       borderRadius: BorderRadius.circular(22),
                       border: Border.all(
-                          color: AppColors.alpha(spec.accent, 0.4)),
+                          color: AppColors.alpha(spec.accentColor, 0.4)),
                     ),
-                    child: Icon(spec.icon, color: spec.accent, size: 40),
+                    child: Icon(spec.icon, color: spec.accentColor, size: 40),
                   ),
                   const SizedBox(height: 20),
                   Text(
                     spec.headline,
-                    style: AppTypography.numeric(40, color: AppColors.text)
+                    style: AppTypography.numeric(40, color: Colors.white)
                         .copyWith(height: 1.05),
                   ),
                   const SizedBox(height: 6),
@@ -178,13 +180,13 @@ class _AuraShareCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          color: AppColors.text,
+                          color: Colors.white,
                           fontSize: 22,
                           fontWeight: FontWeight.w600)),
                   const SizedBox(height: 4),
                   Text(spec.subtitle,
                       style: TextStyle(
-                          color: AppColors.muted, fontSize: 14)),
+                          color: const Color(0xFFAEB4C0), fontSize: 14)),
                   if (spec.stats.isNotEmpty) ...[
                     const SizedBox(height: 20),
                     Row(
@@ -199,7 +201,7 @@ class _AuraShareCard extends StatelessWidget {
                       Container(
                         width: 6,
                         height: 6,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           color: AppColors.primary,
                           shape: BoxShape.circle,
                         ),
@@ -207,7 +209,7 @@ class _AuraShareCard extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text('Build habits that actually stick',
                           style: TextStyle(
-                              color: AppColors.faint, fontSize: 13)),
+                              color: const Color(0xFF8A90A0), fontSize: 13)),
                     ],
                   ),
                 ],
@@ -225,10 +227,10 @@ class _AuraShareCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: AppTypography.numeric(22)),
+          Text(value, style: AppTypography.numeric(22, color: Colors.white)),
           const SizedBox(height: 2),
           Text(label,
-              style: TextStyle(color: AppColors.muted, fontSize: 12)),
+              style: TextStyle(color: const Color(0xFFAEB4C0), fontSize: 12)),
         ],
       ),
     );

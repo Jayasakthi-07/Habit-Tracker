@@ -357,7 +357,7 @@ class _HabitEditorDialogState extends ConsumerState<_HabitEditorDialog> {
         data: Theme.of(context).copyWith(
           colorScheme: ColorScheme.dark(
             primary: AppColors.primary,
-            onPrimary: Color(0xFF002417),
+            onPrimary: AppColors.onPrimary,
             surface: AppColors.card,
           ),
         ),
@@ -545,7 +545,7 @@ class _Segmented<T> extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: v == selected ? const Color(0xFF002417) : AppColors.muted,
+                      color: v == selected ? AppColors.onPrimary : AppColors.muted,
                     ),
                   ),
                 ),
@@ -596,7 +596,7 @@ class _WeekdayPicker extends StatelessWidget {
                   _labels[i - 1],
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
-                    color: selected.contains(i) ? const Color(0xFF002417) : AppColors.muted,
+                    color: selected.contains(i) ? AppColors.onPrimary : AppColors.muted,
                   ),
                 ),
               ),
@@ -705,7 +705,7 @@ class _ReminderEditor extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.notifications_active_rounded, size: 14, color: AppColors.secondary),
+                Icon(Icons.notifications_active_rounded, size: 14, color: AppColors.secondary),
                 const SizedBox(width: 6),
                 Text(r, style: const TextStyle(fontSize: 12)),
                 const SizedBox(width: 4),
@@ -724,7 +724,7 @@ class _ReminderEditor extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
               border: Border.all(color: AppColors.border),
             ),
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.add_rounded, size: 15, color: AppColors.primary),

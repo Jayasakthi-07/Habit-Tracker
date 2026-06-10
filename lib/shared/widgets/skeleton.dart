@@ -17,14 +17,14 @@ class Skeleton extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: AppColors.alpha(Colors.white, 0.06),
+        color: AppColors.alpha(AppColors.text, 0.06),
         borderRadius: BorderRadius.circular(radius),
       ),
     )
         .animate(onPlay: (c) => c.repeat())
         .shimmer(
           duration: 1400.ms,
-          color: AppColors.alpha(Colors.white, 0.12),
+          color: AppColors.alpha(AppColors.text, 0.12),
         );
   }
 }

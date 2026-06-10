@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'habit_enums.dart';
+import '../../../core/theme/app_colors.dart';
 
 /// Core domain entity representing a single habit the user is tracking.
 ///
@@ -16,7 +17,7 @@ class Habit {
     this.priority = HabitPriority.medium,
     this.difficulty = HabitDifficulty.medium,
     this.iconCode = 0xe87d, // favorite
-    this.colorValue = 0xFF00FF88,
+    this.colorValue = 0xFF818CF8,
     required this.startDate,
     this.endDate,
     this.frequency = HabitFrequency.daily,
@@ -60,7 +61,7 @@ class Habit {
   // dynamic (build with --no-tree-shake-icons).
   // ignore: non_const_argument_for_const_parameter
   IconData get icon => IconData(iconCode, fontFamily: 'MaterialIcons');
-  Color get color => Color(colorValue);
+  Color get color => AppColors.habitColor(colorValue);
 
   /// Whether this habit is scheduled on [date] given its frequency.
   bool isScheduledOn(DateTime date) {
@@ -150,7 +151,7 @@ class Habit {
         priority: enumFromName(HabitPriority.values, json['priority'] as String?, HabitPriority.medium),
         difficulty: enumFromName(HabitDifficulty.values, json['difficulty'] as String?, HabitDifficulty.medium),
         iconCode: json['iconCode'] as int? ?? 0xe87d,
-        colorValue: json['colorValue'] as int? ?? 0xFF00FF88,
+        colorValue: json['colorValue'] as int? ?? 0xFF818CF8,
         startDate: DateTime.parse(json['startDate'] as String),
         endDate: json['endDate'] != null ? DateTime.parse(json['endDate'] as String) : null,
         frequency: enumFromName(HabitFrequency.values, json['frequency'] as String?, HabitFrequency.daily),

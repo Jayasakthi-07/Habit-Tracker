@@ -30,7 +30,7 @@ class GoalsPage extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () => GoalEditorSheet.show(context),
         backgroundColor: AppColors.primary,
-        foregroundColor: const Color(0xFF002417),
+        foregroundColor: AppColors.onPrimary,
         child: const Icon(Icons.add_rounded, size: 28),
       ),
       body: goals.isEmpty
@@ -50,7 +50,7 @@ class GoalsPage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.flag_rounded, color: AppColors.primary, size: 56),
+            Icon(Icons.flag_rounded, color: AppColors.primary, size: 56),
             const SizedBox(height: 16),
             Text('No goals yet', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
@@ -120,7 +120,7 @@ class _GoalCard extends ConsumerWidget {
                     child: LinearProgressIndicator(
                       value: goal.percent,
                       minHeight: 8,
-                      backgroundColor: AppColors.alpha(Colors.white, 0.06),
+                      backgroundColor: AppColors.alpha(AppColors.text, 0.06),
                       valueColor: AlwaysStoppedAnimation(color),
                     ),
                   ),
@@ -143,7 +143,7 @@ class _GoalCard extends ConsumerWidget {
         width: 34,
         height: 34,
         decoration: BoxDecoration(
-          color: AppColors.alpha(Colors.white, enabled ? 0.06 : 0.02),
+          color: AppColors.alpha(AppColors.text, enabled ? 0.06 : 0.02),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Icon(icon,
@@ -213,7 +213,7 @@ class _GoalRingPainter extends CustomPainter {
         Paint()
           ..style = PaintingStyle.stroke
           ..strokeWidth = 5
-          ..color = AppColors.alpha(Colors.white, 0.08));
+          ..color = AppColors.alpha(AppColors.text, 0.08));
     if (percent <= 0) return;
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
@@ -335,7 +335,7 @@ class _GoalEditorState extends ConsumerState<_GoalEditor> {
                       decoration: BoxDecoration(
                         color: sel
                             ? AppColors.alpha(AppColors.primary, 0.14)
-                            : AppColors.alpha(Colors.white, 0.03),
+                            : AppColors.alpha(AppColors.text, 0.03),
                         borderRadius:
                             BorderRadius.circular(AppSpacing.radiusPill),
                         border: Border.all(
@@ -402,7 +402,7 @@ class _GoalEditorState extends ConsumerState<_GoalEditor> {
                 const SizedBox(height: 14),
                 Text(_error!,
                     style:
-                        const TextStyle(color: AppColors.danger, fontSize: 13)),
+                        TextStyle(color: AppColors.danger, fontSize: 13)),
               ],
               const SizedBox(height: 22),
               GlowButton(
@@ -424,7 +424,7 @@ class _GoalEditorState extends ConsumerState<_GoalEditor> {
           width: 34,
           height: 34,
           decoration: BoxDecoration(
-            color: AppColors.alpha(Colors.white, 0.06),
+            color: AppColors.alpha(AppColors.text, 0.06),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Icon(icon, size: 18, color: AppColors.text),

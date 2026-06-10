@@ -5,19 +5,19 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 
-/// A frosted-glass surface with a subtle gradient, hairline border and an
-/// optional press feedback. The cornerstone of the app's glassmorphism style.
+/// The cornerstone surface of the Aurora design language.
 ///
-/// Mobile variant of the desktop [GlassCard]: hover is replaced with a tactile
-/// press-scale, otherwise the look (blur 8, surface opacity 0.82, minimal glow)
-/// matches the Windows app exactly.
+/// Dark mode: a layered ink card with a hairline border and a faint top sheen.
+/// Light mode: a crisp white card floating on soft, airy shadows.
+/// Interactive cards get a tactile press-scale. BackdropFilter blur is only
+/// applied when [blur] > 0 — list cells pass 0 so scrolling stays buttery.
 class GlassCard extends StatefulWidget {
   const GlassCard({
     super.key,
     required this.child,
     this.padding = AppSpacing.cardPadding,
     this.radius = AppSpacing.radiusLg,
-    this.blur = 8,
+    this.blur = 0,
     this.onTap,
     this.onLongPress,
     this.borderColor,
@@ -51,6 +51,16 @@ class _GlassCardState extends State<GlassCard> {
     final radius = BorderRadius.circular(widget.radius);
     final interactive = widget.onTap != null || widget.onLongPress != null;
 
+    final inner = Container(
+      padding: widget.padding,
+      decoration: BoxDecoration(
+        // A faint sheen on top of the opaque card color gives depth without
+        // the muddiness of pure translucency.
+        gradient: widget.gradient ?? AppColors.glassGradient,
+      ),
+      child: widget.child,
+    );
+
     Widget card = AnimatedScale(
       scale: _pressed ? 0.98 : 1.0,
       duration: AppSpacing.fast,
@@ -60,42 +70,32 @@ class _GlassCardState extends State<GlassCard> {
         height: widget.height,
         decoration: BoxDecoration(
           borderRadius: radius,
-          gradient: widget.gradient ?? AppColors.glassGradient,
+          color: widget.blur > 0
+              ? AppColors.alpha(AppColors.card, AppColors.isLight ? 0.72 : 0.66)
+              : AppColors.card,
           border: Border.all(
-            color: widget.borderColor ?? AppColors.border,
+            color: widget.borderColor ??
+                (widget.glowColor != null
+                    ? AppColors.alpha(widget.glowColor!, 0.35)
+                    : AppColors.border),
             width: 1,
           ),
           boxShadow: [
             ...AppShadows.card,
             if (widget.glowColor != null)
-              ...AppShadows.glow(widget.glowColor!, strength: 0.10),
+              ...AppShadows.glow(widget.glowColor!, strength: 0.14),
           ],
         ),
-        // Skip the (GPU-expensive) BackdropFilter when blur <= 0. List cells
-        // pass blur:0 so long scrolling lists stay buttery — the gradient +
-        // translucent surface still read as glass.
-        child: widget.blur <= 0
-            ? ClipRRect(
-                borderRadius: radius,
-                child: Container(
-                  padding: widget.padding,
-                  color: AppColors.alpha(
-                      AppColors.card, AppColors.isLight ? 0.92 : 0.86),
-                  child: widget.child,
-                ),
-              )
-            : ClipRRect(
-                borderRadius: radius,
-                child: BackdropFilter(
+        child: ClipRRect(
+          borderRadius: radius,
+          child: widget.blur > 0
+              ? BackdropFilter(
                   filter: ImageFilter.blur(
                       sigmaX: widget.blur, sigmaY: widget.blur),
-                  child: Container(
-                    padding: widget.padding,
-                    color: AppColors.alpha(AppColors.card, 0.82),
-                    child: widget.child,
-                  ),
-                ),
-              ),
+                  child: inner,
+                )
+              : inner,
+        ),
       ),
     );
 

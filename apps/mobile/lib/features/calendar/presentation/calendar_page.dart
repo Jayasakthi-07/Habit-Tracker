@@ -201,7 +201,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
         decoration: BoxDecoration(
           color: hasData
               ? AppColors.alpha(AppColors.primary, 0.12 + intensity * 0.5)
-              : AppColors.alpha(Colors.white, 0.03),
+              : AppColors.alpha(AppColors.text, 0.03),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected
@@ -217,7 +217,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
               fontSize: 13,
               fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
               color: hasData && intensity > 0.5
-                  ? const Color(0xFF002417)
+                  ? AppColors.onPrimary
                   : AppColors.text,
             ),
           ),

@@ -277,7 +277,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 children: [
                                   TextButton(
                                     onPressed: _loading ? null : _resendCode,
-                                    child: const Text('Resend code',
+                                    child: Text('Resend code',
                                         style: TextStyle(
                                             color: AppColors.secondary,
                                             fontSize: 13)),
@@ -359,8 +359,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             borderRadius: BorderRadius.circular(18),
             boxShadow: AppShadows.glow(AppColors.primary),
           ),
-          child: const Icon(Icons.bolt_rounded,
-              color: Color(0xFF002417), size: 36),
+          child: Icon(Icons.bolt_rounded,
+              color: AppColors.onPrimary, size: 36),
         ).animate().fadeIn(duration: 500.ms).scale(begin: const Offset(0.8, 0.8)),
         const SizedBox(height: 16),
         GradientText(
@@ -391,7 +391,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ? null
               : () => _switch(isSignUp ? _Mode.signIn : _Mode.signUp),
           child: Text(isSignUp ? 'Sign in' : 'Create one',
-              style: const TextStyle(
+              style: TextStyle(
                   color: AppColors.primary,
                   fontSize: 13,
                   fontWeight: FontWeight.w600)),
@@ -424,7 +424,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         prefixIcon: Icon(icon, size: 18, color: AppColors.muted),
         suffixIcon: suffix,
         filled: true,
-        fillColor: AppColors.alpha(Colors.white, 0.03),
+        fillColor: AppColors.alpha(AppColors.text, 0.03),
         border: border(AppColors.border),
         enabledBorder: border(AppColors.border),
         focusedBorder: border(AppColors.primary),
@@ -452,14 +452,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         hintStyle: TextStyle(
             color: AppColors.faint, letterSpacing: 1, fontSize: 16),
         filled: true,
-        fillColor: AppColors.alpha(Colors.white, 0.03),
+        fillColor: AppColors.alpha(AppColors.text, 0.03),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          borderSide: const BorderSide(color: AppColors.primary),
+          borderSide: BorderSide(color: AppColors.primary),
         ),
       ),
     );
@@ -527,16 +527,16 @@ class _PrimaryButton extends StatelessWidget {
         ),
         child: Center(
           child: loading
-              ? const SizedBox(
+              ? SizedBox(
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
-                      strokeWidth: 2, color: Color(0xFF002417)),
+                      strokeWidth: 2, color: AppColors.onPrimary),
                 )
               : Text(
                   label,
-                  style: const TextStyle(
-                    color: Color(0xFF002417),
+                  style: TextStyle(
+                    color: AppColors.onPrimary,
                     fontWeight: FontWeight.w700,
                     fontSize: 15,
                   ),

@@ -51,7 +51,7 @@ class WeeklyChart extends StatelessWidget {
           show: true,
           drawVerticalLine: false,
           horizontalInterval: 0.25,
-          getDrawingHorizontalLine: (_) => FlLine(color: AppColors.alpha(Colors.white, 0.04), strokeWidth: 1),
+          getDrawingHorizontalLine: (_) => FlLine(color: AppColors.alpha(AppColors.text, 0.04), strokeWidth: 1),
         ),
         borderData: FlBorderData(show: false),
         barGroups: [
@@ -63,7 +63,7 @@ class WeeklyChart extends StatelessWidget {
                   toY: values[i] == 0 ? 0.02 : values[i],
                   width: 18,
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [AppColors.secondary, AppColors.primary],
@@ -71,7 +71,7 @@ class WeeklyChart extends StatelessWidget {
                   backDrawRodData: BackgroundBarChartRodData(
                     show: true,
                     toY: 1,
-                    color: AppColors.alpha(Colors.white, 0.04),
+                    color: AppColors.alpha(AppColors.text, 0.04),
                   ),
                 ),
               ],

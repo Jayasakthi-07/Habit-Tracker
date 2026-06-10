@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../shared/widgets/completion_tick.dart';
 import '../../../../shared/widgets/glass_card.dart';
 import '../../../../shared/widgets/streak_flame.dart';
 import '../../../categories/domain/habit_category.dart';
@@ -183,40 +184,23 @@ class _StatusToggleState extends State<_StatusToggle> {
             scale: _pressed ? 0.88 : 1.0,
             duration: const Duration(milliseconds: 120),
             curve: Curves.easeOut,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 220),
-              curve: Curves.easeOutCubic,
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: done
-                    ? LinearGradient(colors: [widget.color, AppColors.secondary])
-                    : null,
-                color: !done && active ? AppColors.alpha(status.color, 0.16) : Colors.transparent,
-                border: Border.all(color: ringColor, width: 2),
-                boxShadow: done ? AppShadows.glow(widget.color, strength: 0.18) : null,
-              ),
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 220),
-                transitionBuilder: (child, anim) =>
-                    ScaleTransition(scale: anim, child: FadeTransition(opacity: anim, child: child)),
-                // Completed shows a clean, bold white check (not a circle-in-a-
-                // circle); other active states use their own glyph; pending is a
-                // faint check hinting the control is tappable.
-                child: Icon(
-                  done
-                      ? Icons.check_rounded
-                      : (active ? status.icon : Icons.check_rounded),
-                  key: ValueKey(status),
-                  size: done ? 24 : 18,
-                  weight: done ? 700 : 400,
-                  color: done
-                      ? Colors.white
-                      : (active ? status.color : AppColors.alpha(AppColors.faint, 0.7)),
-                ),
-              ),
-            ),
+            // Completed/pending use the premium CompletionTick coin (drawn
+            // check + spring pop + burst ring). Other statuses keep their
+            // tinted glyph ring.
+            child: !done && active
+                ? AnimatedContainer(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeOutCubic,
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.alpha(status.color, 0.16),
+                      border: Border.all(color: ringColor, width: 2),
+                    ),
+                    child: Icon(status.icon, size: 18, color: status.color),
+                  )
+                : CompletionTick(done: done, color: widget.color, size: 40),
           ),
         ),
       ),
@@ -369,7 +353,7 @@ class _StatusOptionTileState extends State<_StatusOptionTile> {
           decoration: BoxDecoration(
             color: widget.selected
                 ? AppColors.alpha(color, 0.12)
-                : (_hover ? AppColors.alpha(Colors.white, 0.04) : Colors.transparent),
+                : (_hover ? AppColors.alpha(AppColors.text, 0.04) : Colors.transparent),
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
             border: Border.all(
               color: widget.selected ? AppColors.alpha(color, 0.45) : Colors.transparent,

@@ -70,7 +70,7 @@ class HabitsPage extends ConsumerWidget {
                 color: AppColors.alpha(AppColors.primary, 0.10),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.bolt_rounded,
+              child: Icon(Icons.bolt_rounded,
                   color: AppColors.primary, size: 44),
             ),
             const SizedBox(height: 20),
@@ -87,7 +87,7 @@ class HabitsPage extends ConsumerWidget {
               onPressed: () => HabitEditorSheet.show(context),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                foregroundColor: const Color(0xFF002417),
+                foregroundColor: AppColors.onPrimary,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
               ),

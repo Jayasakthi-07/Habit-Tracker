@@ -115,7 +115,7 @@ class _StatusSheet extends StatelessWidget {
       child: Material(
         color: selected
             ? AppColors.alpha(s.color, 0.12)
-            : AppColors.alpha(Colors.white, 0.02),
+            : AppColors.alpha(AppColors.text, 0.02),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         child: InkWell(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
