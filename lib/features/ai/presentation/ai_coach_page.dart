@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../shared/widgets/glass_card.dart';
+import '../../../shared/widgets/glow_button.dart';
 import '../ai_coach_provider.dart';
 
 /// Desktop AI coach — a centred chat grounded in the user's habit data, powered
@@ -104,6 +105,11 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
           ],
         ),
         const Spacer(),
+        IconButton(
+          tooltip: 'API keys',
+          icon: Icon(Icons.key_rounded, color: AppColors.muted),
+          onPressed: () => _ApiKeyDialog.show(context, ref),
+        ),
         if (providers.length > 1)
           PopupMenuButton<AiProviderKind>(
             tooltip: 'Choose AI provider',
@@ -169,13 +175,22 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                 configured
                     ? 'Ask anything about your habits. I read your real streaks '
                         'and success rates to give advice that fits you.'
-                    : 'Add an OpenRouter or OpenAI API key (see AI_SETUP.md) to '
-                        'unlock personalised coaching.',
+                    : 'Paste your own OpenRouter, OpenAI or Gemini API key to '
+                        'unlock personalised coaching. Your key is stored only '
+                        'on this device.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: AppColors.muted, fontSize: 14, height: 1.5),
               ),
             ),
+            if (!configured) ...[
+              const SizedBox(height: 20),
+              GlowButton(
+                label: 'Add API key',
+                icon: Icons.key_rounded,
+                onPressed: () => _ApiKeyDialog.show(context, ref),
+              ),
+            ],
             if (configured) ...[
               const SizedBox(height: 24),
               Wrap(
@@ -259,6 +274,132 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
         const SizedBox(width: 10),
         _SendButton(onTap: state.loading ? null : _send),
       ],
+    );
+  }
+}
+
+/// Dialog for entering AI provider API keys. Keys are stored only in the local
+/// settings box (never synced, never embedded in builds).
+class _ApiKeyDialog extends ConsumerStatefulWidget {
+  const _ApiKeyDialog();
+
+  static Future<void> show(BuildContext context, WidgetRef ref) {
+    return showDialog(
+      context: context,
+      builder: (_) => const _ApiKeyDialog(),
+    );
+  }
+
+  @override
+  ConsumerState<_ApiKeyDialog> createState() => _ApiKeyDialogState();
+}
+
+class _ApiKeyDialogState extends ConsumerState<_ApiKeyDialog> {
+  late final TextEditingController _openRouter;
+  late final TextEditingController _openAi;
+  late final TextEditingController _gemini;
+
+  @override
+  void initState() {
+    super.initState();
+    final ctrl = ref.read(aiCoachProvider.notifier);
+    _openRouter =
+        TextEditingController(text: ctrl.savedKeyFor(AiProviderKind.openrouter));
+    _openAi =
+        TextEditingController(text: ctrl.savedKeyFor(AiProviderKind.openai));
+    _gemini =
+        TextEditingController(text: ctrl.savedKeyFor(AiProviderKind.gemini));
+  }
+
+  @override
+  void dispose() {
+    _openRouter.dispose();
+    _openAi.dispose();
+    _gemini.dispose();
+    super.dispose();
+  }
+
+  void _save(BuildContext dialogContext) {
+    ref.read(aiCoachProvider.notifier).saveApiKeys(
+          openRouter: _openRouter.text,
+          openAi: _openAi.text,
+          gemini: _gemini.text,
+        );
+    Navigator.of(dialogContext).pop();
+  }
+
+  Widget _field(String label, String hint, TextEditingController c) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,
+              style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.text)),
+          const SizedBox(height: 6),
+          TextField(
+            controller: c,
+            style: TextStyle(color: AppColors.text, fontSize: 13),
+            decoration: InputDecoration(hintText: hint),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: AppColors.cardElevated,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        side: BorderSide(color: AppColors.border),
+      ),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 460),
+        child: Padding(
+          padding: const EdgeInsets.all(22),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('AI API keys',
+                  style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 6),
+              Text(
+                'Add at least one key. OpenRouter is tried first, then OpenAI, '
+                'then Gemini. Keys are stored only on this device.',
+                style: TextStyle(
+                    color: AppColors.muted, fontSize: 13, height: 1.4),
+              ),
+              const SizedBox(height: 18),
+              _field('OpenRouter (recommended)', 'sk-or-v1-…', _openRouter),
+              _field('OpenAI', 'sk-…', _openAi),
+              _field('Google Gemini', 'AIza…', _gemini),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GlowButton(
+                    label: 'Cancel',
+                    variant: GlowButtonVariant.ghost,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  const SizedBox(width: 10),
+                  GlowButton(
+                    label: 'Save keys',
+                    icon: Icons.check_rounded,
+                    onPressed: () => _save(context),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -111,7 +110,7 @@ class DashboardPage extends ConsumerWidget {
                 ),
               ],
             ),
-          ).animate().fadeIn(duration: 400.ms).slideY(begin: 0.05),
+          ),
           const SizedBox(height: 24),
           _LevelBar(),
           const SizedBox(height: 24),
@@ -161,7 +160,7 @@ class _Welcome extends StatelessWidget {
         ),
         const Spacer(),
       ],
-    ).animate().fadeIn(duration: 500.ms).slideX(begin: -0.04);
+    );
   }
 }
 
@@ -172,20 +171,30 @@ class _TodayHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pct = (metrics.todayCompletion * 100).round();
-    return GlassCard(
-      glowColor: AppColors.primary,
-      hoverable: true,
+    return Container(
+      padding: AppSpacing.cardPadding,
+      decoration: BoxDecoration(
+        gradient: AppColors.auroraGradient,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        boxShadow: AppShadows.accent,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Today's progress",
-              style: TextStyle(fontSize: 14, color: AppColors.muted, fontWeight: FontWeight.w600)),
+          const Text("Today's progress",
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xD9FFFFFF),
+                  fontWeight: FontWeight.w600)),
           const SizedBox(height: 18),
           Center(
             child: ProgressRing(
               progress: metrics.todayCompletion,
               size: 168,
-              strokeWidth: 16,
+              strokeWidth: 14,
+              gradient:
+                  const LinearGradient(colors: [Colors.white, Colors.white]),
+              trackColor: Colors.white.withValues(alpha: 0.22),
               center: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -193,9 +202,12 @@ class _TodayHero extends StatelessWidget {
                     tween: Tween(begin: 0, end: pct.toDouble()),
                     duration: const Duration(milliseconds: 900),
                     curve: Curves.easeOutCubic,
-                    builder: (_, v, __) => Text('${v.round()}%', style: AppTypography.numeric(40)),
+                    builder: (_, v, __) => Text('${v.round()}%',
+                        style: AppTypography.numeric(40, color: Colors.white)),
                   ),
-                  Text('complete', style: TextStyle(fontSize: 12, color: AppColors.muted)),
+                  const Text('complete',
+                      style:
+                          TextStyle(fontSize: 12, color: Color(0xB3FFFFFF))),
                 ],
               ),
             ),
@@ -206,7 +218,8 @@ class _TodayHero extends StatelessWidget {
               metrics.todayTotal == 0
                   ? 'No habits scheduled today'
                   : '${metrics.todayDone} of ${metrics.todayTotal} habits done',
-              style: TextStyle(color: AppColors.muted),
+              style: const TextStyle(
+                  color: Color(0xD9FFFFFF), fontWeight: FontWeight.w500),
             ),
           ),
         ],
@@ -258,7 +271,7 @@ class _LevelBar extends ConsumerWidget {
                     builder: (_, v, __) => LinearProgressIndicator(
                       value: v,
                       minHeight: 9,
-                      backgroundColor: AppColors.alpha(Colors.white, 0.06),
+                      backgroundColor: AppColors.alpha(AppColors.text, 0.06),
                       valueColor: AlwaysStoppedAnimation(AppColors.primary),
                     ),
                   ),
@@ -269,7 +282,7 @@ class _LevelBar extends ConsumerWidget {
           const SizedBox(width: 20),
           Row(
             children: [
-              const Icon(Icons.monetization_on_rounded, color: AppColors.warning, size: 20),
+              Icon(Icons.monetization_on_rounded, color: AppColors.warning, size: 20),
               const SizedBox(width: 6),
               Text('${game.coins}', style: AppTypography.numeric(18, color: AppColors.warning)),
             ],
@@ -323,7 +336,7 @@ class _TodayHabits extends ConsumerWidget {
                 child: HabitCard(
                   habit: today[i],
                   onEdit: () => showHabitEditor(context, ref, existing: today[i]),
-                ).animate().fadeIn(delay: (40 * i).ms).slideX(begin: 0.05),
+                ),
               ),
         ],
       ),
@@ -387,7 +400,7 @@ class _HeatmapSection extends ConsumerWidget {
           ),
         ],
       ),
-    ).animate().fadeIn(duration: 400.ms);
+    );
   }
 }
 
@@ -443,7 +456,7 @@ class _AchievementsPreview extends ConsumerWidget {
                         child: LinearProgressIndicator(
                           value: a.progress,
                           minHeight: 5,
-                          backgroundColor: AppColors.alpha(Colors.white, 0.06),
+                          backgroundColor: AppColors.alpha(AppColors.text, 0.06),
                           valueColor: AlwaysStoppedAnimation(a.unlocked ? a.color : AppColors.muted),
                         ),
                       ),

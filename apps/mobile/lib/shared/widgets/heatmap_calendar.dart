@@ -52,9 +52,9 @@ class HeatmapCalendar extends StatelessWidget {
   Widget _cell(DateTime date, double intensity, bool future) {
     final Color color;
     if (future || !intensities.containsKey(date)) {
-      color = AppColors.alpha(Colors.white, 0.025);
+      color = AppColors.alpha(AppColors.text, 0.025);
     } else if (intensity <= 0) {
-      color = AppColors.alpha(Colors.white, 0.06);
+      color = AppColors.alpha(AppColors.text, 0.06);
     } else {
       color = AppColors.alpha(_base, 0.25 + 0.75 * intensity.clamp(0, 1));
     }

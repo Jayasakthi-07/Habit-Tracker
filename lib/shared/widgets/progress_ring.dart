@@ -43,7 +43,7 @@ class ProgressRing extends StatelessWidget {
               progress: value,
               strokeWidth: strokeWidth,
               gradient: gradient ?? AppColors.primaryGradient,
-              trackColor: trackColor ?? AppColors.alpha(Colors.white, 0.06),
+              trackColor: trackColor ?? AppColors.alpha(AppColors.text, 0.06),
             ),
             child: Center(child: center),
           ),

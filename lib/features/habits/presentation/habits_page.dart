@@ -95,10 +95,7 @@ class _HabitsPageState extends ConsumerState<HabitsPage> {
                         return HabitCard(
                           habit: habit,
                           onEdit: () => showHabitEditor(context, ref, existing: habit),
-                        )
-                            .animate()
-                            .fadeIn(delay: (30 * i).ms, duration: 300.ms)
-                            .slideY(begin: 0.08);
+                        );
                       },
                     ),
             ),

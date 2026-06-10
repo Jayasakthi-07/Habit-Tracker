@@ -105,7 +105,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                     hintText: 'Write a few words about your day…',
                     hintStyle: TextStyle(color: AppColors.faint),
                     filled: true,
-                    fillColor: AppColors.alpha(Colors.white, 0.03),
+                    fillColor: AppColors.alpha(AppColors.text, 0.03),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
                       borderSide: BorderSide(color: AppColors.border),

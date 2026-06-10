@@ -13,6 +13,24 @@
 
 ---
 
+## ✨ Easiest way (v1.1+): paste the key inside the app
+
+Both apps now accept keys **at runtime** — no rebuild needed, and this is how
+the **public release downloads** (GitHub APK / Windows zip) unlock AI, since
+those builds ship with **no embedded keys** for security:
+
+1. Open **AI Coach** (sparkle icon on the dashboard / sidebar).
+2. Click the **key icon** (top-right) — or the **"Add API key"** button shown
+   when no key is set.
+3. Paste your OpenRouter (recommended), OpenAI, and/or Gemini key and **Save**.
+
+The key is stored **only on that device** (local settings, never synced, never
+committed). Priority stays OpenRouter → OpenAI → Gemini with automatic
+fallback. Keys baked into a personal `env.json` build keep working as before —
+an in-app key simply takes precedence.
+
+---
+
 ## Option 0 — OpenRouter (preferred — one key, many models)
 
 1. Go to **https://openrouter.ai/keys** and sign in.

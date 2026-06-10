@@ -370,7 +370,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         prefixIcon: Icon(icon, size: 18, color: AppColors.muted),
         suffixIcon: suffix,
         filled: true,
-        fillColor: AppColors.alpha(Colors.white, 0.03),
+        fillColor: AppColors.alpha(AppColors.text, 0.03),
         border: border(AppColors.border),
         enabledBorder: border(AppColors.border),
         focusedBorder: border(AppColors.primary),
@@ -397,7 +397,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         hintText: 'Enter code',
         hintStyle: TextStyle(color: AppColors.faint, letterSpacing: 1, fontSize: 16),
         filled: true,
-        fillColor: AppColors.alpha(Colors.white, 0.03),
+        fillColor: AppColors.alpha(AppColors.text, 0.03),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: BorderSide(color: AppColors.border),
@@ -663,7 +663,7 @@ class _FeatureChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
       decoration: BoxDecoration(
-        color: AppColors.alpha(Colors.white, 0.04),
+        color: AppColors.alpha(AppColors.text, 0.04),
         borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
         border: Border.all(color: AppColors.border),
       ),

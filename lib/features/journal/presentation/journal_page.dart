@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -74,10 +73,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
             for (var i = 0; i < entries.length; i++)
               Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: _EntryCard(entry: entries[i])
-                    .animate()
-                    .fadeIn(delay: (30 * i).ms)
-                    .slideX(begin: 0.04),
+                child: _EntryCard(entry: entries[i]),
               ),
         ],
       ),

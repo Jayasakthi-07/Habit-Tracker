@@ -254,7 +254,7 @@ class _ThemeSelector extends ConsumerWidget {
             decoration: BoxDecoration(
               color: sel
                   ? AppColors.alpha(AppColors.primary, 0.16)
-                  : AppColors.alpha(Colors.white, 0.03),
+                  : AppColors.alpha(AppColors.text, 0.03),
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
               border: Border.all(
                   color: sel ? AppColors.primary : AppColors.border),
@@ -386,7 +386,7 @@ class _PremiumCard extends ConsumerWidget {
                   ),
                   if (error != null) ...[
                     const SizedBox(height: 8),
-                    Text(error!, style: const TextStyle(color: AppColors.danger, fontSize: 12)),
+                    Text(error!, style: TextStyle(color: AppColors.danger, fontSize: 12)),
                   ],
                   const SizedBox(height: 12),
                   // Convenience for evaluation: generate a valid demo key.

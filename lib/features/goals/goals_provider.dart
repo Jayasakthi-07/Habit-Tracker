@@ -29,7 +29,7 @@ class GoalsController extends Notifier<List<Goal>> {
     required GoalType type,
     required int target,
     String description = '',
-    int colorValue = 0xFF00FF88,
+    int colorValue = 0xFF818CF8,
   }) =>
       add(Goal(id: _uuid.v4(), title: title, type: type, target: target, description: description, colorValue: colorValue));
 

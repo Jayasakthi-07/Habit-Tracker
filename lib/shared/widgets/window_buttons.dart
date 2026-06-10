@@ -68,7 +68,7 @@ class _WinButtonState extends State<_WinButton> {
             width: 46,
             height: 36,
             color: _hover
-                ? (widget.hoverColor ?? AppColors.alpha(Colors.white, 0.08))
+                ? (widget.hoverColor ?? AppColors.alpha(AppColors.text, 0.08))
                 : Colors.transparent,
             child: Icon(
               widget.icon,

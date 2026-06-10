@@ -424,7 +424,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         prefixIcon: Icon(icon, size: 18, color: AppColors.muted),
         suffixIcon: suffix,
         filled: true,
-        fillColor: AppColors.alpha(Colors.white, 0.03),
+        fillColor: AppColors.alpha(AppColors.text, 0.03),
         border: border(AppColors.border),
         enabledBorder: border(AppColors.border),
         focusedBorder: border(AppColors.primary),
@@ -452,7 +452,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         hintStyle: TextStyle(
             color: AppColors.faint, letterSpacing: 1, fontSize: 16),
         filled: true,
-        fillColor: AppColors.alpha(Colors.white, 0.03),
+        fillColor: AppColors.alpha(AppColors.text, 0.03),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: BorderSide(color: AppColors.border),

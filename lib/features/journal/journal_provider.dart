@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/storage/hive_service.dart';
-import '../../core/theme/app_colors.dart';
 import '../../core/utils/date_x.dart';
 
 /// Mood levels for daily mood tracking.
 enum Mood {
-  awful(1, '😞', 'Awful', AppColors.danger),
-  bad(2, '😕', 'Bad', Color(0xFFFF8A65)),
-  okay(3, '😐', 'Okay', AppColors.warning),
+  awful(1, '😞', 'Awful', Color(0xFFFB7185)),
+  bad(2, '😕', 'Bad', Color(0xFFFB923C)),
+  okay(3, '😐', 'Okay', Color(0xFFFBBF24)),
   good(4, '🙂', 'Good', Color(0xFF38BDF8)),
-  great(5, '😄', 'Great', Color(0xFF6366F1));
+  great(5, '😄', 'Great', Color(0xFF818CF8));
 
   const Mood(this.score, this.emoji, this.label, this.color);
   final int score;

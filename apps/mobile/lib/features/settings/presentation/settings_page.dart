@@ -311,7 +311,7 @@ class SettingsPage extends ConsumerWidget {
                 if (error != null) ...[
                   const SizedBox(height: 10),
                   Text(error!,
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: AppColors.danger, fontSize: 12)),
                 ],
               ],

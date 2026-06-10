@@ -3,19 +3,20 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
-/// Typography scale built on the Inter typeface for a clean, modern look.
+/// Typography scale built on Inter (UI) + Space Grotesk (numerals) for a
+/// clean, premium look. Headlines carry heavier weights and tight tracking.
 ///
 /// Google Fonts caches the typeface after first load and falls back to the
 /// platform default if offline, so this is safe for an offline-first app.
 abstract class AppTypography {
   static TextTheme textTheme(TextTheme base) {
     return GoogleFonts.interTextTheme(base).copyWith(
-      displayLarge: _f(40, FontWeight.w700, height: 1.1),
-      displayMedium: _f(32, FontWeight.w700, height: 1.15),
-      displaySmall: _f(28, FontWeight.w600),
-      headlineMedium: _f(24, FontWeight.w600),
-      headlineSmall: _f(20, FontWeight.w600),
-      titleLarge: _f(18, FontWeight.w600),
+      displayLarge: _f(40, FontWeight.w800, height: 1.08, tracking: -1.2),
+      displayMedium: _f(32, FontWeight.w800, height: 1.12, tracking: -0.8),
+      displaySmall: _f(28, FontWeight.w700, tracking: -0.6),
+      headlineMedium: _f(24, FontWeight.w700, tracking: -0.5),
+      headlineSmall: _f(20, FontWeight.w700, tracking: -0.3),
+      titleLarge: _f(18, FontWeight.w700, tracking: -0.2),
       titleMedium: _f(16, FontWeight.w600),
       titleSmall: _f(14, FontWeight.w600, color: AppColors.muted),
       bodyLarge: _f(15, FontWeight.w400, height: 1.5),
@@ -32,14 +33,14 @@ abstract class AppTypography {
     FontWeight weight, {
     Color? color,
     double? height,
-    double letterSpacing = 0,
+    double tracking = 0,
   }) {
     return GoogleFonts.inter(
       fontSize: size,
       fontWeight: weight,
       color: color ?? AppColors.text,
       height: height,
-      letterSpacing: letterSpacing,
+      letterSpacing: tracking,
     );
   }
 
@@ -50,7 +51,18 @@ abstract class AppTypography {
       fontSize: size,
       fontWeight: weight,
       color: color ?? AppColors.text,
+      letterSpacing: -0.5,
       fontFeatures: const [FontFeature.tabularFigures()],
+    );
+  }
+
+  /// Tiny uppercase section label — the quiet premium detail.
+  static TextStyle overline({Color? color}) {
+    return GoogleFonts.inter(
+      fontSize: 11,
+      fontWeight: FontWeight.w700,
+      letterSpacing: 1.6,
+      color: color ?? AppColors.faint,
     );
   }
 }

@@ -17,13 +17,14 @@ abstract class AppTheme {
     AppColors.brightness = brightness;
     final isLight = brightness == Brightness.light;
     final base = ThemeData(useMaterial3: true, brightness: brightness);
+    final textTheme = AppTypography.textTheme(base.textTheme);
 
     final colorScheme = ColorScheme(
       brightness: brightness,
       primary: AppColors.primary,
       onPrimary: AppColors.onPrimary,
       secondary: AppColors.secondary,
-      onSecondary: const Color(0xFF00222B),
+      onSecondary: Colors.white,
       surface: AppColors.surface,
       onSurface: AppColors.text,
       error: AppColors.danger,
@@ -34,8 +35,9 @@ abstract class AppTheme {
       colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.background,
       canvasColor: AppColors.background,
-      textTheme: AppTypography.textTheme(base.textTheme),
-      splashFactory: InkRipple.splashFactory,
+      textTheme: textTheme,
+      splashFactory: InkSparkle.splashFactory,
+      highlightColor: AppColors.alpha(AppColors.primary, 0.06),
       dividerTheme:
           DividerThemeData(color: AppColors.border, thickness: 1, space: 1),
       iconTheme: IconThemeData(color: AppColors.muted, size: 22),
@@ -43,21 +45,70 @@ abstract class AppTheme {
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.text,
         elevation: 0,
-        titleTextStyle: AppTypography.textTheme(base.textTheme).titleLarge,
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+        titleTextStyle: textTheme.titleLarge,
+      ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: AppColors.cardElevated,
+        contentTextStyle: TextStyle(color: AppColors.text, fontSize: 14),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          side: BorderSide(color: AppColors.border),
+        ),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: AppColors.cardElevated,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          side: BorderSide(color: AppColors.border),
+        ),
+        titleTextStyle: textTheme.titleLarge,
+        contentTextStyle: textTheme.bodyLarge,
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: AppColors.surface,
+        surfaceTintColor: Colors.transparent,
+        modalBackgroundColor: AppColors.surface,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        showDragHandle: true,
+        dragHandleColor: AppColors.borderStrong,
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.selected)
+                ? Colors.white
+                : AppColors.muted),
+        trackColor: WidgetStateProperty.resolveWith((states) =>
+            states.contains(WidgetState.selected)
+                ? AppColors.fillStart
+                : AppColors.alpha(AppColors.text, 0.10)),
+        trackOutlineColor:
+            const WidgetStatePropertyAll(Colors.transparent),
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: AppColors.primary,
+        linearTrackColor: AppColors.alpha(AppColors.text, 0.08),
+        circularTrackColor: AppColors.alpha(AppColors.text, 0.08),
       ),
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
           color: AppColors.cardElevated,
           borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
           border: Border.all(color: AppColors.border),
+          boxShadow: AppShadows.soft,
         ),
         textStyle: TextStyle(color: AppColors.text, fontSize: 12),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: isLight
-            ? AppColors.alpha(Colors.black, 0.03)
-            : AppColors.surface,
+            ? AppColors.alpha(const Color(0xFF101828), 0.04)
+            : AppColors.alpha(Colors.white, 0.05),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         hintStyle: TextStyle(color: AppColors.faint),

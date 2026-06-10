@@ -181,7 +181,7 @@ class _EditorState extends ConsumerState<_Editor> {
               if (_error != null) ...[
                 const SizedBox(height: 14),
                 Text(_error!,
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: AppColors.danger, fontSize: 13)),
               ],
               const SizedBox(height: 24),
@@ -228,7 +228,7 @@ class _EditorState extends ConsumerState<_Editor> {
             decoration: BoxDecoration(
               color: selected
                   ? AppColors.alpha(color, 0.18)
-                  : AppColors.alpha(Colors.white, 0.03),
+                  : AppColors.alpha(AppColors.text, 0.03),
               borderRadius: BorderRadius.circular(13),
               border: Border.all(
                   color: selected ? color : AppColors.border,
@@ -293,7 +293,7 @@ class _EditorState extends ConsumerState<_Editor> {
             decoration: BoxDecoration(
               color: isSel
                   ? AppColors.alpha(AppColors.primary, 0.14)
-                  : AppColors.alpha(Colors.white, 0.03),
+                  : AppColors.alpha(AppColors.text, 0.03),
               borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
               border: Border.all(
                   color: isSel ? AppColors.primary : AppColors.border),

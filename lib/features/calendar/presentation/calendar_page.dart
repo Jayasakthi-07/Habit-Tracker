@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -45,14 +44,11 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                   onPrev: () => setState(() => _month = DateTime(_month.year, _month.month - 1)),
                   onNext: () => setState(() => _month = DateTime(_month.year, _month.month + 1)),
                   onSelect: (d) => setState(() => _selected = d),
-                ).animate().fadeIn(duration: 400.ms).slideX(begin: -0.05, curve: Curves.easeOutCubic)),
+                )),
                 const SizedBox(width: 16),
                 Expanded(
                   flex: 5,
-                  child: _DayDetail(date: _selected)
-                      .animate()
-                      .fadeIn(delay: 100.ms, duration: 400.ms)
-                      .slideX(begin: 0.05, curve: Curves.easeOutCubic),
+                  child: _DayDetail(date: _selected),
                 ),
               ],
             ),
@@ -137,10 +133,10 @@ class _MonthGrid extends ConsumerWidget {
                     duration: AppSpacing.fast,
                     decoration: BoxDecoration(
                       color: future
-                          ? AppColors.alpha(Colors.white, 0.02)
+                          ? AppColors.alpha(AppColors.text, 0.02)
                           : intensity > 0
                               ? AppColors.alpha(AppColors.primary, 0.15 + 0.5 * intensity)
-                              : AppColors.alpha(Colors.white, 0.04),
+                              : AppColors.alpha(AppColors.text, 0.04),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: isSelected
@@ -214,10 +210,7 @@ class _DayDetail extends ConsumerWidget {
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemBuilder: (context, i) {
                       final h = scheduled[i];
-                      return HabitCard(habit: h, date: date)
-                          .animate()
-                          .fadeIn(delay: (30 * i).ms)
-                          .slideX(begin: 0.05);
+                      return HabitCard(habit: h, date: date);
                     },
                   ),
           ),

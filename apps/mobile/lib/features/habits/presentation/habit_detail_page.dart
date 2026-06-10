@@ -245,7 +245,7 @@ class _WeekdayBars extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: performance[wd] ?? 0,
                       minHeight: 8,
-                      backgroundColor: AppColors.alpha(Colors.white, 0.06),
+                      backgroundColor: AppColors.alpha(AppColors.text, 0.06),
                       valueColor: AlwaysStoppedAnimation(color),
                     ),
                   ),

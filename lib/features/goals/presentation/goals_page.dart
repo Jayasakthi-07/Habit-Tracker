@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -55,10 +54,7 @@ class GoalsPage extends ConsumerWidget {
                         mainAxisSpacing: 16,
                       ),
                       itemCount: goals.length,
-                      itemBuilder: (context, i) => _GoalCard(goal: goals[i])
-                          .animate()
-                          .fadeIn(delay: (40 * i).ms)
-                          .slideY(begin: 0.06),
+                      itemBuilder: (context, i) => _GoalCard(goal: goals[i]),
                     ),
             ),
           ],

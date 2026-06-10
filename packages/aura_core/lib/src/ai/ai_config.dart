@@ -7,10 +7,25 @@ import 'ai_coach.dart';
 /// Priority order is **OpenRouter → OpenAI → Gemini**: OpenRouter is preferred
 /// (it can route to many models behind one key) and OpenAI is the fallback.
 abstract class AiConfig {
-  static const String openRouterKey =
+  static const String _envOpenRouterKey =
       String.fromEnvironment('OPENROUTER_API_KEY');
-  static const String openAiKey = String.fromEnvironment('OPENAI_API_KEY');
-  static const String geminiKey = String.fromEnvironment('GEMINI_API_KEY');
+  static const String _envOpenAiKey = String.fromEnvironment('OPENAI_API_KEY');
+  static const String _envGeminiKey = String.fromEnvironment('GEMINI_API_KEY');
+
+  /// Runtime keys, supplied by the user through the app's settings UI and
+  /// persisted locally. They take precedence over build-time keys so public
+  /// release builds — which deliberately ship with NO embedded keys — can
+  /// still unlock AI coaching once the user pastes their own key.
+  static String runtimeOpenRouterKey = '';
+  static String runtimeOpenAiKey = '';
+  static String runtimeGeminiKey = '';
+
+  static String get openRouterKey =>
+      runtimeOpenRouterKey.isNotEmpty ? runtimeOpenRouterKey : _envOpenRouterKey;
+  static String get openAiKey =>
+      runtimeOpenAiKey.isNotEmpty ? runtimeOpenAiKey : _envOpenAiKey;
+  static String get geminiKey =>
+      runtimeGeminiKey.isNotEmpty ? runtimeGeminiKey : _envGeminiKey;
 
   /// Models are overridable but have sensible, low-cost defaults.
   static const String openRouterModel = String.fromEnvironment(

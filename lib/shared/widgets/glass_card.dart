@@ -5,15 +5,19 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 
-/// A frosted-glass surface with a subtle gradient, hairline border and
-/// optional hover elevation. The cornerstone of the app's glassmorphism style.
+/// The cornerstone surface of the Aurora design language.
+///
+/// Dark mode: a layered ink card with a hairline border and a faint top sheen.
+/// Light mode: a crisp white card floating on soft, airy shadows. Hoverable
+/// cards lift slightly. BackdropFilter blur is only applied when [blur] > 0,
+/// so grids of cards stay cheap to composite.
 class GlassCard extends StatefulWidget {
   const GlassCard({
     super.key,
     required this.child,
     this.padding = AppSpacing.cardPadding,
     this.radius = AppSpacing.radiusLg,
-    this.blur = 8,
+    this.blur = 0,
     this.onTap,
     this.hoverable = false,
     this.borderColor,
@@ -47,6 +51,14 @@ class _GlassCardState extends State<GlassCard> {
     final hover = widget.hoverable && _hovered;
     final radius = BorderRadius.circular(widget.radius);
 
+    final inner = Container(
+      padding: widget.padding,
+      decoration: BoxDecoration(
+        gradient: widget.gradient ?? AppColors.glassGradient,
+      ),
+      child: widget.child,
+    );
+
     Widget card = AnimatedContainer(
       duration: AppSpacing.fast,
       curve: Curves.easeOut,
@@ -56,29 +68,36 @@ class _GlassCardState extends State<GlassCard> {
       transformAlignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: radius,
-        gradient: widget.gradient ?? AppColors.glassGradient,
+        color: widget.blur > 0
+            ? AppColors.alpha(AppColors.card, AppColors.isLight ? 0.72 : 0.66)
+            : AppColors.card,
         border: Border.all(
           color: hover
-              ? (widget.glowColor ?? AppColors.borderStrong)
-              : (widget.borderColor ?? AppColors.border),
+              ? (widget.glowColor != null
+                  ? AppColors.alpha(widget.glowColor!, 0.55)
+                  : AppColors.borderStrong)
+              : (widget.borderColor ??
+                  (widget.glowColor != null
+                      ? AppColors.alpha(widget.glowColor!, 0.35)
+                      : AppColors.border)),
           width: 1,
         ),
         boxShadow: [
           ...AppShadows.card,
-          if (hover && widget.glowColor != null)
-            ...AppShadows.glow(widget.glowColor!, strength: 0.12),
+          if (widget.glowColor != null)
+            ...AppShadows.glow(widget.glowColor!,
+                strength: hover ? 0.20 : 0.12),
         ],
       ),
       child: ClipRRect(
         borderRadius: radius,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: widget.blur, sigmaY: widget.blur),
-          child: Container(
-            padding: widget.padding,
-            color: AppColors.alpha(AppColors.card, 0.82),
-            child: widget.child,
-          ),
-        ),
+        child: widget.blur > 0
+            ? BackdropFilter(
+                filter:
+                    ImageFilter.blur(sigmaX: widget.blur, sigmaY: widget.blur),
+                child: inner,
+              )
+            : inner,
       ),
     );
 

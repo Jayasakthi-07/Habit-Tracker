@@ -42,6 +42,11 @@ class AiCoachState {
 /// and calls the configured [AiCoach] (Gemini or OpenAI) via `aura_core`.
 class AiCoachController extends Notifier<AiCoachState> {
   static const _kProvider = 'ai_provider';
+  static const _keyStoreKeys = {
+    AiProviderKind.openrouter: 'ai_key_openrouter',
+    AiProviderKind.openai: 'ai_key_openai',
+    AiProviderKind.gemini: 'ai_key_gemini',
+  };
 
   static const _system =
       'You are Aura, the AI habit coach built into Aura Habits — a premium '
@@ -63,10 +68,24 @@ class AiCoachController extends Notifier<AiCoachState> {
 
   @override
   AiCoachState build() {
+    _loadRuntimeKeys();
     final saved = HiveService.dynBox(Boxes.settings).get(_kProvider) as String?;
     final preferred =
         saved == null ? null : AiProviderKind.fromName(saved, AiProviderKind.gemini);
     return AiCoachState(provider: AiConfig.resolve(preferred));
+  }
+
+  /// Loads user-supplied API keys (saved from the in-app key dialog) into
+  /// [AiConfig]. This is what makes AI coaching work in public release builds,
+  /// which ship without embedded keys.
+  void _loadRuntimeKeys() {
+    final box = HiveService.dynBox(Boxes.settings);
+    AiConfig.runtimeOpenRouterKey =
+        (box.get(_keyStoreKeys[AiProviderKind.openrouter]) as String?) ?? '';
+    AiConfig.runtimeOpenAiKey =
+        (box.get(_keyStoreKeys[AiProviderKind.openai]) as String?) ?? '';
+    AiConfig.runtimeGeminiKey =
+        (box.get(_keyStoreKeys[AiProviderKind.gemini]) as String?) ?? '';
   }
 
   bool get isConfigured => AiConfig.anyConfigured;
@@ -74,6 +93,36 @@ class AiCoachController extends Notifier<AiCoachState> {
   /// Providers that actually have a key configured.
   List<AiProviderKind> get availableProviders =>
       AiProviderKind.values.where(AiConfig.isConfigured).toList();
+
+  /// The user-saved key for [kind] (empty when unset or build-time only).
+  String savedKeyFor(AiProviderKind kind) =>
+      (HiveService.dynBox(Boxes.settings).get(_keyStoreKeys[kind]) as String?) ??
+      '';
+
+  /// Persists user-supplied keys and re-resolves the active provider.
+  void saveApiKeys({String? openRouter, String? openAi, String? gemini}) {
+    final box = HiveService.dynBox(Boxes.settings);
+    void put(AiProviderKind kind, String? value) {
+      if (value == null) return;
+      final v = value.trim();
+      if (v.isEmpty) {
+        box.delete(_keyStoreKeys[kind]);
+      } else {
+        box.put(_keyStoreKeys[kind], v);
+      }
+    }
+
+    put(AiProviderKind.openrouter, openRouter);
+    put(AiProviderKind.openai, openAi);
+    put(AiProviderKind.gemini, gemini);
+    _loadRuntimeKeys();
+    // Re-resolve so the UI unlocks (or re-gates) immediately.
+    state = AiCoachState(
+      messages: state.messages,
+      loading: state.loading,
+      provider: AiConfig.resolve(state.provider),
+    );
+  }
 
   void setProvider(AiProviderKind kind) {
     HiveService.dynBox(Boxes.settings).put(_kProvider, kind.name);
@@ -98,8 +147,8 @@ class AiCoachController extends Notifier<AiCoachState> {
           const AiMessage(
             fromUser: false,
             text:
-                'AI coaching isn\'t set up yet. Add an OpenRouter or OpenAI API '
-                'key (see AI_SETUP.md) to unlock your coach.',
+                'AI coaching isn\'t set up yet. Click the key icon and paste your '
+                'OpenRouter, OpenAI or Gemini API key to unlock your coach.',
           ),
         ],
       );
