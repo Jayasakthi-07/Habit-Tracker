@@ -13,9 +13,20 @@ abstract class AppColors {
   static Brightness brightness = Brightness.dark;
   static bool get isLight => brightness == Brightness.light;
 
-  // ---- Brand accents (constant across themes) ----
-  static const Color primary = Color(0xFF00FF88); // electric mint
-  static const Color secondary = Color(0xFF00D4FF); // cyan
+  // ---- Brand accents (theme-aware) ----
+  // Dark keeps the signature electric mint + cyan. Light uses a premium
+  // indigo -> violet that reads crisp and upscale on white (no neon green).
+  static Color get primary => isLight ? _lPrimary : _dPrimary;
+  static Color get secondary => isLight ? _lSecondary : _dSecondary;
+
+  /// Foreground to place ON a filled [primary] / primary-gradient surface.
+  static Color get onPrimary =>
+      isLight ? Colors.white : const Color(0xFF002417);
+
+  static const Color _dPrimary = Color(0xFF00FF88); // electric mint
+  static const Color _dSecondary = Color(0xFF00D4FF); // cyan
+  static const Color _lPrimary = Color(0xFF6366F1); // indigo
+  static const Color _lSecondary = Color(0xFF8B5CF6); // violet
 
   // ---- Surfaces (theme-aware) ----
   static Color get background => isLight ? _lBackground : _dBackground;
@@ -53,11 +64,13 @@ abstract class AppColors {
   static const Color _lBorder = Color(0x14000000); // 8% black
   static const Color _lBorderStrong = Color(0x24000000); // ~14% black
 
-  // ---- Semantic (constant) ----
-  static const Color success = Color(0xFF00FF88);
+  // ---- Semantic ----
+  // success tracks the brand accent (green in dark, indigo in light) so there
+  // is no green "Completed"/streak coloring in the light theme.
+  static Color get success => primary;
+  static Color get info => secondary;
   static const Color warning = Color(0xFFFFC857);
   static const Color danger = Color(0xFFFF5A6E);
-  static const Color info = Color(0xFF00D4FF);
   static const Color partial = Color(0xFFFFC857);
   static const Color skipped = Color(0xFF7A7A8C);
 
@@ -66,18 +79,18 @@ abstract class AppColors {
   static const Color ambientB = Color(0xFF7C3AED); // violet
   static const Color ambientC = Color(0xFF2563EB); // blue
 
-  // ---- Gradients ----
-  static const LinearGradient primaryGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [primary, secondary],
-  );
+  // ---- Gradients (theme-aware via the accent getters) ----
+  static LinearGradient get primaryGradient => LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [primary, secondary],
+      );
 
-  static const LinearGradient accentGlow = LinearGradient(
-    begin: Alignment.centerLeft,
-    end: Alignment.centerRight,
-    colors: [Color(0xFF00FF88), Color(0xFF00D4FF)],
-  );
+  static LinearGradient get accentGlow => LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        colors: [primary, secondary],
+      );
 
   static LinearGradient get surfaceGradient => LinearGradient(
         begin: Alignment.topLeft,

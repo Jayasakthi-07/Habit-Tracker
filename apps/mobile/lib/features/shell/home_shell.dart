@@ -40,7 +40,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           ? FloatingActionButton(
               onPressed: () => HabitEditorSheet.show(context),
               backgroundColor: AppColors.primary,
-              foregroundColor: const Color(0xFF002417),
+              foregroundColor: AppColors.onPrimary,
               child: const Icon(Icons.add_rounded, size: 28),
             )
           : null,

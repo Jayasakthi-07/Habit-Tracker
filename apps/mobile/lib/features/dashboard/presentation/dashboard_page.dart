@@ -213,7 +213,7 @@ class _RingPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 7
       ..strokeCap = StrokeCap.round
-      ..shader = const LinearGradient(
+      ..shader = LinearGradient(
         colors: [AppColors.primary, AppColors.secondary],
       ).createShader(rect);
     canvas.drawArc(rect, -math.pi / 2, 2 * math.pi * ratio, false, arc);

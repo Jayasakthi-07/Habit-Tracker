@@ -60,7 +60,7 @@ class AppSidebar extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: AppShadows.glow(AppColors.primary, strength: 0.2),
                   ),
-                  child: const Icon(Icons.bolt_rounded, color: Color(0xFF002417), size: 22),
+                  child: Icon(Icons.bolt_rounded, color: AppColors.onPrimary, size: 22),
                 ),
                 const SizedBox(width: 12),
                 Column(
@@ -224,7 +224,7 @@ class _UserCard extends StatelessWidget {
             ),
           ),
           if (u?.isPremium ?? false)
-            const Icon(Icons.workspace_premium_rounded, color: AppColors.primary, size: 18),
+            Icon(Icons.workspace_premium_rounded, color: AppColors.primary, size: 18),
         ],
       ),
     );

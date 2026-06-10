@@ -61,9 +61,9 @@ class SettingsPage extends ConsumerWidget {
                       borderRadius:
                           BorderRadius.circular(AppSpacing.radiusPill),
                     ),
-                    child: const Text('PRO',
+                    child: Text('PRO',
                         style: TextStyle(
-                            color: Color(0xFF002417),
+                            color: AppColors.onPrimary,
                             fontSize: 11,
                             fontWeight: FontWeight.w800)),
                   ),
@@ -181,7 +181,7 @@ class SettingsPage extends ConsumerWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.palette_outlined,
+              Icon(Icons.palette_outlined,
                   color: AppColors.secondary, size: 20),
               const SizedBox(width: 10),
               Text('Appearance',
@@ -221,8 +221,8 @@ class SettingsPage extends ConsumerWidget {
           ? null
           : Center(
               child: Text(profile?.initials ?? 'U',
-                  style: const TextStyle(
-                      color: Color(0xFF002417),
+                  style: TextStyle(
+                      color: AppColors.onPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.w700)),
             ),
@@ -276,7 +276,7 @@ class SettingsPage extends ConsumerWidget {
               onPressed: () => _enterKey(context, ref),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                foregroundColor: const Color(0xFF002417),
+                foregroundColor: AppColors.onPrimary,
               ),
               child: const Text('Enter license key',
                   style: TextStyle(fontWeight: FontWeight.w700)),
@@ -325,7 +325,7 @@ class SettingsPage extends ConsumerWidget {
               FilledButton(
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  foregroundColor: const Color(0xFF002417),
+                  foregroundColor: AppColors.onPrimary,
                 ),
                 onPressed: () {
                   final err = ref

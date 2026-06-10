@@ -144,7 +144,8 @@ class _CategoryFilter extends StatelessWidget {
     );
   }
 
-  Widget _pill(String label, String? id, bool active, {Color color = AppColors.primary}) {
+  Widget _pill(String label, String? id, bool active, {Color? color}) {
+    color ??= AppColors.primary;
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: GestureDetector(
@@ -184,7 +185,7 @@ class _Fab extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: AppShadows.glow(AppColors.primary, strength: 0.22),
         ),
-        child: const Icon(Icons.add_rounded, color: Color(0xFF002417), size: 28),
+        child: Icon(Icons.add_rounded, color: AppColors.onPrimary, size: 28),
       ),
     ).animate(onPlay: (c) => c.repeat(reverse: true)).scale(
           duration: 2.seconds,

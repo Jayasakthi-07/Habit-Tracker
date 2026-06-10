@@ -14,6 +14,7 @@ import os
 
 CODES = {
     'invalid_constant',
+    'const_with_non_constant_argument',
     'non_constant_list_element',
     'non_constant_map_element',
     'non_constant_map_key_element',

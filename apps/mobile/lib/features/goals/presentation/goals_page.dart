@@ -30,7 +30,7 @@ class GoalsPage extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () => GoalEditorSheet.show(context),
         backgroundColor: AppColors.primary,
-        foregroundColor: const Color(0xFF002417),
+        foregroundColor: AppColors.onPrimary,
         child: const Icon(Icons.add_rounded, size: 28),
       ),
       body: goals.isEmpty
@@ -50,7 +50,7 @@ class GoalsPage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.flag_rounded, color: AppColors.primary, size: 56),
+            Icon(Icons.flag_rounded, color: AppColors.primary, size: 56),
             const SizedBox(height: 16),
             Text('No goals yet', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),

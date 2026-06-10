@@ -45,7 +45,7 @@ class _GlowButtonState extends State<GlowButton> {
     final radius = BorderRadius.circular(AppSpacing.radiusMd);
 
     final fg = switch (widget.variant) {
-      GlowButtonVariant.filled => const Color(0xFF002417),
+      GlowButtonVariant.filled => AppColors.onPrimary,
       _ => accent,
     };
 

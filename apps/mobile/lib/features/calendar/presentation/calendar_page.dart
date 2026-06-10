@@ -217,7 +217,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
               fontSize: 13,
               fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
               color: hasData && intensity > 0.5
-                  ? const Color(0xFF002417)
+                  ? AppColors.onPrimary
                   : AppColors.text,
             ),
           ),

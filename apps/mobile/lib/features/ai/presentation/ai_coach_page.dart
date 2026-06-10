@@ -61,8 +61,8 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                 gradient: AppColors.primaryGradient,
                 borderRadius: BorderRadius.circular(9),
               ),
-              child: const Icon(Icons.auto_awesome_rounded,
-                  color: Color(0xFF002417), size: 17),
+              child: Icon(Icons.auto_awesome_rounded,
+                  color: AppColors.onPrimary, size: 17),
             ),
             const SizedBox(width: 10),
             const Text('AI Coach'),
@@ -81,7 +81,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                     child: Row(
                       children: [
                         if (state.provider == p)
-                          const Icon(Icons.check_rounded,
+                          Icon(Icons.check_rounded,
                               size: 16, color: AppColors.primary)
                         else
                           const SizedBox(width: 16),
@@ -135,8 +135,8 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: AppShadows.glow(AppColors.primary),
           ),
-          child: const Icon(Icons.auto_awesome_rounded,
-              color: Color(0xFF002417), size: 38),
+          child: Icon(Icons.auto_awesome_rounded,
+              color: AppColors.onPrimary, size: 38),
         ),
         const SizedBox(height: 20),
         Text('Your habit coach',
@@ -179,7 +179,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                           color: AppColors.alpha(AppColors.primary, 0.3)),
                     ),
                     child: Text(label,
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: AppColors.primary,
                             fontSize: 13,
                             fontWeight: FontWeight.w600)),
@@ -214,7 +214,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
         child: Text(
           m.text,
           style: TextStyle(
-            color: user ? const Color(0xFF002417) : AppColors.text,
+            color: user ? AppColors.onPrimary : AppColors.text,
             fontSize: 14,
             height: 1.5,
             fontWeight: user ? FontWeight.w500 : FontWeight.w400,
@@ -254,7 +254,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
-                    borderSide: const BorderSide(color: AppColors.primary),
+                    borderSide: BorderSide(color: AppColors.primary),
                   ),
                 ),
               ),
@@ -269,8 +269,8 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                   gradient: AppColors.primaryGradient,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.arrow_upward_rounded,
-                    color: Color(0xFF002417)),
+                child: Icon(Icons.arrow_upward_rounded,
+                    color: AppColors.onPrimary),
               ),
             ),
           ],

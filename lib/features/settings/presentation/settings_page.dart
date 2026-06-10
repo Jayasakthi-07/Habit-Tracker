@@ -303,13 +303,13 @@ class _PremiumCard extends ConsumerWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.workspace_premium_rounded, color: AppColors.primary),
+              Icon(Icons.workspace_premium_rounded, color: AppColors.primary),
               const SizedBox(width: 10),
               Text(license.activated ? 'Premium Activated' : 'Aura Premium',
                   style: Theme.of(context).textTheme.titleLarge),
               const Spacer(),
               if (license.activated)
-                const Icon(Icons.verified_rounded, color: AppColors.success),
+                Icon(Icons.verified_rounded, color: AppColors.success),
             ],
           ),
           const SizedBox(height: 12),
@@ -392,7 +392,7 @@ class _PremiumCard extends ConsumerWidget {
                   // Convenience for evaluation: generate a valid demo key.
                   TextButton(
                     onPressed: () => keyCtrl.text = ref.read(licenseProvider.notifier).generateDemoKey(),
-                    child: const Text('Generate demo key', style: TextStyle(color: AppColors.secondary, fontSize: 12)),
+                    child: Text('Generate demo key', style: TextStyle(color: AppColors.secondary, fontSize: 12)),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -440,7 +440,7 @@ class _Perk extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.check_rounded, size: 13, color: AppColors.primary),
+          Icon(Icons.check_rounded, size: 13, color: AppColors.primary),
           const SizedBox(width: 5),
           Text(label, style: TextStyle(fontSize: 11, color: AppColors.text)),
         ],
@@ -571,7 +571,7 @@ class _Toggle extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeThumbColor: const Color(0xFF002417),
+            activeThumbColor: AppColors.onPrimary,
             activeTrackColor: AppColors.primary,
             inactiveThumbColor: AppColors.muted,
             inactiveTrackColor: AppColors.surface,

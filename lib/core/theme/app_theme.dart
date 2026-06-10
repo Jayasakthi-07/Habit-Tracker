@@ -21,7 +21,7 @@ abstract class AppTheme {
     final colorScheme = ColorScheme(
       brightness: brightness,
       primary: AppColors.primary,
-      onPrimary: const Color(0xFF002417),
+      onPrimary: AppColors.onPrimary,
       secondary: AppColors.secondary,
       onSecondary: const Color(0xFF00222B),
       surface: AppColors.surface,
@@ -67,7 +67,7 @@ abstract class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: BorderSide(color: AppColors.primary, width: 1.5),
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMd),

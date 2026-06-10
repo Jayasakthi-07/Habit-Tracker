@@ -107,7 +107,7 @@ class _GoalCard extends ConsumerWidget {
                     ),
                     const Spacer(),
                     if (goal.isComplete)
-                      const Icon(Icons.verified_rounded, color: AppColors.success, size: 18),
+                      Icon(Icons.verified_rounded, color: AppColors.success, size: 18),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -210,7 +210,7 @@ void _showGoalDialog(BuildContext context, WidgetRef ref) {
                     Text('$target', style: AppTypography.numeric(18)),
                     IconButton(
                       onPressed: () => setState(() => target = (target + 1).clamp(1, 999)),
-                      icon: const Icon(Icons.add_circle_outline_rounded, color: AppColors.primary),
+                      icon: Icon(Icons.add_circle_outline_rounded, color: AppColors.primary),
                     ),
                   ],
                 ),

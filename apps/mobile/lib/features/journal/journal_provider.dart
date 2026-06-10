@@ -10,8 +10,8 @@ enum Mood {
   awful(1, '😞', 'Awful', AppColors.danger),
   bad(2, '😕', 'Bad', Color(0xFFFF8A65)),
   okay(3, '😐', 'Okay', AppColors.warning),
-  good(4, '🙂', 'Good', AppColors.secondary),
-  great(5, '😄', 'Great', AppColors.primary);
+  good(4, '🙂', 'Good', Color(0xFF38BDF8)),
+  great(5, '😄', 'Great', Color(0xFF6366F1));
 
   const Mood(this.score, this.emoji, this.label, this.color);
   final int score;

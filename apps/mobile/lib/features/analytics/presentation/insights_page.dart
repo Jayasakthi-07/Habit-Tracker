@@ -282,8 +282,8 @@ class _LevelCard extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text('${game.level}',
-                      style: const TextStyle(
-                          color: Color(0xFF002417),
+                      style: TextStyle(
+                          color: AppColors.onPrimary,
                           fontSize: 22,
                           fontWeight: FontWeight.w800)),
                 ),
@@ -315,7 +315,7 @@ class _LevelCard extends StatelessWidget {
               value: game.levelProgress,
               minHeight: 10,
               backgroundColor: AppColors.alpha(Colors.white, 0.06),
-              valueColor: const AlwaysStoppedAnimation(AppColors.primary),
+              valueColor: AlwaysStoppedAnimation(AppColors.primary),
             ),
           ),
         ],

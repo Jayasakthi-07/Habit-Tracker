@@ -233,7 +233,7 @@ class _LevelBar extends ConsumerWidget {
               boxShadow: AppShadows.glow(AppColors.primary, strength: 0.18),
             ),
             child: Text('${game.level}',
-                style: const TextStyle(color: Color(0xFF002417), fontWeight: FontWeight.w800, fontSize: 20)),
+                style: TextStyle(color: AppColors.onPrimary, fontWeight: FontWeight.w800, fontSize: 20)),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -259,7 +259,7 @@ class _LevelBar extends ConsumerWidget {
                       value: v,
                       minHeight: 9,
                       backgroundColor: AppColors.alpha(Colors.white, 0.06),
-                      valueColor: const AlwaysStoppedAnimation(AppColors.primary),
+                      valueColor: AlwaysStoppedAnimation(AppColors.primary),
                     ),
                   ),
                 ),

@@ -89,8 +89,8 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
             gradient: AppColors.primaryGradient,
             borderRadius: BorderRadius.circular(11),
           ),
-          child: const Icon(Icons.auto_awesome_rounded,
-              color: Color(0xFF002417), size: 20),
+          child: Icon(Icons.auto_awesome_rounded,
+              color: AppColors.onPrimary, size: 20),
         ),
         const SizedBox(width: 12),
         Column(
@@ -156,8 +156,8 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
                 borderRadius: BorderRadius.circular(22),
                 boxShadow: AppShadows.glow(AppColors.primary),
               ),
-              child: const Icon(Icons.auto_awesome_rounded,
-                  color: Color(0xFF002417), size: 40),
+              child: Icon(Icons.auto_awesome_rounded,
+                  color: AppColors.onPrimary, size: 40),
             ),
             const SizedBox(height: 20),
             Text('Your habit coach',
@@ -216,7 +216,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
         child: SelectableText(
           m.text,
           style: TextStyle(
-            color: user ? const Color(0xFF002417) : AppColors.text,
+            color: user ? AppColors.onPrimary : AppColors.text,
             fontSize: 14,
             height: 1.5,
             fontWeight: user ? FontWeight.w500 : FontWeight.w400,
@@ -251,7 +251,7 @@ class _AiCoachPageState extends ConsumerState<AiCoachPage> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
-                borderSide: const BorderSide(color: AppColors.primary),
+                borderSide: BorderSide(color: AppColors.primary),
               ),
             ),
           ),
@@ -309,8 +309,8 @@ class _SendButton extends StatelessWidget {
             gradient: AppColors.primaryGradient,
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.arrow_upward_rounded,
-              color: Color(0xFF002417)),
+          child: Icon(Icons.arrow_upward_rounded,
+              color: AppColors.onPrimary),
         ),
       ),
     );
@@ -329,7 +329,7 @@ class _Typing extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(
+            SizedBox(
               width: 16,
               height: 16,
               child: CircularProgressIndicator(

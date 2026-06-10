@@ -247,11 +247,11 @@ class _DaySummary extends ConsumerWidget {
     final pct = habits.isEmpty ? 0 : (done / habits.length * 100).round();
     return Row(
       children: [
-        const Icon(Icons.insights_rounded, size: 16, color: AppColors.primary),
+        Icon(Icons.insights_rounded, size: 16, color: AppColors.primary),
         const SizedBox(width: 8),
         Text('Completion: ', style: Theme.of(context).textTheme.bodyMedium),
         Text('$pct%  ($done/${habits.length})',
-            style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600)),
+            style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600)),
       ],
     );
   }

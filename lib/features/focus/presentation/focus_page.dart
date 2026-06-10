@@ -14,9 +14,9 @@ import '../../../shared/widgets/section_header.dart';
 import '../../notifications/notification_service.dart';
 
 enum PomodoroMode {
-  focus(25, 'Focus', AppColors.primary),
-  shortBreak(5, 'Short Break', AppColors.secondary),
-  longBreak(15, 'Long Break', AppColors.info);
+  focus(25, 'Focus', Color(0xFF6366F1)),
+  shortBreak(5, 'Short Break', Color(0xFF38BDF8)),
+  longBreak(15, 'Long Break', Color(0xFF8B5CF6));
 
   const PomodoroMode(this.minutes, this.label, this.color);
   final int minutes;
